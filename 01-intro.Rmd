@@ -1,6 +1,7 @@
-# Hello bookdown 
+# Hello bookdown
 
 ## Importar librerías
+
 ```{r message=FALSE, warning=FALSE}
 library(tidyverse)
 ```
@@ -24,11 +25,11 @@ df_atl <- df |>
          NUMCONSUL,
          CODMUNRE,
          N_EMB,
-         NIV_EDUM)
+         NIV_EDUM,
+         EDAD_MADRE)
 
 str(df_atl)
 ```
-
 
 ## Transformación de datos
 
@@ -47,18 +48,33 @@ df_atl <- df_atl |>
                         labels = c("Contributivo", "Subsidiado", "Excepción",
                                    "Especial", "No asegurado")),
     NIV_EDUM = factor(as.integer(NIV_EDUM),
-                        levels = 1:13,
-                        labels = c("Preescolar", "Básica primaria", "Básica secundaria",
-                                   "Media académica o clásica","Media técnica","Normalista",
-                                   "Técnica profesional","Tecnológica","Profesional",
-                                   "Especialización","Maestría","Doctorado",
-                                   "Ninguno"))
+                      levels = 1:13,
+                      labels = c("Preescolar", "Básica primaria", "Básica secundaria",
+                                 "Media académica o clásica","Media técnica","Normalista",
+                                 "Técnica profesional","Tecnológica","Profesional",
+                                 "Especialización","Maestría","Doctorado",
+                                 "Ninguno")),
+    
+    # NUEVA VARIABLE: Reagrupación convirtiendo el 99 en NA
+    EDAD_MADRE = as.integer(EDAD_MADRE),
+    EDAD_MADRE = na_if(EDAD_MADRE, 99),
+    EDAD_MADRE = factor(EDAD_MADRE,
+                            levels = c(1, 2, 3, 4, 5, 6, 7, 8, 9),
+                            labels = c("Maternidad Adolescente",      # 1: 10-14 años
+                                       "Maternidad Adolescente",      # 2: 15-19 años
+                                       "Edad Reproductiva Óptima",    # 3: 20-24 años
+                                       "Edad Reproductiva Óptima",    # 4: 25-29 años
+                                       "Edad Reproductiva Óptima",    # 5: 30-34 años
+                                       "Edad Materna Avanzada",       # 6: 35-39 años
+                                       "Edad Materna Avanzada",       # 7: 40-44 años
+                                       "Edad Materna Avanzada",       # 8: 45-49 años
+                                       "Edad Materna Avanzada"))      # 9: 50-54 años
   )
 
 str(df_atl)
 ```
 
-# Manejar datos faltantes 
+# Manejar datos faltantes
 
 ```{r nulos message=FALSE, warning=FALSE}
 df_atl |> 
@@ -91,7 +107,7 @@ df_atl |>
   arrange(desc(pct))
 ```
 
-# Análisis univariado 
+# Análisis univariado
 
 ## Número de consultas
 
@@ -124,6 +140,29 @@ numconsult |>
     y = "Cantidad de casos"
   ) +
   theme_classic()
+```
+
+## Edad de la madre
+
+```{r grupo}
+edad_madre <- df_atl |> 
+  count(EDAD_MADRE, name='casos') |> 
+  mutate(Porcentaje = casos / sum(casos))
+
+ggplot(edad_madre, aes(x = reorder(EDAD_MADRE, Porcentaje), y = Porcentaje, fill = EDAD_MADRE)) +
+  geom_bar(stat = "identity", show.legend = FALSE) +
+  # Agrega el texto del porcentaje al final de cada barra
+  geom_text(aes(label = paste0(round(Porcentaje * 100, 1), "%")), 
+            hjust = -0.1, fontface = "bold") +
+  # Voltea las barras a horizontales para leer mejor los nombres de las categorías
+  coord_flip() + 
+  theme_classic() +
+  labs(
+    title = "Distribución por Edad de la Madre",
+    x = "Categoría de Edad",
+    y = "Proporción"
+  )
+
 ```
 
 ## APGAR 1
@@ -193,6 +232,7 @@ apgar2 |>
 ```
 
 ## Número de embarazos (includo el presente)
+
 ```{r num-embarazos-resumen message=FALSE, warning=FALSE}
 n_emb <-  df_atl|> 
   select(N_EMB) 
@@ -210,6 +250,7 @@ n_emb|>
     max = max(N_EMB)
   )
 ```
+
 ```{r num-embarazos-dist message=FALSE, warning=FALSE}
 n_emb |> 
   ggplot(aes(x = N_EMB))+
@@ -223,7 +264,8 @@ n_emb |>
   theme_classic()
 ```
 
-## Tipo de parto 
+## Tipo de parto
+
 ```{r message=FALSE, warning=FALSE}
 tipo_parto <- df_atl |> 
   count(TIPO_PARTO) |> 
