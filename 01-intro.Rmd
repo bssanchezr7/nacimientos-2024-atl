@@ -288,21 +288,14 @@ tipo_parto |>
 ## Regimen de seguridad social en salud de la madre
 
 ```{r message=FALSE, warning=FALSE}
-niv_edum <- df_atl |>
-  count(NIV_EDUM) |>
-  mutate(
-    pct = n / sum(n),
-    NIV_EDUM = fct_reorder(NIV_EDUM, n) # Reordena el factor según n
-  )
-
-niv_edum |>
-  ggplot(aes(x = NIV_EDUM, y = n)) +    # Ya no necesitas fct_rev()
+seg_social |>
+  ggplot(aes(x = fct_reorder(SEG_SOCIAL, n), y = n)) +
   geom_col(fill = "steelblue") +
   geom_text(aes(label = scales::percent(pct, accuracy = 0.1)),
-            hjust = -0.1, size = 3.2) +
+            hjust = -0.1, size = 3.5) +
   coord_flip() +
   scale_y_continuous(expand = expansion(mult = c(0, 0.12))) +
-  labs(title = "Nivel educativo de la madre",
+  labs(title = "Régimen de seguridad social de la madre",
        subtitle = "Madres residentes en el Atlántico, 2024",
        x = NULL, y = "Cantidad de nacimientos",
        caption = "Fuente: DANE, Estadísticas Vitales 2024") +
@@ -337,7 +330,7 @@ niv_edum |>
 
 # Análisis exploratorio bivariado
 
-## 
+## Número de consultas prenatales según la edad
 
 ```{r}
 df_atl |> 
@@ -357,4 +350,42 @@ df_atl |>
       axis.text = element_text(size = 11)
     )
 ```
+
+## Cesáreas según el régimen de salud
+
+```{r}
+library(dplyr)
+library(tidyr)
+library(knitr)
+
+tabla_final_logica <- df_atl %>% 
+  # 1. FILTRAR: Conservar solo los dos regímenes que vas a comparar
+  filter(SEG_SOCIAL %in% c("Contributivo", "Subsidiado")) %>% 
+  
+  # 2. CREAR COLUMNA TRUE/FALSE: TRUE si es Cesárea, FALSE para cualquier otro parto
+  mutate(
+    Cesarea = (TIPO_PARTO == "Cesárea")
+  ) %>% 
+  
+  # 3. CONTAR: Frecuencias cruzando la variable lógica con el régimen
+  count(Cesarea, SEG_SOCIAL) %>% 
+  
+  # 4. PORCENTAJES: Calcular proporciones por columna (dentro de cada régimen)
+  group_by(SEG_SOCIAL) %>% 
+  mutate(
+    Porcentaje = (n / sum(n)) * 100,
+    # SOLUCIÓN: Usamos formatC para enteros para evitar el aviso (warning) de R
+    n_formateado = formatC(n, format = "d", big.mark = "."),
+    Texto_Celda = paste0(n_formateado, " (", round(Porcentaje, 1), "%)")
+  ) %>% 
+  ungroup() %>% 
+  
+  # 5. PIVOT: Generar las columnas automáticas ("Contributivo" y "Subsidiado")
+  select(Cesarea, SEG_SOCIAL, Texto_Celda) %>% 
+  pivot_wider(names_from = SEG_SOCIAL, values_from = Texto_Celda)
+
+# 6. Renderizar tabla limpia
+kable(tabla_final_logica)
+```
+
 
