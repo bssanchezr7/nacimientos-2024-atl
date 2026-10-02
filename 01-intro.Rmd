@@ -333,3 +333,28 @@ niv_edum |>
   theme_classic()
 ```
 
+
+
+# Análisis exploratorio bivariado
+
+## 
+
+```{r}
+df_atl |> 
+  select(NUMCONSUL, EDAD_MADRE) |> 
+  ggplot( aes(x = EDAD_MADRE, y = NUMCONSUL, fill = EDAD_MADRE)) +
+    geom_boxplot(alpha = 0.7, outlier.color = "red", outlier.shape = 1, width = 0.5) +
+    labs(
+      title = "Número de Consultas Prenatales según Grupo de Edad",
+      subtitle = "Análisis Bivariado - Microdatos DANE",
+      x = "Grupo de Edad de la Madre",
+      y = "Número de Consultas Prenatales (NUMCONSUL)"
+    ) +
+    theme_minimal() +
+    theme(
+      legend.position = "none", # Eliminamos leyenda porque el eje X ya lo explica
+      plot.title = element_text(face = "bold", size = 14),
+      axis.text = element_text(size = 11)
+    )
+```
+
