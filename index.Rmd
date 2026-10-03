@@ -1,6 +1,6 @@
 --- 
-title: "Análisis de nacimientos en el Atlántico, 2024"
-subtitle: "Estadísticas Vitales (EEVV) - DANE"
+title: "Nacimientos en el Atlántico, 2024: condiciones del recién nacido, tipo de parto y atención prenatal"
+subtitle: "Análisis exploratorio y pruebas de hipótesis con las Estadísticas Vitales del DANE"
 author: ["Brandon Sanchez", "Andres Florez"]
 date: "`r format(Sys.Date(), '%d/%m/%Y')`"
 site: bookdown::bookdown_site
@@ -27,31 +27,46 @@ source("R/graficos.R")
 
 # Presentación {-}
 
-Este documento presenta un análisis exploratorio de los nacimientos
-registrados en el departamento del Atlántico durante 2024, a partir de los
-microdatos de Estadísticas Vitales (EEVV) del DANE.
+Este documento presenta un análisis exploratorio y un conjunto de pruebas de
+hipótesis sobre los nacimientos registrados en el departamento del Atlántico
+durante 2024, a partir de las Estadísticas Vitales (EEVV) del
+DANE.
 
-El análisis se centra en las condiciones del recién nacido (puntaje APGAR al
-minuto y a los cinco minutos), la atención prenatal (número de consultas),
-el tipo de parto y las características de la madre (régimen de seguridad
-social, nivel educativo y número de embarazos).
+El análisis se centra en evidenciar si el tipo de parto y la vitalidad del recién nacido se ven afectados por la atencion prenatal, el régimen de salud de la madre o en la edad de esta.
 
 ## Objetivos {-}
 
-**Objetivo general.** (una frase con lo que busca el estudio)
+**Objetivo general.** Analizar la atención prenatal, el tipo de parto y la
+vitalidad del recién nacido en los nacidos vivos de madres residentes en el
+departamento del Atlántico durante 2024, y sus diferencias según la edad, el
+régimen de salud y la subregión de residencia de la madre, mediante un
+análisis exploratorio y pruebas de hipótesis aplicadas a los microdatos de
+Estadísticas Vitales del DANE.
 
 **Objetivos específicos.**
 
-1. Describir la distribución de ...
-2. Comparar ... según ...
-3. Explorar la relación entre ... y ...
+1. Comparar el número de consultas prenatales entre las madres adolescentes
+   (menores de 20 años) y las madres adultas.
+2. Comparar la proporción de partos por cesárea entre las madres afiliadas al
+   régimen contributivo y las afiliadas al régimen subsidiado.
+3. Evaluar si el número promedio de consultas prenatales difiere entre las
+   subregiones de residencia de la madre (Barranquilla, Soledad, resto del
+   área metropolitana y resto del departamento).
+4. Determinar si el puntaje Apgar al primer minuto difiere entre los grupos
+   de edad de la madre (adolescente, de 20 a 34 años y de 35 años o más).
+5. Determinar si el puntaje Apgar a los cinco minutos de vida es mayor que el
+   registrado al primer minuto.
 
 ## Estructura del documento {-}
 
-- **Capítulo \@ref(datos)**: fuente, selección de variables y limpieza.
+- **Capítulo \@ref(introduccion)**: contexto y pregunta que motiva el estudio.
+- **Capítulo \@ref(datos)**: fuente, selección de variables, limpieza y plan
+  de análisis.
 - **Capítulo \@ref(univariado)**: descripción individual de cada variable.
-- **Capítulo \@ref(bivariado)**: relaciones entre pares de variables.
-- **Capítulo \@ref(conclusiones)**: hallazgos principales.
+- **Capítulo \@ref(bivariado)**: exploración de los cruces asociados a cada
+  objetivo.
+- **Capítulo \@ref(hipotesis)**: pruebas de hipótesis para cada objetivo.
+- **Capítulo \@ref(conclusiones)**: hallazgos principales y limitaciones.
 
 ## Sobre este proyecto {-}
 

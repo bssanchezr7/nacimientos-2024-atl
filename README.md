@@ -9,11 +9,13 @@ Autores: Brandon Sanchez, Andres Florez — curso de Estadística Computacional.
 ## Estructura
 
 - `index.Rmd`: presentación, objetivos y configuración global.
-- `01-datos.Rmd`: fuente, selección de variables, limpieza y valores faltantes.
-- `02-univariado.Rmd`: descripción individual de cada variable.
-- `03-bivariado.Rmd`: relaciones entre pares de variables.
-- `04-conclusiones.Rmd`: hallazgos principales (por redactar).
-- `05-referencias.Rmd`: referencias.
+- `01-introduccion.Rmd`: contexto y pregunta del estudio (por redactar).
+- `02-datos.Rmd`: fuente, selección de variables, limpieza y valores faltantes.
+- `03-univariado.Rmd`: descripción individual de cada variable.
+- `04-bivariado.Rmd`: relaciones entre pares de variables.
+- `05-hipotesis.Rmd`: pruebas de hipótesis por objetivo (por redactar).
+- `06-conclusiones.Rmd`: hallazgos principales (por redactar).
+- `07-referencias.Rmd`: referencias.
 - `R/`: `estilo.R`, `tablas.R`, `graficos.R` (paleta, tema ggplot y helpers).
 - `data/`: `BD-EEVV-Nacimientos-2024.csv` (no se versiona, ver `.gitignore`).
 
