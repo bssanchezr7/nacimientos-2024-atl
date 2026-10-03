@@ -179,6 +179,10 @@ tipo_parto |>
 ## Régimen de seguridad social en salud de la madre
 
 ```{r seg-social, message=FALSE, warning=FALSE}
+seg_social <- df_atl |>
+  count(SEG_SOCIAL) |>
+  mutate(pct = n / sum(n))
+
 seg_social |>
   ggplot(aes(x = fct_reorder(SEG_SOCIAL, n), y = n)) +
   geom_col(fill = "steelblue") +
