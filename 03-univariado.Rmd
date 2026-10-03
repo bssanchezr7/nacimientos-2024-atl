@@ -1,15 +1,5 @@
 # Análisis univariado {#univariado}
 
-Descripción individual de cada variable. Las tablas resumen concentran las
-medidas descriptivas y los gráficos muestran la forma de cada distribución.
-Cada bloque arma sus datos con `dplyr` y solo aplica el estilo del proyecto
-al final (`theme_proyecto()`, `estilo_tabla()`).
-
-> Para correr chunks sueltos en RStudio: primero corre el chunk `setup` de
-> `index.Rmd` y todos los chunks de `02-datos.Rmd` (ahí se crea `df_atl`).
-> Al compilar el libro completo con `bookdown::render_book("index.Rmd")` no
-> hace falta nada extra porque la sesión es compartida.
-
 ```{r depende-datos, include=FALSE}
 if (!exists("df_atl")) {
   stop("No existe `df_atl`. Corre primero el setup de index.Rmd y los chunks de 02-datos.Rmd.")
