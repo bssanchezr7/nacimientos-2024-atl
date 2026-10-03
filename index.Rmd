@@ -59,7 +59,7 @@ Trabajo elaborado para el curso de Estadística Computacional
 (universidad, programa, docente, periodo). El código fuente está disponible en
 <https://github.com/bssanchezr7/nacimientos-2024-atl>.
 
-```{r include=FALSE}
+```{r write-bib, include=FALSE}
 # genera automáticamente la bibliografía de los paquetes de R usados
 knitr::write_bib(c(
   .packages(), 'bookdown', 'knitr', 'rmarkdown'

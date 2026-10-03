@@ -1,0 +1,4 @@
+# Conclusiones {#conclusiones}
+
+(Por redactar: resumir aquí los hallazgos principales de los Capítulos
+\@ref(datos), \@ref(univariado) y \@ref(bivariado).)

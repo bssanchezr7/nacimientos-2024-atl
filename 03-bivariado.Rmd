@@ -1,0 +1,59 @@
+# Análisis bivariado {#bivariado}
+
+## Número de consultas prenatales según la edad
+
+```{r consultas-edad, message=FALSE, warning=FALSE}
+df_atl |>
+  select(NUMCONSUL, EDAD_MADRE) |>
+  ggplot(aes(x = EDAD_MADRE, y = NUMCONSUL, fill = EDAD_MADRE)) +
+    geom_boxplot(alpha = 0.7, outlier.color = "red", outlier.shape = 1, width = 0.5) +
+    labs(
+      title = "Número de Consultas Prenatales según Grupo de Edad",
+      subtitle = "Análisis Bivariado - Microdatos DANE",
+      x = "Grupo de Edad de la Madre",
+      y = "Número de Consultas Prenatales (NUMCONSUL)"
+    ) +
+    theme_minimal() +
+    theme(
+      legend.position = "none", # Eliminamos leyenda porque el eje X ya lo explica
+      plot.title = element_text(face = "bold", size = 14),
+      axis.text = element_text(size = 11)
+    )
+```
+
+## Cesáreas según el régimen de salud
+
+```{r cesareas-regimen, message=FALSE, warning=FALSE}
+library(dplyr)
+library(tidyr)
+library(knitr)
+
+tabla_final_logica <- df_atl %>%
+  # 1. FILTRAR: Conservar solo los dos regímenes que vas a comparar
+  filter(SEG_SOCIAL %in% c("Contributivo", "Subsidiado")) %>%
+
+  # 2. CREAR COLUMNA TRUE/FALSE: TRUE si es Cesárea, FALSE para cualquier otro parto
+  mutate(
+    Cesarea = (TIPO_PARTO == "Cesárea")
+  ) %>%
+
+  # 3. CONTAR: Frecuencias cruzando la variable lógica con el régimen
+  count(Cesarea, SEG_SOCIAL) %>%
+
+  # 4. PORCENTAJES: Calcular proporciones por columna (dentro de cada régimen)
+  group_by(SEG_SOCIAL) %>%
+  mutate(
+    Porcentaje = (n / sum(n)) * 100,
+    # SOLUCIÓN: Usamos formatC para enteros para evitar el aviso (warning) de R
+    n_formateado = formatC(n, format = "d", big.mark = "."),
+    Texto_Celda = paste0(n_formateado, " (", round(Porcentaje, 1), "%)")
+  ) %>%
+  ungroup() %>%
+
+  # 5. PIVOT: Generar las columnas automáticas ("Contributivo" y "Subsidiado")
+  select(Cesarea, SEG_SOCIAL, Texto_Celda) %>%
+  pivot_wider(names_from = SEG_SOCIAL, values_from = Texto_Celda)
+
+# 6. Renderizar tabla limpia
+kable(tabla_final_logica)
+```
