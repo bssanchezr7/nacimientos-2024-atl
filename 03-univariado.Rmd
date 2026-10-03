@@ -1,222 +1,194 @@
 # Análisis univariado {#univariado}
 
-## Número de consultas
+Descripción individual de cada variable. Las tablas resumen concentran las
+medidas descriptivas y los gráficos muestran la forma de cada distribución.
+Cada bloque arma sus datos con `dplyr` y solo aplica el estilo del proyecto
+al final (`theme_proyecto()`, `estilo_tabla()`).
 
-```{r num-consul-resumen, message=FALSE, warning=FALSE}
-numconsult <-  df_atl|>
-              select(NUMCONSUL)
+> Para correr chunks sueltos en RStudio: primero corre el chunk `setup` de
+> `index.Rmd` y todos los chunks de `02-datos.Rmd` (ahí se crea `df_atl`).
+> Al compilar el libro completo con `bookdown::render_book("index.Rmd")` no
+> hace falta nada extra porque la sesión es compartida.
 
-numconsult|>
-  summarise(
-    n = length(NUMCONSUL),
-    promedio = mean(NUMCONSUL),
-    ds = sd(NUMCONSUL),
-    mediana= median(NUMCONSUL),
-    RIC = IQR(NUMCONSUL),
-    Q1 = quantile(NUMCONSUL, 0.25),
-    Q3 = quantile(NUMCONSUL, 0.75),
-    min = min(NUMCONSUL),
-    max = max(NUMCONSUL)
-  )
+```{r depende-datos, include=FALSE}
+if (!exists("df_atl")) {
+  stop("No existe `df_atl`. Corre primero el setup de index.Rmd y los chunks de 02-datos.Rmd.")
+}
+if (!exists("theme_proyecto")) {
+  stop("No está el estilo. Corre primero el chunk setup de index.Rmd (source de R/).")
+}
 ```
 
-```{r num-consul-dist, message=FALSE, warning=FALSE}
-numconsult |>
-  ggplot(aes(x = NUMCONSUL))+
-  geom_bar(fill = 'steelblue',
-                 color='white')+
-  labs(
-    title = "Distribución del número de consultas",
-    x = "Número de consultas",
-    y = "Cantidad de casos"
-  ) +
-  theme_classic()
+```{r tabla-numericas, message=FALSE, warning=FALSE}
+df_atl |>
+  select(NUMCONSUL, APGAR1, APGAR2, N_EMB) |>
+  pivot_longer(everything(), names_to = "Variable", values_to = "valor") |>
+  mutate(Variable = recode(Variable,
+    NUMCONSUL = "Número de consultas",
+    APGAR1 = "APGAR al minuto",
+    APGAR2 = "APGAR a los cinco minutos",
+    N_EMB = "Número de embarazos")) |>
+  group_by(Variable) |>
+  summarise(
+    n = n(),
+    `x̄ (DE)` = paste0(num(mean(valor), 0.01), " (", num(sd(valor), 0.01), ")"),
+    `Me (RIC)` = paste0(num_auto(median(valor)), " (", num_auto(IQR(valor)), ")"),
+    `Mín – Máx` = paste0(num_auto(min(valor)), " – ", num_auto(max(valor))),
+    .groups = "drop"
+  ) |>
+  gt() |>
+  fmt_number(columns = n, decimals = 0, sep_mark = ".", dec_mark = ",") |>
+  cols_align("left", columns = Variable) |>
+  cols_align("center", columns = -Variable) |>
+  estilo_tabla("Variables numéricas: medidas descriptivas") |>
+  tab_footnote(nota_resumen)
+```
+
+```{r tabla-categoricas, message=FALSE, warning=FALSE}
+df_atl |>
+  mutate(across(c(EDAD_MADRE, TIPO_PARTO, SEG_SOCIAL, NIV_EDUM), as.character)) |>
+  pivot_longer(c(EDAD_MADRE, TIPO_PARTO, SEG_SOCIAL, NIV_EDUM),
+               names_to = "Variable", values_to = "Categoría") |>
+  mutate(Variable = recode(Variable,
+    EDAD_MADRE = "Grupo de edad de la madre",
+    TIPO_PARTO = "Tipo de parto",
+    SEG_SOCIAL = "Régimen de seguridad social",
+    NIV_EDUM = "Nivel educativo de la madre")) |>
+  count(Variable, Categoría, name = "n") |>
+  group_by(Variable) |>
+  mutate(`n (%)` = paste0(num(n), " (", pct(n / sum(n)), ")")) |>
+  ungroup() |>
+  select(-n) |>
+  gt(groupname_col = "Variable") |>
+  cols_label(`n (%)` = "n (%)") |>
+  cols_align("center", columns = `n (%)`) |>
+  estilo_tabla("Variables categóricas: frecuencias")
+```
+
+## Número de consultas
+
+```{r hist-numconsul, message=FALSE, warning=FALSE, fig.cap="Distribución del número de consultas prenatales."}
+x <- df_atl$NUMCONSUL
+
+ggplot(df_atl, aes(x = NUMCONSUL)) +
+  geom_histogram(binwidth = 1, center = 0,
+                 fill = pal[["principal"]], color = "white", linewidth = 0.3) +
+  lineas_ref(x) +
+  escala_x(x) +
+  scale_y_continuous(labels = num, expand = expansion(mult = c(0, 0.05))) +
+  labs(title = "Número de consultas prenatales", subtitle = sub_atl,
+       x = "Número de consultas", y = "Nacimientos", caption = fuente_dane) +
+  theme_proyecto()
 ```
 
 ## Edad de la madre
 
-```{r grupo-edad, message=FALSE, warning=FALSE}
-edad_madre <- df_atl |>
-  count(EDAD_MADRE, name='casos') |>
-  mutate(Porcentaje = casos / sum(casos))
-
-ggplot(edad_madre, aes(x = reorder(EDAD_MADRE, Porcentaje), y = Porcentaje, fill = EDAD_MADRE)) +
-  geom_bar(stat = "identity", show.legend = FALSE) +
-  # Agrega el texto del porcentaje al final de cada barra
-  geom_text(aes(label = paste0(round(Porcentaje * 100, 1), "%")),
-            hjust = -0.1, fontface = "bold") +
-  # Voltea las barras a horizontales para leer mejor los nombres de las categorías
-  coord_flip() +
-  theme_classic() +
-  labs(
-    title = "Distribución por Edad de la Madre",
-    x = "Categoría de Edad",
-    y = "Proporción"
-  )
-
+```{r barras-edad, message=FALSE, warning=FALSE, fig.cap="Distribución por grupo de edad de la madre."}
+df_atl |>
+  count(EDAD_MADRE, name = "n") |>
+  mutate(pct = n / sum(n),
+         EDAD_MADRE = fct_rev(EDAD_MADRE)) |>
+  ggplot(aes(x = n, y = EDAD_MADRE)) +
+  geom_col(width = 0.7, fill = pal[["principal"]]) +
+  geom_text(aes(label = paste0(num(n), "  (", pct(pct), ")")), hjust = -0.08) +
+  scale_x_continuous(labels = num, expand = expansion(mult = c(0, 0.25))) +
+  labs(title = "Grupo de edad de la madre", subtitle = sub_atl,
+       x = "Nacimientos", y = NULL, caption = fuente_dane) +
+  theme_proyecto(grid = "x")
 ```
 
-## APGAR 1
+## APGAR al minuto
 
-```{r apgar1-resumen, message=FALSE, warning=FALSE}
-apgar1 <-  df_atl|>
-  select(APGAR1)
+```{r hist-apgar1, message=FALSE, warning=FALSE, fig.cap="Distribución del puntaje APGAR al minuto."}
+x <- df_atl$APGAR1
 
-apgar1 |>
-  summarise(
-    n = length(APGAR1),
-    promedio = mean(APGAR1),
-    ds = sd(APGAR1),
-    mediana= median(APGAR1),
-    RIC = IQR(APGAR1),
-    Q1 = quantile(APGAR1, 0.25),
-    Q3 = quantile(APGAR1, 0.75),
-    min = min(APGAR1),
-    max = max(APGAR1)
-  )
+ggplot(df_atl, aes(x = APGAR1)) +
+  geom_histogram(binwidth = 1, center = 0,
+                 fill = pal[["principal"]], color = "white", linewidth = 0.3) +
+  lineas_ref(x) +
+  escala_x(x) +
+  scale_y_continuous(labels = num, expand = expansion(mult = c(0, 0.05))) +
+  labs(title = "Puntaje APGAR al minuto", subtitle = sub_atl,
+       x = "APGAR al minuto", y = "Nacimientos", caption = fuente_dane) +
+  theme_proyecto()
 ```
 
-```{r apgar1-dist, message=FALSE, warning=FALSE}
-apgar1 |>
-  ggplot(aes(x = APGAR1))+
-  geom_bar(fill = 'steelblue',
-                 color='white')+
-  labs(
-    title = "Distribución del puntaje APGAR al minuto",
-    x = "APGAR al minuto",
-    y = "Cantidad de casos"
-  ) +
-  theme_classic()
+## APGAR a los cinco minutos
+
+```{r hist-apgar2, message=FALSE, warning=FALSE, fig.cap="Distribución del puntaje APGAR a los cinco minutos."}
+x <- df_atl$APGAR2
+
+ggplot(df_atl, aes(x = APGAR2)) +
+  geom_histogram(binwidth = 1, center = 0,
+                 fill = pal[["principal"]], color = "white", linewidth = 0.3) +
+  lineas_ref(x) +
+  escala_x(x) +
+  scale_y_continuous(labels = num, expand = expansion(mult = c(0, 0.05))) +
+  labs(title = "Puntaje APGAR a los cinco minutos", subtitle = sub_atl,
+       x = "APGAR a los cinco minutos", y = "Nacimientos", caption = fuente_dane) +
+  theme_proyecto()
 ```
 
-## APGAR 2
+## Número de embarazos
 
-```{r apgar2-resumen, message=FALSE, warning=FALSE}
-apgar2 <-  df_atl|>
-  select(APGAR2)
+```{r hist-nemb, message=FALSE, warning=FALSE, fig.cap="Distribución del número de embarazos (incluido el presente)."}
+x <- df_atl$N_EMB
 
-apgar2|>
-  summarise(
-    n = length(APGAR2),
-    promedio = mean(APGAR2),
-    ds = sd(APGAR2),
-    mediana= median(APGAR2),
-    RIC = IQR(APGAR2),
-    Q1 = quantile(APGAR2, 0.25),
-    Q3 = quantile(APGAR2, 0.75),
-    min = min(APGAR2),
-    max = max(APGAR2)
-  )
-```
-
-```{r apgar2-dist, message=FALSE, warning=FALSE}
-apgar2 |>
-  ggplot(aes(x = APGAR2))+
-  geom_bar(fill = 'steelblue',
-                 color='white')+
-  labs(
-    title = "Distribución del puntaje APGAR a los cinco minutos",
-    x = "APGAR a los cinco minutos",
-    y = "Cantidad de casos"
-  ) +
-  theme_classic()
-```
-
-## Número de embarazos (incluido el presente)
-
-```{r num-embarazos-resumen, message=FALSE, warning=FALSE}
-n_emb <-  df_atl|>
-  select(N_EMB)
-
-n_emb|>
-  summarise(
-    n = length(N_EMB),
-    promedio = mean(N_EMB),
-    ds = sd(N_EMB),
-    mediana= median(N_EMB),
-    RIC = IQR(N_EMB),
-    Q1 = quantile(N_EMB, 0.25),
-    Q3 = quantile(N_EMB, 0.75),
-    min = min(N_EMB),
-    max = max(N_EMB)
-  )
-```
-
-```{r num-embarazos-dist, message=FALSE, warning=FALSE}
-n_emb |>
-  ggplot(aes(x = N_EMB))+
-  geom_bar(fill = 'steelblue',
-                 color='white')+
-  labs(
-    title = "Distribución del número de embarazos",
-    x = "Número de embarazos",
-    y = "Cantidad de casos"
-  ) +
-  theme_classic()
+ggplot(df_atl, aes(x = N_EMB)) +
+  geom_histogram(binwidth = 1, center = 0,
+                 fill = pal[["principal"]], color = "white", linewidth = 0.3) +
+  lineas_ref(x) +
+  escala_x(x) +
+  scale_y_continuous(labels = num, expand = expansion(mult = c(0, 0.05))) +
+  labs(title = "Número de embarazos", subtitle = sub_atl,
+       x = "Número de embarazos", y = "Nacimientos", caption = fuente_dane) +
+  theme_proyecto()
 ```
 
 ## Tipo de parto
 
-```{r tipo-parto, message=FALSE, warning=FALSE}
-tipo_parto <- df_atl |>
-  count(TIPO_PARTO) |>
-  mutate(pct = n / sum(n))
-
-tipo_parto |>
-  ggplot(aes(x = fct_reorder(TIPO_PARTO, n, .desc = TRUE), y = n)) +
-  geom_col(fill = "steelblue", width = 0.6) +
-  geom_text(aes(label = paste0(scales::comma(n, big.mark = ".", decimal.mark = ","),
-                               "\n(", scales::percent(pct, accuracy = 0.1), ")")),
-            vjust = -0.3, size = 3.5) +
-  scale_y_continuous(expand = expansion(mult = c(0, 0.15))) +
-  labs(title = "Tipo de parto",
-       subtitle = "Madres residentes en el Atlántico, 2024",
-       x = NULL, y = "Cantidad de nacimientos",
-       caption = "Fuente: DANE, Estadísticas Vitales 2024") +
-  theme_classic()
+```{r barras-parto, message=FALSE, warning=FALSE, fig.cap="Distribución por tipo de parto."}
+df_atl |>
+  count(TIPO_PARTO, name = "n") |>
+  mutate(pct = n / sum(n),
+         TIPO_PARTO = fct_reorder(TIPO_PARTO, n)) |>
+  ggplot(aes(x = n, y = TIPO_PARTO)) +
+  geom_col(width = 0.7, fill = pal[["principal"]]) +
+  geom_text(aes(label = paste0(num(n), "  (", pct(pct), ")")), hjust = -0.08) +
+  scale_x_continuous(labels = num, expand = expansion(mult = c(0, 0.25))) +
+  labs(title = "Tipo de parto", subtitle = sub_atl,
+       x = "Nacimientos", y = NULL, caption = fuente_dane) +
+  theme_proyecto(grid = "x")
 ```
 
-## Régimen de seguridad social en salud de la madre
+## Régimen de seguridad social de la madre
 
-```{r seg-social, message=FALSE, warning=FALSE}
-seg_social <- df_atl |>
-  count(SEG_SOCIAL) |>
-  mutate(pct = n / sum(n))
-
-seg_social |>
-  ggplot(aes(x = fct_reorder(SEG_SOCIAL, n), y = n)) +
-  geom_col(fill = "steelblue") +
-  geom_text(aes(label = scales::percent(pct, accuracy = 0.1)),
-            hjust = -0.1, size = 3.5) +
-  coord_flip() +
-  scale_y_continuous(expand = expansion(mult = c(0, 0.12))) +
-  labs(title = "Régimen de seguridad social de la madre",
-       subtitle = "Madres residentes en el Atlántico, 2024",
-       x = NULL, y = "Cantidad de nacimientos",
-       caption = "Fuente: DANE, Estadísticas Vitales 2024") +
-  theme_classic()
+```{r barras-segsocial, message=FALSE, warning=FALSE, fig.cap="Distribución por régimen de seguridad social de la madre."}
+df_atl |>
+  count(SEG_SOCIAL, name = "n") |>
+  mutate(pct = n / sum(n),
+         SEG_SOCIAL = fct_reorder(SEG_SOCIAL, n)) |>
+  ggplot(aes(x = n, y = SEG_SOCIAL)) +
+  geom_col(width = 0.7, fill = pal[["principal"]]) +
+  geom_text(aes(label = paste0(num(n), "  (", pct(pct), ")")), hjust = -0.08) +
+  scale_x_continuous(labels = num, expand = expansion(mult = c(0, 0.25))) +
+  labs(title = "Régimen de seguridad social de la madre", subtitle = sub_atl,
+       x = "Nacimientos", y = NULL, caption = fuente_dane) +
+  theme_proyecto(grid = "x")
 ```
 
 ## Nivel educativo de la madre
 
-```{r niv-edum, message=FALSE, warning=FALSE}
-niv_edum <- df_atl |>
-  count(NIV_EDUM) |>
-  mutate(
-    pct = n / sum(n),
-    NIV_EDUM = fct_reorder(NIV_EDUM, n) # Reordena el factor según n
-  )
-
-niv_edum |>
-  ggplot(aes(x = NIV_EDUM, y = n)) +    # Ya no necesitas fct_rev()
-  geom_col(fill = "steelblue") +
-  geom_text(aes(label = scales::percent(pct, accuracy = 0.1)),
-            hjust = -0.1, size = 3.2) +
-  coord_flip() +
-  scale_y_continuous(expand = expansion(mult = c(0, 0.12))) +
-  labs(title = "Nivel educativo de la madre",
-       subtitle = "Madres residentes en el Atlántico, 2024",
-       x = NULL, y = "Cantidad de nacimientos",
-       caption = "Fuente: DANE, Estadísticas Vitales 2024") +
-  theme_classic()
+```{r barras-nivedum, message=FALSE, warning=FALSE, fig.cap="Distribución por nivel educativo de la madre."}
+df_atl |>
+  count(NIV_EDUM, name = "n") |>
+  mutate(pct = n / sum(n),
+         NIV_EDUM = fct_rev(NIV_EDUM)) |>
+  ggplot(aes(x = n, y = NIV_EDUM)) +
+  geom_col(width = 0.7, fill = pal[["principal"]]) +
+  geom_text(aes(label = paste0(num(n), "  (", pct(pct), ")")), hjust = -0.08) +
+  scale_x_continuous(labels = num, expand = expansion(mult = c(0, 0.25))) +
+  labs(title = "Nivel educativo de la madre", subtitle = sub_atl,
+       x = "Nacimientos", y = NULL, caption = fuente_dane) +
+  theme_proyecto(grid = "x")
 ```

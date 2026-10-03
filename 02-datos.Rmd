@@ -82,9 +82,31 @@ df_atl |>
                    list(n = ~sum(is.na(.x)),
                         pct = ~mean(is.na(.x)) * 100))) |>
   pivot_longer(everything(),
-               names_to = c("variable", ".value"),
+               names_to = c("Variable", ".value"),
                names_pattern = "(.*)_(n|pct)$") |>
-  arrange(desc(pct))
+  arrange(desc(pct)) |>
+  gt() |>
+  fmt_number(columns = n, decimals = 0, sep_mark = ".", dec_mark = ",") |>
+  fmt_number(columns = pct, decimals = 1, sep_mark = ".", dec_mark = ",") |>
+  cols_label(Variable = "Variable", n = "n faltantes", pct = "% faltante") |>
+  estilo_tabla("Valores faltantes por variable (antes de depurar)")
+```
+
+```{r faltantes-plot, message=FALSE, warning=FALSE, fig.cap="Porcentaje de valores faltantes por variable."}
+df_atl |>
+  summarise(across(everything(), ~mean(is.na(.x)) * 100)) |>
+  pivot_longer(everything(), names_to = "variable", values_to = "pct") |>
+  arrange(desc(pct)) |>
+  mutate(variable = fct_inorder(variable)) |>
+  ggplot(aes(x = pct, y = variable)) +
+  geom_col(width = 0.6, fill = pal[["principal"]]) +
+  geom_text(aes(label = paste0(num(pct, 0.1), "%")), hjust = -0.1) +
+  scale_x_continuous(labels = \(v) paste0(num(v, 1), "%"),
+                     expand = expansion(mult = c(0, 0.25))) +
+  labs(title = "Valores faltantes por variable",
+       subtitle = sub_atl, x = "% faltante", y = NULL,
+       caption = fuente_dane) +
+  theme_proyecto(grid = "x")
 ```
 
 Siendo menos del 1.5% se eliminan las filas con valores nulos:
@@ -102,7 +124,12 @@ df_atl |>
                    list(n = ~sum(is.na(.x)),
                         pct = ~mean(is.na(.x)) * 100))) |>
   pivot_longer(everything(),
-               names_to = c("variable", ".value"),
+               names_to = c("Variable", ".value"),
                names_pattern = "(.*)_(n|pct)$") |>
-  arrange(desc(pct))
+  arrange(desc(pct)) |>
+  gt() |>
+  fmt_number(columns = n, decimals = 0, sep_mark = ".", dec_mark = ",") |>
+  fmt_number(columns = pct, decimals = 1, sep_mark = ".", dec_mark = ",") |>
+  cols_label(Variable = "Variable", n = "n faltantes", pct = "% faltante") |>
+  estilo_tabla("Valores faltantes por variable (después de depurar)")
 ```

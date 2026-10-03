@@ -1,5 +1,6 @@
 # Estética común del proyecto: paleta, formato de números y tema de ggplot.
-# Uso: source("R/estilo.R"); source("R/tablas.R"); source("R/graficos.R")
+# Uso: source("R/estilo.R"); source("R/tablas.R")
+# Este archivo es SOLO estilo: no arma datos ni calcula resúmenes.
 
 library(tidyverse)
 library(gt)
@@ -75,3 +76,33 @@ theme_set(theme_proyecto())
 update_geom_defaults("bar",  list(fill = pal[["principal"]]))
 update_geom_defaults("col",  list(fill = pal[["principal"]]))
 update_geom_defaults("text", list(color = pal[["texto"]], size = 3.4))
+
+# AYUDAS DE ESTILO PARA GRÁFICOS YA ARMADOS ----------------------------------
+# Solo visten un ggplot existente: no cuentan, no resumen, no filtran.
+# La lógica (count, summarise, mutate) vive en cada capítulo.
+
+# Líneas de media (continua) y mediana (punteada) en color de acento.
+# Recibe el vector ya disponible en el capítulo, p. ej. lineas_ref(df$X)
+lineas_ref <- function(x) {
+  ref <- tibble(tipo = c("Media", "Mediana"), valor = c(mean(x), median(x)))
+  list(
+    geom_vline(data = ref, aes(xintercept = valor, linetype = tipo),
+               color = pal[["acento"]], linewidth = 0.7),
+    scale_linetype_manual(values = c(Media = "solid", Mediana = "22"), name = NULL)
+  )
+}
+
+# Punto de la media (rombo) para boxplots
+punto_media <- function() {
+  stat_summary(fun = mean, geom = "point", shape = 23, size = 3,
+               fill = pal[["acento"]], color = "white")
+}
+
+# Ejes con cortes enteros si la variable es discreta (evita 2,5 o 7,5)
+es_discreta <- function(x) all(x == round(x)) && diff(range(x)) <= 60
+cortes_para <- function(x) {
+  if (!es_discreta(x)) return(waiver())
+  \(l) { b <- scales::breaks_extended(7)(l); b[b == round(b)] }
+}
+escala_x <- function(x, ...) scale_x_continuous(breaks = cortes_para(x), labels = num_auto, ...)
+escala_y <- function(x, ...) scale_y_continuous(breaks = cortes_para(x), labels = num_auto, ...)

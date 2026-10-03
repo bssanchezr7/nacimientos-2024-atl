@@ -1,2 +1,4 @@
 # Pruebas de hipótesis {#hipotesis}
 
+(Por redactar: plantear aquí las hipótesis que se contrastan a partir de los
+hallazgos de los Capítulos \@ref(univariado) y \@ref(bivariado).)

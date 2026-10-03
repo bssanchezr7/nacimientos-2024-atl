@@ -1,59 +1,109 @@
 # Análisis bivariado {#bivariado}
 
+Relaciones entre pares de variables: número de consultas según la edad de la
+madre (numérica vs. categórica) y tipo de parto según régimen de salud
+(categórica vs. categórica). Cada bloque arma sus datos con `dplyr` y solo
+aplica el estilo del proyecto al final.
+
 ## Número de consultas prenatales según la edad
 
-```{r consultas-edad, message=FALSE, warning=FALSE}
+```{r consultas-edad-tabla, message=FALSE, warning=FALSE}
 df_atl |>
-  select(NUMCONSUL, EDAD_MADRE) |>
-  ggplot(aes(x = EDAD_MADRE, y = NUMCONSUL, fill = EDAD_MADRE)) +
-    geom_boxplot(alpha = 0.7, outlier.color = "red", outlier.shape = 1, width = 0.5) +
-    labs(
-      title = "Número de Consultas Prenatales según Grupo de Edad",
-      subtitle = "Análisis Bivariado - Microdatos DANE",
-      x = "Grupo de Edad de la Madre",
-      y = "Número de Consultas Prenatales (NUMCONSUL)"
-    ) +
-    theme_minimal() +
-    theme(
-      legend.position = "none", # Eliminamos leyenda porque el eje X ya lo explica
-      plot.title = element_text(face = "bold", size = 14),
-      axis.text = element_text(size = 11)
-    )
+  group_by(`Grupo de edad` = EDAD_MADRE) |>
+  summarise(
+    n = n(),
+    `Media (DE)` = paste0(num(mean(NUMCONSUL), 0.01), " (", num(sd(NUMCONSUL), 0.01), ")"),
+    `Mediana (RIC)` = paste0(num_auto(median(NUMCONSUL)), " (", num_auto(IQR(NUMCONSUL)), ")"),
+    .groups = "drop"
+  ) |>
+  gt() |>
+  fmt_number(columns = n, decimals = 0, sep_mark = ".", dec_mark = ",") |>
+  cols_align("left", columns = `Grupo de edad`) |>
+  cols_align("center", columns = -`Grupo de edad`) |>
+  estilo_tabla("Número de consultas según grupo de edad") |>
+  tab_footnote(nota_resumen)
 ```
 
-## Cesáreas según el régimen de salud
+```{r consultas-edad, message=FALSE, warning=FALSE, fig.cap="Número de consultas prenatales según grupo de edad de la madre."}
+x <- df_atl$NUMCONSUL
 
-```{r cesareas-regimen, message=FALSE, warning=FALSE}
-library(dplyr)
-library(tidyr)
-library(knitr)
+df_atl |>
+  mutate(grupo = fct_rev(EDAD_MADRE)) |>
+  add_count(grupo, name = "n_g") |>
+  mutate(grupo_lab = paste0(grupo, "  (n = ", num(n_g), ")"),
+         grupo_lab = fct_rev(grupo_lab)) |>
+  ggplot(aes(x = NUMCONSUL, y = grupo_lab)) +
+  geom_boxplot(width = 0.55, fill = pal[["claro"]], color = pal[["principal"]],
+               outlier.color = pal[["gris"]], outlier.alpha = 0.35, outlier.size = 0.9) +
+  punto_media() +
+  escala_x(x) +
+  labs(title = "Número de consultas prenatales según grupo de edad",
+       subtitle = sub_atl, x = "Número de consultas", y = NULL,
+       caption = paste0(fuente_dane, "  ·  ◆ = media")) +
+  theme_proyecto(grid = "x")
+```
 
-tabla_final_logica <- df_atl %>%
-  # 1. FILTRAR: Conservar solo los dos regímenes que vas a comparar
-  filter(SEG_SOCIAL %in% c("Contributivo", "Subsidiado")) %>%
+## Tipo de parto según el régimen de salud
 
-  # 2. CREAR COLUMNA TRUE/FALSE: TRUE si es Cesárea, FALSE para cualquier otro parto
+Se comparan los dos regímenes con mayor volumen: Contributivo y Subsidiado.
+
+```{r cesareas-regimen-datos, message=FALSE, warning=FALSE}
+df_reg <- df_atl |>
+  filter(SEG_SOCIAL %in% c("Contributivo", "Subsidiado")) |>
   mutate(
-    Cesarea = (TIPO_PARTO == "Cesárea")
-  ) %>%
+    SEG_SOCIAL = fct_drop(SEG_SOCIAL),
+    TIPO_PARTO = fct_drop(TIPO_PARTO)
+  )
 
-  # 3. CONTAR: Frecuencias cruzando la variable lógica con el régimen
-  count(Cesarea, SEG_SOCIAL) %>%
+tab <- table(df_reg$SEG_SOCIAL, df_reg$TIPO_PARTO)
+prop_fila <- prop.table(tab, 1)
+chi <- chisq.test(tab)
+```
 
-  # 4. PORCENTAJES: Calcular proporciones por columna (dentro de cada régimen)
-  group_by(SEG_SOCIAL) %>%
-  mutate(
-    Porcentaje = (n / sum(n)) * 100,
-    # SOLUCIÓN: Usamos formatC para enteros para evitar el aviso (warning) de R
-    n_formateado = formatC(n, format = "d", big.mark = "."),
-    Texto_Celda = paste0(n_formateado, " (", round(Porcentaje, 1), "%)")
-  ) %>%
-  ungroup() %>%
+```{r cesareas-regimen-tabla, message=FALSE, warning=FALSE}
+tibble(
+  Régimen = rep(rownames(tab), times = ncol(tab)),
+  Parto = rep(colnames(tab), each = nrow(tab)),
+  n = as.vector(tab),
+  p = as.vector(prop_fila)
+) |>
+  mutate(celda = paste0(num(n), " (", pct(p), ")")) |>
+  select(Régimen, Parto, celda) |>
+  pivot_wider(names_from = Parto, values_from = celda) |>
+  mutate(Total = paste0(num(rowSums(tab)), " (", pct(rowSums(tab) / sum(tab)), ")")) |>
+  gt() |>
+  cols_align("left", columns = Régimen) |>
+  cols_align("center", columns = -Régimen) |>
+  estilo_tabla("Tipo de parto según régimen de seguridad social") |>
+  tab_footnote("Porcentajes por fila.") |>
+  tab_footnote(paste0(
+    "Prueba χ² de independencia: χ²(", chi$parameter, ") = ",
+    num(chi$statistic, 0.01), "; ", formato_p(chi$p.value), "."
+  ))
+```
 
-  # 5. PIVOT: Generar las columnas automáticas ("Contributivo" y "Subsidiado")
-  select(Cesarea, SEG_SOCIAL, Texto_Celda) %>%
-  pivot_wider(names_from = SEG_SOCIAL, values_from = Texto_Celda)
+```{r cesareas-regimen, message=FALSE, warning=FALSE, fig.cap="Composición del tipo de parto dentro de cada régimen de salud."}
+colores_parto <- setNames(
+  pal_cat[seq_len(nlevels(df_reg$TIPO_PARTO))],
+  levels(df_reg$TIPO_PARTO)
+)
 
-# 6. Renderizar tabla limpia
-kable(tabla_final_logica)
+df_reg |>
+  count(SEG_SOCIAL, TIPO_PARTO, name = "n") |>
+  group_by(SEG_SOCIAL) |>
+  mutate(p = n / sum(n), n_f = sum(n)) |>
+  ungroup() |>
+  mutate(f_lab = paste0(SEG_SOCIAL, "  (n = ", num(n_f), ")"),
+         txt = color_texto_sobre(colores_parto[as.character(TIPO_PARTO)])) |>
+  ggplot(aes(x = p, y = fct_rev(f_lab), fill = TIPO_PARTO)) +
+  geom_col(position = position_fill(reverse = TRUE), width = 0.7,
+           color = "white", linewidth = 0.3) +
+  geom_text(aes(label = if_else(p >= 0.05, pct(p, 1), ""), color = txt),
+            position = position_fill(vjust = 0.5, reverse = TRUE), size = 3.1) +
+  scale_color_identity() +
+  scale_fill_manual(values = colores_parto, name = "Tipo de parto") +
+  scale_x_continuous(labels = \(v) pct(v, 1), expand = expansion(0)) +
+  labs(title = "Tipo de parto según régimen de seguridad social",
+       subtitle = sub_atl, x = NULL, y = NULL, caption = fuente_dane) +
+  theme_proyecto(grid = "none")
 ```
