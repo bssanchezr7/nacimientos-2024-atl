@@ -1,2 +1,48 @@
 # Introducción {#introduccion}
 
+Este documento presenta un análisis exploratorio y un conjunto de pruebas de
+hipótesis sobre los nacimientos registrados en el departamento del Atlántico
+durante 2024, a partir de las Estadísticas Vitales (EEVV) del
+DANE.
+
+El análisis se centra en evidenciar si el tipo de parto y la vitalidad del recién nacido se ven afectados por la atencion prenatal, el régimen de salud de la madre o en la edad de esta.
+
+## Objetivos
+
+**Objetivo general.** Analizar la atención prenatal, el tipo de parto y la
+vitalidad del recién nacido en los nacidos vivos de madres residentes en el
+departamento del Atlántico durante 2024, y sus diferencias según la edad, el
+régimen de salud y la subregión de residencia de la madre, mediante un
+análisis exploratorio y pruebas de hipótesis aplicadas a los microdatos de
+Estadísticas Vitales del DANE.
+
+**Objetivos específicos.**
+
+1. Comparar el número de consultas prenatales entre las madres adolescentes
+   (menores de 20 años) y las madres adultas.
+2. Comparar la proporción de partos por cesárea entre las madres afiliadas al
+   régimen contributivo y las afiliadas al régimen subsidiado.
+3. Evaluar si el número promedio de consultas prenatales difiere entre las
+   subregiones de residencia de la madre (Barranquilla, Soledad, resto del
+   área metropolitana y resto del departamento).
+4. Determinar si el puntaje Apgar al primer minuto difiere entre los grupos
+   de edad de la madre (adolescente, de 20 a 34 años y de 35 años o más).
+5. Determinar si el puntaje Apgar a los cinco minutos de vida es mayor que el
+   registrado al primer minuto.
+
+## Estructura del documento
+
+- **Capítulo \@ref(introduccion)**: contexto y pregunta que motiva el estudio.
+- **Capítulo \@ref(datos)**: fuente, selección de variables, limpieza y plan
+  de análisis.
+- **Capítulo \@ref(univariado)**: descripción individual de cada variable.
+- **Capítulo \@ref(bivariado)**: exploración de los cruces asociados a cada
+  objetivo.
+- **Capítulo \@ref(hipotesis)**: pruebas de hipótesis para cada objetivo.
+- **Capítulo \@ref(conclusiones)**: hallazgos principales y limitaciones.
+
+## Sobre este proyecto
+
+Trabajo elaborado para el curso de Estadística Computacional
+(universidad, programa, docente, periodo). El código fuente está disponible en
+<https://github.com/bssanchezr7/nacimientos-2024-atl>.
