@@ -1,38 +1,21 @@
 # Introducción {#introduccion}
 
-Este documento presenta un análisis exploratorio y un conjunto de pruebas de
-hipótesis sobre los nacimientos registrados en el departamento del Atlántico
-durante 2024, a partir de las Estadísticas Vitales (EEVV) del
-DANE.
-
-El análisis se centra en evidenciar si el tipo de parto y la vitalidad del recién nacido se ven afectados por la atencion prenatal, el régimen de salud de la madre o en la edad de esta.
-
 ## Objetivos
 
-**Objetivo general.** Analizar la atención prenatal, el tipo de parto y la
-vitalidad del recién nacido en los nacidos vivos de madres residentes en el
-departamento del Atlántico durante 2024, y sus diferencias según la edad, el
-régimen de salud y la subregión de residencia de la madre, mediante un
-análisis exploratorio y pruebas de hipótesis aplicadas a los microdatos de
-Estadísticas Vitales del DANE.
+**Objetivo general.**
+
+Analizar si la atención prenatal, el tipo de parto y la vitalidad del recién nacido fueron similares para todas las madres residentes en el departamento del Atlántico durante 2024, o si variaron según su edad, su régimen de salud y el lugar donde viven, a partir de las Estadísticas Vitales del DANE.
 
 **Objetivos específicos.**
 
-1. Comparar el número de consultas prenatales entre las madres adolescentes
-   (menores de 20 años) y las madres adultas.
-2. Comparar la proporción de partos por cesárea entre las madres afiliadas al
-   régimen contributivo y las afiliadas al régimen subsidiado.
-3. Evaluar si el número promedio de consultas prenatales difiere entre las
-   subregiones de residencia de la madre (Barranquilla, Soledad, resto del
-   área metropolitana y resto del departamento).
-4. Determinar si el puntaje Apgar al primer minuto difiere entre los grupos
-   de edad de la madre (adolescente, de 20 a 34 años y de 35 años o más).
-5. Determinar si el puntaje Apgar a los cinco minutos de vida es mayor que el
-   registrado al primer minuto.
+1. Comparar el número de consultas prenatales de las madres adolescentes y de las madres adultas, para determinar si las más jóvenes tienen un menor seguimiento de su embarazo.
+2. Investigar si las cesáreas son igual de frecuentes entre las madres del régimen contributivo y las del régimen subsidiado, o si el tipo de afiliación en salud marca una diferencia en la forma en que termina el parto.
+3. Analizar si el control prenatal es desigual dentro del departamento, comparando las consultas de las madres que residen en Barranquilla, en Soledad, en el resto del área metropolitana y en los demás municipios.
+4. Examinar si la vitalidad del recién nacido en su primer minuto de vida, medida con el puntaje Apgar, cambia según la edad de la madre (adolescente, de 20 a 34 años, o de 35 años o más).
+5. Verificar si los recién nacidos mejoran su condición entre el primer y el quinto minuto de vida, comparando su puntaje Apgar en ambos momentos.
 
 ## Estructura del documento
 
-- **Capítulo \@ref(introduccion)**: contexto y pregunta que motiva el estudio.
 - **Capítulo \@ref(datos)**: fuente, selección de variables, limpieza y plan
   de análisis.
 - **Capítulo \@ref(univariado)**: descripción individual de cada variable.
@@ -41,8 +24,3 @@ Estadísticas Vitales del DANE.
 - **Capítulo \@ref(hipotesis)**: pruebas de hipótesis para cada objetivo.
 - **Capítulo \@ref(conclusiones)**: hallazgos principales y limitaciones.
 
-## Sobre este proyecto
-
-Trabajo elaborado para el curso de Estadística Computacional
-(universidad, programa, docente, periodo). El código fuente está disponible en
-<https://github.com/bssanchezr7/nacimientos-2024-atl>.

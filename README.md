@@ -8,8 +8,9 @@ Autores: Brandon Sanchez, Andres Florez — curso de Estadística Computacional.
 
 ## Estructura
 
-- `index.Rmd`: configuración global.
-- `01-introduccion.Rmd`: presentación, objetivos y estructura.
+- `index.Rmd`: presentación y configuración global.
+- `01-introduccion.Rmd`: contexto (por redactar), objetivos y estructura del
+  documento.
 - `02-datos.Rmd`: fuente, selección de variables, limpieza y valores faltantes.
 - `03-univariado.Rmd`: descripción individual de cada variable.
 - `04-bivariado.Rmd`: relaciones entre pares de variables.

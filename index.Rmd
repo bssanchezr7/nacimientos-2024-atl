@@ -8,7 +8,7 @@ documentclass: book
 lang: es
 bibliography: [book.bib, packages.bib]
 link-citations: yes
-description: "Análisis exploratorio de los nacimientos registrados en el departamento del Atlántico en 2024."
+description: "Análisis exploratorio y pruebas de hipótesis de los nacimientos registrados en el departamento del Atlántico en 2024."
 github-repo: bssanchezr7/nacimientos-2024-atl
 ---
 
@@ -22,6 +22,20 @@ library(tidyverse)
 source("R/estilo.R")
 source("R/tablas.R")
 ```
+
+# Presentación {-}
+
+Este documento presenta un análisis exploratorio y un conjunto de pruebas de
+hipótesis sobre los nacimientos registrados en el departamento del Atlántico
+durante 2024, a partir de las Estadísticas Vitales (EEVV) del
+DANE.
+
+El análisis examina si la atención prenatal, el tipo de parto y la vitalidad del recién nacido difieren según la edad, el régimen de salud y la subregión de residencia de la madre.
+
+## Sobre este proyecto {-}
+
+Trabajo elaborado para el curso de Estadística Computacional de Maestría en Estadística Aplicada de la Universidad del Norte, orientado por Carlos de Oro Aguado, durante el periodo 20263. El código fuente está disponible en
+<https://github.com/bssanchezr7/nacimientos-2024-atl>.
 
 ```{r write-bib, include=FALSE}
 # genera automáticamente la bibliografía de los paquetes de R usados
