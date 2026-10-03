@@ -6,4 +6,6 @@ bookdown::gitbook:
       collapse: section
       before: |
         <li><a href="./">Nacimientos Atlántico 2024</a></li>
+      after: |
+        <li><a href="https://github.com/bssanchezr7/nacimientos-2024-atl" target="_blank">Código fuente en GitHub</a></li>
     sharing: no

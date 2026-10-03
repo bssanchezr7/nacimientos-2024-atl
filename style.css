@@ -1,3 +1,147 @@
+@import url("https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&display=swap");
+
+/* Tema del libro: mismos colores que la paleta de R/estilo.R.
+   Para cambiar color, tipo o tamaño de letra basta editar este bloque. */
+:root {
+  --color-principal: #2E5A6B;
+  --color-claro: #A9C1CA;
+  --color-texto: #2B2B2B;
+  --color-gris: #7A7A7A;
+  --color-linea: #E3E3E3;
+  --color-fondo: #F3F6F7;
+  --color-resalte: #DDE7EB;
+  --color-hover: #E8EFF2;
+  --color-acento: #C8764A;
+  --ancho-menu: 260px;
+  --fuente: "Source Sans 3", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --tamano-texto: 1.6rem; /* 1.6rem = 16 px */
+}
+
+/* Tipo y tamaño de letra */
+.book.font-family-1,
+.book .book-summary {
+  font-family: var(--fuente);
+}
+.book.font-size-2 .book-body .page-inner section {
+  font-size: var(--tamano-texto);
+}
+
+/* Colores del texto */
+.book .book-body .page-wrapper .page-inner section.normal {
+  color: var(--color-texto);
+}
+.book .book-body .page-wrapper .page-inner section.normal h1,
+.book .book-body .page-wrapper .page-inner section.normal h2,
+.book .book-body .page-wrapper .page-inner section.normal h3,
+.book .book-body .page-wrapper .page-inner section.normal h4 {
+  color: var(--color-principal);
+}
+.book .book-body .page-wrapper .page-inner section.normal a {
+  color: var(--color-principal);
+  text-decoration: underline;
+  text-decoration-color: var(--color-claro);
+}
+.book .book-body .page-wrapper .page-inner section.normal a.anchor-section {
+  text-decoration: none;
+}
+
+/* Tabla de contenido lateral */
+.book .book-summary {
+  background: var(--color-fondo);
+  border-right-color: var(--color-linea);
+}
+/* El ancho solo se cambia en pantallas grandes; en celular el menú ocupa casi
+   toda la pantalla y lo maneja gitbook */
+@media (min-width: 600px) {
+  .book .book-summary {
+    width: var(--ancho-menu);
+    left: calc(-1 * var(--ancho-menu));
+  }
+  .book.with-summary .book-summary {
+    left: 0;
+  }
+  .book.with-summary .book-body,
+  .book.with-summary .book-header.fixed {
+    left: var(--ancho-menu);
+  }
+}
+/* Los títulos largos pasan a una segunda línea en vez de cortarse */
+.book .book-summary ul.summary li a {
+  white-space: normal;
+  line-height: 1.35;
+}
+.book .book-summary ul.summary li a b {
+  color: var(--color-acento);
+}
+.book .book-summary ul.summary > li.chapter + li.chapter {
+  border-top: 1px solid var(--color-resalte);
+}
+.book .book-summary ul.summary li ul li a {
+  padding-top: 6px;
+  padding-bottom: 6px;
+  font-size: 0.95em;
+}
+.book .book-summary ul.summary li a:hover,
+.book .book-summary ul.summary li.active > a {
+  color: var(--color-principal);
+}
+.book .book-summary ul.summary li a:hover {
+  background: var(--color-hover);
+}
+.book .book-summary ul.summary li.active > a {
+  font-weight: 600;
+  background: var(--color-resalte);
+  box-shadow: inset 4px 0 0 var(--color-principal);
+}
+/* Encabezado (nombre del libro) y pie (enlace al repositorio) */
+.book .book-summary ul.summary > li:first-child > a {
+  padding-top: 14px;
+  padding-bottom: 14px;
+  font-size: 1.05em;
+  font-weight: 700;
+  color: var(--color-principal);
+}
+.book .book-summary ul.summary > li:last-child > a {
+  font-size: 0.9em;
+  color: var(--color-gris);
+}
+
+/* Portada: título compacto, autores y fecha en una sola línea */
+#header {
+  margin-bottom: 2em;
+  padding-bottom: 1.2em;
+  border-bottom: 1px solid var(--color-linea);
+}
+#header .title {
+  font-size: 1.7em;
+  line-height: 1.25;
+  margin-bottom: 0.3em;
+}
+#header .subtitle {
+  font-size: 1.1em;
+  font-weight: 400;
+  color: var(--color-gris);
+  margin-top: 0;
+  margin-bottom: 0.8em;
+}
+#header .author,
+#header .multi-author,
+#header .date {
+  display: inline;
+  margin: 0;
+  color: var(--color-gris);
+}
+#header .author em,
+#header .date em {
+  font-style: normal;
+}
+#header .author + .author::before {
+  content: " · ";
+}
+#header .date::before {
+  content: " — ";
+}
+
 p.caption {
   color: #777;
   margin-top: 10px;
