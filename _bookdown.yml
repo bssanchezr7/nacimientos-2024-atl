@@ -1,4 +1,10 @@
+book_filename: "nacimientos_atlantico_2024"
+output_dir: "docs"
 delete_merged_file: true
+new_session: no
 language:
+  label:
+    fig: "Figura "
+    tab: "Tabla "
   ui:
-    chapter_name: "Chapter "
+    chapter_name: "Capítulo "

@@ -1,3 +1,30 @@
+# Datos crudos (no se versionan)
 data/
+
+# RStudio / sesión de R
 .Rproj.user/
 .Rhistory
+.RData
+.Ruserdata
+
+# Archivos intermedios de bookdown / knitr
+_main.Rmd
+_main.md
+_main.rds
+_main_files/
+_bookdown_files/
+*_cache/
+nacimientos_atlantico_2024.Rmd
+nacimientos_atlantico_2024.md
+nacimientos_atlantico_2024_files/
+packages.bib
+
+# Salida compilada del libro
+# (quitar docs/ de aquí cuando se publique en GitHub Pages)
+docs/
+_book/
+
+# Sistema operativo
+Thumbs.db
+desktop.ini
+.DS_Store

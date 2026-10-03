@@ -1,4 +1,4 @@
-# Hello bookdown
+# Analisis Exploratorio
 
 ## Importar librerías
 
@@ -8,14 +8,14 @@ library(tidyverse)
 
 ## Importar datos
 
-```{r cargar-datos message=FALSE, warning=FALSE}
+```{r cargar-datos,  message=FALSE, warning=FALSE}
 df <- read_csv("./data/BD-EEVV-Nacimientos-2024.csv", 
                                      locale = locale(encoding = "ISO-8859-1"))
 ```
 
 ## Filtrar solo para el departamento del Atlántico
 
-```{r filtrar-atl message=FALSE, warning=FALSE}
+```{r filtrar-atl, message=FALSE, warning=FALSE}
 df_atl <- df |> 
   dplyr::filter(CODPTORE=='08') |> 
   select(APGAR1,
@@ -35,7 +35,7 @@ str(df_atl)
 
 Teniendo en cuenta el diccionario proporcionado por la fuente de los datos
 
-```{r transformar-datos message=FALSE, warning=FALSE}
+```{r transformar-datos, message=FALSE, warning=FALSE}
 df_atl <- df_atl |>   
   mutate(
     across(c(APGAR1, APGAR2, NUMCONSUL, N_EMB),
@@ -76,7 +76,7 @@ str(df_atl)
 
 # Manejar datos faltantes
 
-```{r nulos message=FALSE, warning=FALSE}
+```{r nulos, message=FALSE, warning=FALSE}
 df_atl |> 
   summarise(across(everything(),
                    list(n = ~sum(is.na(.x)),
@@ -89,14 +89,14 @@ df_atl |>
 
 Siendo menos del 1.5% se eliminan las filas con valores nulos
 
-```{r eliminar-nulos message=FALSE, warning=FALSE}
+```{r eliminar-nulos, message=FALSE, warning=FALSE}
 df_atl <- df_atl |> 
   drop_na()
 ```
 
 Sin valores faltantes
 
-```{r sin-nulos message=FALSE, warning=FALSE}
+```{r sin-nulos, message=FALSE, warning=FALSE}
 df_atl |> 
   summarise(across(everything(),
                    list(n = ~sum(is.na(.x)),
@@ -111,7 +111,7 @@ df_atl |>
 
 ## Número de consultas
 
-```{r num-consul-resumen message=FALSE, warning=FALSE}
+```{r num-consul-resumen, message=FALSE, warning=FALSE}
 numconsult <-  df_atl|> 
               select(NUMCONSUL) 
 
@@ -129,7 +129,7 @@ numconsult|>
   )
 ```
 
-```{r num-consul-dist message=FALSE, warning=FALSE}
+```{r num-consul-dist, message=FALSE, warning=FALSE}
 numconsult |> 
   ggplot(aes(x = NUMCONSUL))+
   geom_bar(fill = 'steelblue',
@@ -167,7 +167,7 @@ ggplot(edad_madre, aes(x = reorder(EDAD_MADRE, Porcentaje), y = Porcentaje, fill
 
 ## APGAR 1
 
-```{r apgar1-resumen message=FALSE, warning=FALSE}
+```{r apgar1-resumen, message=FALSE, warning=FALSE}
 apgar1 <-  df_atl|> 
   select(APGAR1) 
 
@@ -185,7 +185,7 @@ apgar1 |>
   )
 ```
 
-```{r apgar1-dist message=FALSE, warning=FALSE}
+```{r apgar1-dist, message=FALSE, warning=FALSE}
 apgar1 |> 
   ggplot(aes(x = APGAR1))+
   geom_bar(fill = 'steelblue',
@@ -200,7 +200,7 @@ apgar1 |>
 
 ## APGAR 2
 
-```{r apgar2-resumen message=FALSE, warning=FALSE}
+```{r apgar2-resumen, message=FALSE, warning=FALSE}
 apgar2 <-  df_atl|> 
   select(APGAR2) 
 
@@ -218,7 +218,7 @@ apgar2|>
   )
 ```
 
-```{r apgar2-dist message=FALSE, warning=FALSE}
+```{r apgar2-dist, message=FALSE, warning=FALSE}
 apgar2 |> 
   ggplot(aes(x = APGAR2))+
   geom_bar(fill = 'steelblue',
@@ -233,7 +233,7 @@ apgar2 |>
 
 ## Número de embarazos (includo el presente)
 
-```{r num-embarazos-resumen message=FALSE, warning=FALSE}
+```{r num-embarazos-resumen, message=FALSE, warning=FALSE}
 n_emb <-  df_atl|> 
   select(N_EMB) 
 
@@ -251,7 +251,7 @@ n_emb|>
   )
 ```
 
-```{r num-embarazos-dist message=FALSE, warning=FALSE}
+```{r num-embarazos-dist, message=FALSE, warning=FALSE}
 n_emb |> 
   ggplot(aes(x = N_EMB))+
   geom_bar(fill = 'steelblue',
