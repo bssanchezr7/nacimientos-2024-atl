@@ -1,15 +1,5 @@
 # Análisis univariado {#univariado}
 
-Descripción individual de cada variable. Las tablas resumen concentran las
-medidas descriptivas y los gráficos muestran la forma de cada distribución.
-Cada bloque arma sus datos con `dplyr` y solo aplica el estilo del proyecto
-al final (`theme_proyecto()`, `estilo_tabla()`).
-
-> Para correr chunks sueltos en RStudio: primero corre el chunk `setup` de
-> `index.Rmd` y todos los chunks de `02-datos.Rmd` (ahí se crea `df_atl`).
-> Al compilar el libro completo con `bookdown::render_book("index.Rmd")` no
-> hace falta nada extra porque la sesión es compartida.
-
 ```{r depende-datos, include=FALSE}
 if (!exists("df_atl")) {
   stop("No existe `df_atl`. Corre primero el setup de index.Rmd y los chunks de 02-datos.Rmd.")
@@ -87,7 +77,7 @@ ggplot(df_atl, aes(x = NUMCONSUL)) +
 df_atl |>
   count(EDAD_MADRE, name = "n") |>
   mutate(pct = n / sum(n),
-         EDAD_MADRE = fct_rev(EDAD_MADRE)) |>
+         EDAD_MADRE = fct_reorder(EDAD_MADRE, pct)) |>
   ggplot(aes(x = n, y = EDAD_MADRE)) +
   geom_col(width = 0.7, fill = pal[["principal"]]) +
   geom_text(aes(label = paste0(num(n), "  (", pct(pct), ")")), hjust = -0.08) +
@@ -173,22 +163,6 @@ df_atl |>
   geom_text(aes(label = paste0(num(n), "  (", pct(pct), ")")), hjust = -0.08) +
   scale_x_continuous(labels = num, expand = expansion(mult = c(0, 0.25))) +
   labs(title = "Régimen de seguridad social de la madre", subtitle = sub_atl,
-       x = "Nacimientos", y = NULL, caption = fuente_dane) +
-  theme_proyecto(grid = "x")
-```
-
-## Nivel educativo de la madre
-
-```{r barras-nivedum, message=FALSE, warning=FALSE, fig.cap="Distribución por nivel educativo de la madre."}
-df_atl |>
-  count(NIV_EDUM, name = "n") |>
-  mutate(pct = n / sum(n),
-         NIV_EDUM = fct_rev(NIV_EDUM)) |>
-  ggplot(aes(x = n, y = NIV_EDUM)) +
-  geom_col(width = 0.7, fill = pal[["principal"]]) +
-  geom_text(aes(label = paste0(num(n), "  (", pct(pct), ")")), hjust = -0.08) +
-  scale_x_continuous(labels = num, expand = expansion(mult = c(0, 0.25))) +
-  labs(title = "Nivel educativo de la madre", subtitle = sub_atl,
        x = "Nacimientos", y = NULL, caption = fuente_dane) +
   theme_proyecto(grid = "x")
 ```
