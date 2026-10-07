@@ -1,5 +1,36 @@
 # Introducción {#introduccion}
 
+No todas las madres llegan al parto en las mismas condiciones. Las hay de
+todas las edades y, aunque casi todas están afiliadas al sistema de salud sin
+importar dónde viven, esas características pueden marcar diferencias en el
+seguimiento del embarazo, en el tipo de parto y en el estado de salud del
+recién nacido. En Colombia, cada nacimiento queda registrado en un certificado
+de nacido vivo, y el DANE reúne esos certificados en las Estadísticas Vitales
+[-@dane2024eevv]. Para examinar si en el departamento del Atlántico existen
+esas diferencias, se seleccionaron los cerca de 26.000 nacimientos de 2024
+cuyas madres residían en el departamento.
+
+Los registros ofrecen tres indicadores de cómo transcurrieron el embarazo y el
+nacimiento. El primero es el número de consultas prenatales: la Organización
+Mundial de la Salud (OMS) recomienda al menos ocho contactos con el personal
+de salud durante el embarazo, porque un mayor seguimiento se asocia con menos
+muertes perinatales [-@oms2016prenatal]. El segundo es el tipo de parto: la
+OMS señala que, cuando las cesáreas superan el 10 % de los nacimientos de una
+población, ya no se observa una reducción de la mortalidad de madres y recién
+nacidos [-@oms2015cesarea]; en el Atlántico, cerca de tres de cada cuatro
+nacimientos de 2024 fueron por cesárea. El tercero es el puntaje Apgar, una
+calificación de 0 a 10 que resume el estado del recién nacido al minuto y a
+los cinco minutos de vida, y que se usa en todo el mundo para valorar cómo
+llega el bebé y cómo se adapta en sus primeros minutos
+[@apgar1953; @aap2015apgar].
+
+Por eso resulta de interés estudiar cómo se relacionan las características de
+la madre con el embarazo y el nacimiento. Este trabajo se centra en comparar
+grupos de madres para establecer si la atención prenatal, el tipo de parto y
+el estado del recién nacido difieren según la edad, el régimen de salud y el
+lugar de residencia. El análisis permite identificar esas diferencias, pero no
+atribuirlas a una causa.
+
 ## Objetivos
 
 **Objetivo general.**
@@ -13,14 +44,3 @@ Analizar si la atención prenatal, el tipo de parto y la vitalidad del recién n
 3. Analizar si el control prenatal es desigual dentro del departamento, comparando las consultas de las madres que residen en Barranquilla, en Soledad, en el resto del área metropolitana y en los demás municipios.
 4. Examinar si la vitalidad del recién nacido en su primer minuto de vida, medida con el puntaje Apgar, cambia según la edad de la madre (adolescente, de 20 a 34 años, o de 35 años o más).
 5. Verificar si los recién nacidos mejoran su condición entre el primer y el quinto minuto de vida, comparando su puntaje Apgar en ambos momentos.
-
-## Estructura del documento
-
-- **Capítulo \@ref(datos)**: fuente, selección de variables, limpieza y plan
-  de análisis.
-- **Capítulo \@ref(univariado)**: descripción individual de cada variable.
-- **Capítulo \@ref(bivariado)**: exploración de los cruces asociados a cada
-  objetivo.
-- **Capítulo \@ref(hipotesis)**: pruebas de hipótesis para cada objetivo.
-- **Capítulo \@ref(conclusiones)**: hallazgos principales y limitaciones.
-

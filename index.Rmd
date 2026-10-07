@@ -32,6 +32,17 @@ DANE.
 
 El análisis examina si la atención prenatal, el tipo de parto y la vitalidad del recién nacido difieren según la edad, el régimen de salud y la subregión de residencia de la madre.
 
+## Estructura del documento {-}
+
+- **Capítulo \@ref(introduccion)**: contexto del estudio y objetivos.
+- **Capítulo \@ref(datos)**: fuente, selección de variables, limpieza y plan
+  de análisis.
+- **Capítulo \@ref(univariado)**: descripción individual de cada variable.
+- **Capítulo \@ref(bivariado)**: exploración de los cruces asociados a cada
+  objetivo.
+- **Capítulo \@ref(hipotesis)**: pruebas de hipótesis para cada objetivo.
+- **Capítulo \@ref(conclusiones)**: hallazgos principales y limitaciones.
+
 ## Sobre este proyecto {-}
 
 Trabajo elaborado para el curso de Estadística Computacional de Maestría en Estadística Aplicada de la Universidad del Norte, orientado por Carlos de Oro Aguado, durante el periodo 20263. El código fuente está disponible en
