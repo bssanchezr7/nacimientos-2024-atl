@@ -113,6 +113,28 @@ En el histograma se sugiere una asimetría negativa, la media (línea continua) 
 
 ## Edad de la madre
 
+```{r tabla-edad, message=FALSE, warning=FALSE}
+frec_edad <- df_atl |>
+  count(EDAD_MADRE, name = "n") |>
+  mutate(p = n / sum(n))
+
+frec_edad |>
+  gt() |>
+  fmt_number(columns = n, decimals = 0, sep_mark = ".", dec_mark = ",") |>
+  fmt_percent(columns = p, decimals = 1, scale_values = TRUE, sep_mark = ".", dec_mark = ",") |>
+  cols_label(EDAD_MADRE = "Grupo de edad", n = "n", p = "%") |>
+  cols_align("left", columns = EDAD_MADRE) |>
+  cols_align("center", columns = c(n, p)) |>
+  estilo_tabla("Grupo de edad de la madre: frecuencias")
+```
+
+```{r filas-edad-uni, include=FALSE}
+res_grupo_optima <- frec_edad |> filter(EDAD_MADRE == "Edad Reproductiva Óptima")
+res_grupo_adol <- frec_edad |> filter(EDAD_MADRE == "Maternidad Adolescente")
+res_grupo_avanz <- frec_edad |> filter(EDAD_MADRE == "Edad Materna Avanzada")
+```
+
+
 ```{r barras-edad, message=FALSE, warning=FALSE, fig.cap="Distribución por grupo de edad de la madre."}
 df_atl |>
   count(EDAD_MADRE, name = "n") |>
@@ -126,6 +148,7 @@ df_atl |>
        x = "Nacimientos", y = NULL, caption = fuente_dane) +
   theme_proyecto(grid = "x")
 ```
+Del total de `r num(sum(frec_edad$n))` nacimientos, predominó el grupo de edad reproductiva óptima con un `r pct(res_grupo_optima$p)` (`r num(res_grupo_optima$n)` nacimientos), seguido por la maternidad adolescente con un `r pct(res_grupo_adol$p)` (`r num(res_grupo_adol$n)` nacimientos) y por último la edad materna avanzada con un `r pct(res_grupo_avanz$p)` (`r num(res_grupo_avanz$n)` nacimientos).
 
 ## APGAR al minuto
 
