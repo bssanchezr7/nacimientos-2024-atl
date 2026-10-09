@@ -35,8 +35,8 @@ El análisis examina si la atención prenatal, el tipo de parto y la vitalidad d
 ## Estructura del documento {-}
 
 - **Capítulo \@ref(introduccion)**: contexto del estudio y objetivos.
-- **Capítulo \@ref(datos)**: fuente, selección de variables, limpieza y plan
-  de análisis.
+- **Capítulo \@ref(datos)**: fuente, población, variables y depuración de los
+  datos.
 - **Capítulo \@ref(univariado)**: descripción individual de cada variable.
 - **Capítulo \@ref(bivariado)**: exploración de los cruces asociados a cada
   objetivo.

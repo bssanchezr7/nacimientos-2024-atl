@@ -1,19 +1,19 @@
-# Datos {#datos}
+# Datos y metodología {#datos}
 
-## Fuente
-
-Microdatos de Estadísticas Vitales (EEVV) del DANE, nacimientos 2024.
-Archivo: `data/BD-EEVV-Nacimientos-2024.csv`.
+## Fuente de datos
 
 ```{r cargar-datos, message=FALSE, warning=FALSE}
 df <- read_csv("./data/BD-EEVV-Nacimientos-2024.csv",
                locale = locale(encoding = "ISO-8859-1"))
 ```
 
-## Selección de variables
+Los datos provienen de las Estadísticas Vitales del DANE, específicamente del
+registro de nacimientos [-@dane2024eevv]. El DANE consolida los certificados
+de nacido vivo que se diligencian por cada nacimiento, los revisa y los
+publica como microdatos anonimizados de acceso abierto. Se utilizó la base de
+nacimientos de 2024, que contiene `r num(nrow(df))` registros de todo el país.
 
-Se filtra solo el departamento del Atlántico (`CODPTORE == '08'`) y se
-seleccionan las variables de interés.
+## Población y unidad de análisis
 
 ```{r filtrar-atl, message=FALSE, warning=FALSE}
 df_atl <- df |>
@@ -24,21 +24,71 @@ df_atl <- df |>
          SEG_SOCIAL,
          NUMCONSUL,
          CODMUNRE,
-         N_EMB,
-         NIV_EDUM,
          EDAD_MADRE)
+```
 
-str(df_atl)
+De la base nacional se seleccionaron los nacimientos cuyas madres residían en
+el departamento del Atlántico al momento del parto, sin importar dónde ocurrió
+este: `r num(nrow(df_atl))` registros. Cada registro corresponde a un recién
+nacido, no a una madre; por eso, cuando una madre tuvo un parto múltiple,
+aparece una vez por cada uno de sus hijos.
+
+Aunque la base incluye todos los nacimientos registrados en 2024, corresponde
+a un solo año. Las pruebas de hipótesis se usan para valorar si las
+diferencias observadas ese año reflejan un patrón que se mantendría más allá
+de 2024, o si podrían deberse al azar.
+
+## Variables
+
+La base cuenta con `r ncol(df)` variables, que recogen información sobre el
+lugar y la atención del parto, las características del recién nacido, el
+embarazo y datos sociodemográficos de la madre y, en menor medida, del padre.
+De ellas se seleccionaron las necesarias para responder los objetivos:
+
+```{r tabla-variables-dane, message=FALSE, warning=FALSE}
+tribble(
+  ~Variable,     ~`Qué registra`,                             ~Tipo,                          ~Valores,
+  "`NUMCONSUL`",  "Número de consultas prenatales",            "Numérica discreta",            "Número entero, desde 0",
+  "`APGAR1`",     "Puntaje Apgar al minuto de vida",           "Numérica discreta (puntaje)",  "De 0 a 10",
+  "`APGAR2`",     "Puntaje Apgar a los cinco minutos de vida", "Numérica discreta (puntaje)",  "De 0 a 10",
+  "`TIPO_PARTO`", "Tipo de parto",                             "Categórica nominal",           "Espontáneo, cesárea, instrumentado",
+  "`SEG_SOCIAL`", "Régimen de seguridad social de la madre",   "Categórica nominal",           "Contributivo, subsidiado, excepción, especial, no asegurado",
+  "`EDAD_MADRE`", "Edad de la madre, en grupos de cinco años", "Categórica ordinal",           "Nueve grupos, de 10–14 a 50–54 años",
+  "`CODMUNRE`",   "Municipio de residencia de la madre",       "Categórica nominal",           "Los 23 municipios del Atlántico"
+) |>
+  gt() |>
+  fmt_markdown(columns = Variable) |>
+  cols_align("left", columns = everything()) |>
+  estilo_tabla("Variables tomadas de la base del DANE", subtitulo = NULL)
+```
+
+A partir de estas se construyeron tres variables más, que agrupan sus
+categorías para poder responder los objetivos de manera adecuada:
+
+```{r tabla-variables-construidas, message=FALSE, warning=FALSE}
+tribble(
+  ~Variable,                 ~`Se construye a partir de`, ~Categorías,                                                                                                                         ~Objetivo,
+  "Subregión de residencia", "`CODMUNRE`",                "Barranquilla; Soledad; resto del área metropolitana (Galapa, Malambo y Puerto Colombia); resto del departamento (18 municipios)", "3",
+  "Grupo de edad",           "`EDAD_MADRE`",              "Adolescente (10 a 19 años); de 20 a 34 años; de 35 años o más",                                                                   "1 y 4",
+  "Cesárea",                 "`TIPO_PARTO`",              "Sí; no (parto espontáneo o instrumentado)",                                                                                       "2"
+) |>
+  gt() |>
+  fmt_markdown(columns = `Se construye a partir de`) |>
+  cols_align("left", columns = everything()) |>
+  estilo_tabla("Variables construidas para el análisis", subtitulo = NULL,
+               fuente = "Fuente: elaboración propia a partir de DANE, Estadísticas Vitales 2024")
 ```
 
 ## Limpieza y transformación
 
-Teniendo en cuenta el diccionario proporcionado por la fuente de los datos:
+Siguiendo el diccionario de datos del DANE, los códigos numéricos de las
+variables categóricas se reemplazaron por sus nombres. El código 99, que
+indica que el dato no se registró, se trató como valor faltante.
 
 ```{r transformar-datos, message=FALSE, warning=FALSE}
 df_atl <- df_atl |>
   mutate(
-    across(c(APGAR1, APGAR2, NUMCONSUL, N_EMB),
+    across(c(APGAR1, APGAR2, NUMCONSUL),
            ~ na_if(as.integer(.x), 99L)),
     TIPO_PARTO = factor(as.integer(TIPO_PARTO),
                         levels = c(1,2,3,4),
@@ -47,15 +97,7 @@ df_atl <- df_atl |>
                         levels = 1:5,
                         labels = c("Contributivo", "Subsidiado", "Excepción",
                                    "Especial", "No asegurado")),
-    NIV_EDUM = factor(as.integer(NIV_EDUM),
-                      levels = 1:13,
-                      labels = c("Preescolar", "Básica primaria", "Básica secundaria",
-                                 "Media académica o clásica","Media técnica","Normalista",
-                                 "Técnica profesional","Tecnológica","Profesional",
-                                 "Especialización","Maestría","Doctorado",
-                                 "Ninguno")),
 
-    # NUEVA VARIABLE: Reagrupación convirtiendo el 99 en NA
     EDAD_MADRE = as.integer(EDAD_MADRE),
     EDAD_MADRE = na_if(EDAD_MADRE, 99),
     EDAD_MADRE = factor(EDAD_MADRE,
@@ -70,11 +112,12 @@ df_atl <- df_atl |>
                                        "Edad Materna Avanzada",       # 8: 45-49 años
                                        "Edad Materna Avanzada"))      # 9: 50-54 años
   )
-
-str(df_atl)
 ```
 
 ## Valores faltantes
+
+Después se revisó cuántos valores faltantes tenía cada variable en los
+registros del departamento:
 
 ```{r nulos, message=FALSE, warning=FALSE}
 df_atl |>
@@ -89,47 +132,38 @@ df_atl |>
   fmt_number(columns = n, decimals = 0, sep_mark = ".", dec_mark = ",") |>
   fmt_number(columns = pct, decimals = 1, sep_mark = ".", dec_mark = ",") |>
   cols_label(Variable = "Variable", n = "n faltantes", pct = "% faltante") |>
-  estilo_tabla("Valores faltantes por variable (antes de depurar)")
+  estilo_tabla("Valores faltantes por variable",
+               subtitulo = "Registros del Atlántico antes de eliminar los incompletos")
 ```
-
-```{r faltantes-plot, message=FALSE, warning=FALSE, fig.cap="Porcentaje de valores faltantes por variable."}
-df_atl |>
-  summarise(across(everything(), ~mean(is.na(.x)) * 100)) |>
-  pivot_longer(everything(), names_to = "variable", values_to = "pct") |>
-  arrange(desc(pct)) |>
-  mutate(variable = fct_inorder(variable)) |>
-  ggplot(aes(x = pct, y = variable)) +
-  geom_col(width = 0.6, fill = pal[["principal"]]) +
-  geom_text(aes(label = paste0(num(pct, 0.1), "%")), hjust = -0.1) +
-  scale_x_continuous(labels = \(v) paste0(num(v, 1), "%"),
-                     expand = expansion(mult = c(0, 0.25))) +
-  labs(title = "Valores faltantes por variable",
-       subtitle = sub_atl, x = "% faltante", y = NULL,
-       caption = fuente_dane) +
-  theme_proyecto(grid = "x")
-```
-
-Siendo menos del 1.5% se eliminan las filas con valores nulos:
 
 ```{r eliminar-nulos, message=FALSE, warning=FALSE}
+n_antes <- nrow(df_atl)
+
 df_atl <- df_atl |>
   drop_na()
 ```
 
-Sin valores faltantes:
+Los registros con algún valor faltante fueron `r num(n_antes - nrow(df_atl))`,
+el `r pct((n_antes - nrow(df_atl)) / n_antes)` del total. Como este porcentaje
+no supera el 5 %, se decidió eliminarlos. La base final quedó con
+`r num(nrow(df_atl))` registros, que son los que se analizan en todos los
+objetivos.
 
-```{r sin-nulos, message=FALSE, warning=FALSE}
-df_atl |>
-  summarise(across(everything(),
-                   list(n = ~sum(is.na(.x)),
-                        pct = ~mean(is.na(.x)) * 100))) |>
-  pivot_longer(everything(),
-               names_to = c("Variable", ".value"),
-               names_pattern = "(.*)_(n|pct)$") |>
-  arrange(desc(pct)) |>
-  gt() |>
-  fmt_number(columns = n, decimals = 0, sep_mark = ".", dec_mark = ",") |>
-  fmt_number(columns = pct, decimals = 1, sep_mark = ".", dec_mark = ",") |>
-  cols_label(Variable = "Variable", n = "n faltantes", pct = "% faltante") |>
-  estilo_tabla("Valores faltantes por variable (después de depurar)")
+```{r construir-variables, message=FALSE, warning=FALSE}
+df_atl <- df_atl |>
+  mutate(
+    SUBREGION = case_when(
+      CODMUNRE == "001"                    ~ "Barranquilla",
+      CODMUNRE == "758"                    ~ "Soledad",
+      CODMUNRE %in% c("296", "433", "573") ~ "Resto del área metropolitana",
+      TRUE                                 ~ "Resto del departamento"
+    ),
+    SUBREGION = factor(SUBREGION,
+                       levels = c("Barranquilla", "Soledad",
+                                  "Resto del área metropolitana",
+                                  "Resto del departamento")),
+
+    CESAREA = factor(if_else(TIPO_PARTO == "Cesárea", "Sí", "No"),
+                     levels = c("Sí", "No"))
+  )
 ```
