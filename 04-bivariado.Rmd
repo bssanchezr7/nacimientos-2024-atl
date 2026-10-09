@@ -1,28 +1,44 @@
 # Análisis bivariado {#bivariado}
 
-Relaciones entre pares de variables: número de consultas según la edad de la
-madre (numérica vs. categórica) y tipo de parto según régimen de salud
-(categórica vs. categórica). Cada bloque arma sus datos con `dplyr` y solo
-aplica el estilo del proyecto al final.
-
 ## Número de consultas prenatales según la edad
 
 ```{r consultas-edad-tabla, message=FALSE, warning=FALSE}
-df_atl |>
+res_consultas_edad <- df_atl |>
   group_by(`Grupo de edad` = EDAD_MADRE) |>
   summarise(
     n = n(),
-    `Media (DE)` = paste0(num(mean(NUMCONSUL), 0.01), " (", num(sd(NUMCONSUL), 0.01), ")"),
-    `Mediana (RIC)` = paste0(num_auto(median(NUMCONSUL)), " (", num_auto(IQR(NUMCONSUL)), ")"),
+    media = mean(NUMCONSUL),
+    de = sd(NUMCONSUL),
+    mediana = median(NUMCONSUL),
+    q1 = quantile(NUMCONSUL, 0.25),
+    q3 = quantile(NUMCONSUL, 0.75),
+    min = min(NUMCONSUL),
+    max = max(NUMCONSUL),
     .groups = "drop"
   ) |>
+  mutate(RIC = paste0(num_auto(q1), " – ", num_auto(q3)))
+
+res_consultas_edad |>
+  select(`Grupo de edad`, n, media, de, mediana, RIC, min, max) |>
   gt() |>
   fmt_number(columns = n, decimals = 0, sep_mark = ".", dec_mark = ",") |>
+  fmt_number(columns = c(media, de), decimals = 2, sep_mark = ".", dec_mark = ",") |>
+  fmt_number(columns = c(mediana, min, max), decimals = 0, sep_mark = ".", dec_mark = ",") |>
+  cols_label(`Grupo de edad` = "Grupo de edad", n = "n",
+             media = "Media", de = "DE", mediana = "Mediana", RIC = "RIC (Q1–Q3)",
+             min = "Mín", max = "Máx") |>
   cols_align("left", columns = `Grupo de edad`) |>
   cols_align("center", columns = -`Grupo de edad`) |>
-  estilo_tabla("Número de consultas según grupo de edad") |>
-  tab_footnote(nota_resumen)
+  estilo_tabla("Número de consultas según grupo de edad")
 ```
+
+```{r filas-edad, include=FALSE}
+res_adol <- res_consultas_edad |> filter(`Grupo de edad` == "Maternidad Adolescente")
+res_optima <- res_consultas_edad |> filter(`Grupo de edad` == "Edad Reproductiva Óptima")
+res_avanzada <- res_consultas_edad |> filter(`Grupo de edad` == "Edad Materna Avanzada")
+```
+
+La tabla anterior muestra el número de consultas según la edad de la madre. Se observó una media de `r num(res_adol$media, 0.01)` (DE `r num(res_adol$de, 0.01)`) para las madres adolescentes, menor frente a las madres adultas: edad reproductiva óptima con media `r num(res_optima$media, 0.01)` (DE `r num(res_optima$de, 0.01)`) y edad materna avanzada con media `r num(res_avanzada$media, 0.01)` (DE `r num(res_avanzada$de, 0.01)`). Las medianas fueron `r num_auto(res_adol$mediana)` (RIC `r res_adol$RIC`) en adolescentes, `r num_auto(res_optima$mediana)` (RIC `r res_optima$RIC`) en edad óptima y `r num_auto(res_avanzada$mediana)` (RIC `r res_avanzada$RIC`) en edad avanzada.
 
 ```{r consultas-edad, message=FALSE, warning=FALSE, fig.cap="Número de consultas prenatales según grupo de edad de la madre."}
 x <- df_atl$NUMCONSUL
@@ -42,6 +58,8 @@ df_atl |>
        caption = paste0(fuente_dane, "  ·  ◆ = media")) +
   theme_proyecto(grid = "x")
 ```
+
+En el boxplot se observó la caja del grupo adolescente ligeramente a la izquierda respecto a los grupos de edad adulta. La media (rombo) se ubica levemente a la izquierda de la mediana en el grupo adolescente y en el de edad óptima, mientras que en el grupo de edad avanzada visualmente no se puede apreciar una diferencia.
 
 ## Tipo de parto según el régimen de salud
 

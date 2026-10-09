@@ -39,7 +39,7 @@ Analizar si la atención prenatal, el tipo de parto y la vitalidad del recién n
 
 **Objetivos específicos.**
 
-1. Comparar el número de consultas prenatales de las madres adolescentes y de las madres adultas, para determinar si las más jóvenes tienen un menor seguimiento de su embarazo.
+1. Comparar el número de consultas prenatales de las madres adolescentes con el de las madres de 20 a 34 años y con el de las de 35 años o más, para determinar si las más jóvenes tienen un menor seguimiento de su embarazo.
 2. Investigar si las cesáreas son igual de frecuentes entre las madres del régimen contributivo y las del régimen subsidiado, o si el tipo de afiliación en salud marca una diferencia en la forma en que termina el parto.
 3. Analizar si el control prenatal es desigual dentro del departamento, comparando las consultas de las madres que residen en Barranquilla, en Soledad, en el resto del área metropolitana y en los demás municipios.
 4. Examinar si la vitalidad del recién nacido en su primer minuto de vida, medida con el puntaje Apgar, cambia según la edad de la madre (adolescente, de 20 a 34 años, o de 35 años o más).

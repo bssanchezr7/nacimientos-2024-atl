@@ -57,21 +57,83 @@ df_atl |>
 
 ## Número de consultas
 
+```{r tabla-numconsul, message=FALSE, warning=FALSE}
+frec_numconsul <- df_atl |>
+  count(NUMCONSUL, name = "n") |>
+  mutate(p = n / sum(n))
+
+res_numconsul <- df_atl |>
+  summarise(
+    n = n(),
+    media = mean(NUMCONSUL),
+    de = sd(NUMCONSUL),
+    mediana = median(NUMCONSUL),
+    q1 = quantile(NUMCONSUL, 0.25),
+    q3 = quantile(NUMCONSUL, 0.75),
+    min = min(NUMCONSUL),
+    max = max(NUMCONSUL)
+  ) |>
+  mutate(RIC = paste0(num_auto(q1), " – ", num_auto(q3)))
+
+res_numconsul |>
+  select(n, media, de, mediana, RIC, min, max) |>
+  gt() |>
+  fmt_number(columns = n, decimals = 0, sep_mark = ".", dec_mark = ",") |>
+  fmt_number(columns = c(media, de), decimals = 2, sep_mark = ".", dec_mark = ",") |>
+  fmt_number(columns = c(mediana, min, max), decimals = 0, sep_mark = ".", dec_mark = ",") |>
+  cols_label(n = "n", media = "Media", de = "DE",
+             mediana = "Mediana", RIC = "RIC (Q1–Q3)",
+             min = "Mín", max = "Máx") |>
+  cols_align("center", columns = everything()) |>
+  estilo_tabla("Número de consultas prenatales: resumen")
+```
+
+Al analizar el número de consultas prenatales, se observó un promedio de `r num(res_numconsul$media, 0.01)` (DE `r num(res_numconsul$de, 0.01)`) y que el 50% de las madres realizaron `r num_auto(res_numconsul$mediana)` (RIC `r res_numconsul$RIC`) consultas o más para `r num(res_numconsul$n)` nacimientos. El número mínimo y máximo de consultas fue de `r num_auto(res_numconsul$min)` y `r num_auto(res_numconsul$max)`, respectivamente.
+
 ```{r hist-numconsul, message=FALSE, warning=FALSE, fig.cap="Distribución del número de consultas prenatales."}
 x <- df_atl$NUMCONSUL
 
-ggplot(df_atl, aes(x = NUMCONSUL)) +
-  geom_histogram(binwidth = 1, center = 0,
-                 fill = pal[["principal"]], color = "white", linewidth = 0.3) +
+  ggplot(frec_numconsul, aes(x = NUMCONSUL, y = n)) +
+  geom_col(fill = pal[["principal"]], color = "white",
+           linewidth = 0.3, width = 1) +
+  geom_text(aes(label = num(n, 1)), vjust = -0.4, size = 2.4) +
   lineas_ref(x) +
   escala_x(x) +
-  scale_y_continuous(labels = num, expand = expansion(mult = c(0, 0.05))) +
+  scale_y_continuous(labels = num, expand = expansion(mult = c(0, 0.12))) +
   labs(title = "Número de consultas prenatales", subtitle = sub_atl,
-       x = "Número de consultas", y = "Nacimientos", caption = fuente_dane) +
+       x = "Número de consultas", y = "Frecuencia", caption = fuente_dane) +
   theme_proyecto()
 ```
 
+```{r moda-numconsul, include=FALSE}
+row_moda <- frec_numconsul |> slice_max(n, n = 1)
+```
+
+En el histograma se sugiere una asimetría negativa, la media (línea continua) se encuentra levemente a la izquierda de la mediana (línea discontinua), con un pico en `r row_moda |> pull(NUMCONSUL) |> num_auto()` consultas (`r row_moda |> pull(n) |> num()` nacimientos). A la derecha de la distribución se observan barras con baja frecuencia. 
+
 ## Edad de la madre
+
+```{r tabla-edad, message=FALSE, warning=FALSE}
+frec_edad <- df_atl |>
+  count(EDAD_MADRE, name = "n") |>
+  mutate(p = n / sum(n))
+
+frec_edad |>
+  gt() |>
+  fmt_number(columns = n, decimals = 0, sep_mark = ".", dec_mark = ",") |>
+  fmt_percent(columns = p, decimals = 1, scale_values = TRUE, sep_mark = ".", dec_mark = ",") |>
+  cols_label(EDAD_MADRE = "Grupo de edad", n = "n", p = "%") |>
+  cols_align("left", columns = EDAD_MADRE) |>
+  cols_align("center", columns = c(n, p)) |>
+  estilo_tabla("Grupo de edad de la madre: frecuencias")
+```
+
+```{r filas-edad-uni, include=FALSE}
+res_grupo_optima <- frec_edad |> filter(EDAD_MADRE == "Edad Reproductiva Óptima")
+res_grupo_adol <- frec_edad |> filter(EDAD_MADRE == "Maternidad Adolescente")
+res_grupo_avanz <- frec_edad |> filter(EDAD_MADRE == "Edad Materna Avanzada")
+```
+
 
 ```{r barras-edad, message=FALSE, warning=FALSE, fig.cap="Distribución por grupo de edad de la madre."}
 df_atl |>
@@ -86,6 +148,7 @@ df_atl |>
        x = "Nacimientos", y = NULL, caption = fuente_dane) +
   theme_proyecto(grid = "x")
 ```
+Del total de `r num(sum(frec_edad$n))` nacimientos, predominó el grupo de edad reproductiva óptima con un `r pct(res_grupo_optima$p)` (`r num(res_grupo_optima$n)` nacimientos), seguido por la maternidad adolescente con un `r pct(res_grupo_adol$p)` (`r num(res_grupo_adol$n)` nacimientos) y por último la edad materna avanzada con un `r pct(res_grupo_avanz$p)` (`r num(res_grupo_avanz$n)` nacimientos).
 
 ## APGAR al minuto
 
