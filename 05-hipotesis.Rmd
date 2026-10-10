@@ -1,4 +1,23 @@
 # Pruebas de hipótesis {#hipotesis}
 
-(Por redactar: plantear aquí las hipótesis que se contrastan a partir de los
-hallazgos de los Capítulos \@ref(univariado) y \@ref(bivariado).)
+(Por redactar: criterios comunes a todas las pruebas.)
+
+## Objetivo 1: consultas prenatales según la edad de la madre
+
+(Por redactar.)
+
+## Objetivo 2: cesáreas según el régimen de salud
+
+(Por redactar.)
+
+## Objetivo 3: consultas prenatales según la subregión de residencia
+
+(Por redactar.)
+
+## Objetivo 4: Apgar al minuto según la edad de la madre
+
+(Por redactar.)
+
+## Objetivo 5: Apgar al minuto y a los cinco minutos
+
+(Por redactar.)
