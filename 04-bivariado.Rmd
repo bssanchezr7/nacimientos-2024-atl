@@ -181,3 +181,76 @@ df_atl |>
   theme_proyecto(grid = "x")
 ```
 Para el resto del área metropolitana se observa una media ligeramente a la derecha de la mediana, y en el resto del departamento ligeramente a la izquierda, aunque en ambos casos la diferencia apenas se distingue. En cambio, en Barranquilla y Soledad la media queda claramente a la izquierda de la mediana. Se registran valores atípicos en todas las subregiones, tanto para conteos bajos como para altos.
+
+## APGAR al minuto según la edad de la madre
+
+```{r apgar-edad-tabla, message=FALSE, warning=FALSE}
+res_apgar_edad <- df_atl |>
+  group_by(`Grupo de edad` = EDAD_MADRE) |>
+  summarise(
+    n = n(),
+    media = mean(APGAR1),
+    de = sd(APGAR1),
+    mediana = median(APGAR1),
+    q1 = quantile(APGAR1, 0.25),
+    q3 = quantile(APGAR1, 0.75),
+    min = min(APGAR1),
+    max = max(APGAR1),
+    p_bajo = mean(APGAR1 < 7),
+    .groups = "drop"
+  ) |>
+  mutate(RIC = paste0(num_auto(q1), " – ", num_auto(q3)))
+
+res_apgar_edad |>
+  select(`Grupo de edad`, n, media, de, mediana, RIC, min, max, p_bajo) |>
+  gt() |>
+  fmt_number(columns = n, decimals = 0, sep_mark = ".", dec_mark = ",") |>
+  fmt_number(columns = c(media, de), decimals = 2, sep_mark = ".", dec_mark = ",") |>
+  fmt_number(columns = c(mediana, min, max), decimals = 0, sep_mark = ".", dec_mark = ",") |>
+  fmt_percent(columns = p_bajo, decimals = 2, scale_values = TRUE, sep_mark = ".", dec_mark = ",") |>
+  cols_label(`Grupo de edad` = "Grupo de edad", n = "n",
+             media = "Media", de = "DE", mediana = "Mediana", RIC = "RIC (Q1–Q3)",
+             min = "Mín", max = "Máx", p_bajo = "APGAR menor que 7") |>
+  cols_align("left", columns = `Grupo de edad`) |>
+  cols_align("center", columns = -`Grupo de edad`) |>
+  estilo_tabla("APGAR al minuto según grupo de edad")
+```
+
+```{r filas-apgar-edad, include=FALSE}
+niv_edad <- levels(df_atl$EDAD_MADRE)
+res_apgar_adol <- res_apgar_edad |> filter(`Grupo de edad` == niv_edad[1])
+res_apgar_opt <- res_apgar_edad |> filter(`Grupo de edad` == niv_edad[2])
+res_apgar_avan <- res_apgar_edad |> filter(`Grupo de edad` == niv_edad[3])
+```
+
+En los tres grupos de edad la mediana del Apgar al minuto fue de `r num_auto(res_apgar_adol$mediana)`. El promedio fue de `r num(res_apgar_adol$media, 0.01)` en las madres adolescentes, `r num(res_apgar_opt$media, 0.01)` en las de 20 a 34 años y `r num(res_apgar_avan$media, 0.01)` en las de 35 o más. El puntaje menor que 7 se presentó en el `r pct(res_apgar_adol$p_bajo, 0.01)` de los nacimientos de madres adolescentes, frente al `r pct(res_apgar_opt$p_bajo, 0.01)` y el `r pct(res_apgar_avan$p_bajo, 0.01)` de los otros dos grupos.
+
+```{r apgar-edad, message=FALSE, warning=FALSE, fig.cap="Distribución del puntaje APGAR al minuto dentro de cada grupo de edad."}
+df_apgar_edad <- df_atl |>
+  mutate(apgar_cat = cut(APGAR1, breaks = c(-Inf, 6, 7, 8, 9, 10),
+                         labels = c("Menor que 7", "7", "8", "9", "10")))
+
+colores_apgar <- setNames(
+  colores_grupo(nlevels(df_apgar_edad$apgar_cat), ordinal = TRUE),
+  levels(df_apgar_edad$apgar_cat)
+)
+
+df_apgar_edad |>
+  count(EDAD_MADRE, apgar_cat, name = "n") |>
+  group_by(EDAD_MADRE) |>
+  mutate(p = n / sum(n), n_f = sum(n)) |>
+  ungroup() |>
+  mutate(f_lab = fct_inorder(paste0(EDAD_MADRE, "  (n = ", num(n_f), ")")),
+         txt = color_texto_sobre(colores_apgar[as.character(apgar_cat)])) |>
+  ggplot(aes(x = p, y = fct_rev(f_lab), fill = apgar_cat)) +
+  geom_col(position = position_fill(reverse = TRUE), width = 0.7,
+           color = "white", linewidth = 0.3) +
+  geom_text(aes(label = if_else(p >= 0.05, pct(p, 0.1), ""), color = txt),
+            position = position_fill(vjust = 0.5, reverse = TRUE), size = 3.1) +
+  scale_color_identity() +
+  scale_fill_manual(values = colores_apgar, name = "APGAR al minuto") +
+  scale_x_continuous(labels = \(v) pct(v, 1), expand = expansion(0)) +
+  labs(title = "APGAR al minuto según grupo de edad",
+       subtitle = sub_atl, x = NULL, y = NULL, caption = fuente_dane) +
+  theme_proyecto(grid = "none")
+```

@@ -106,19 +106,59 @@ Del total de `r num(sum(frec_edad$n))` nacimientos, predominó el grupo de edad 
 
 ## APGAR al minuto
 
+```{r tabla-apgar1, message=FALSE, warning=FALSE}
+frec_apgar1 <- df_atl |>
+  count(APGAR1, name = "n") |>
+  mutate(p = n / sum(n))
+
+res_apgar1 <- df_atl |>
+  summarise(
+    n = n(),
+    media = mean(APGAR1),
+    de = sd(APGAR1),
+    mediana = median(APGAR1),
+    q1 = quantile(APGAR1, 0.25),
+    q3 = quantile(APGAR1, 0.75),
+    min = min(APGAR1),
+    max = max(APGAR1),
+    p_bajo = mean(APGAR1 < 7)
+  ) |>
+  mutate(RIC = paste0(num_auto(q1), " – ", num_auto(q3)))
+
+res_apgar1 |>
+  select(n, media, de, mediana, RIC, min, max) |>
+  gt() |>
+  fmt_number(columns = n, decimals = 0, sep_mark = ".", dec_mark = ",") |>
+  fmt_number(columns = c(media, de), decimals = 2, sep_mark = ".", dec_mark = ",") |>
+  fmt_number(columns = c(mediana, min, max), decimals = 0, sep_mark = ".", dec_mark = ",") |>
+  cols_label(n = "n", media = "Media", de = "DE",
+             mediana = "Mediana", RIC = "RIC (Q1–Q3)",
+             min = "Mín", max = "Máx") |>
+  cols_align("center", columns = everything()) |>
+  estilo_tabla("Puntaje APGAR al minuto: resumen")
+```
+
 ```{r hist-apgar1, message=FALSE, warning=FALSE, fig.cap="Distribución del puntaje APGAR al minuto."}
 x <- df_atl$APGAR1
 
-ggplot(df_atl, aes(x = APGAR1)) +
-  geom_histogram(binwidth = 1, center = 0,
-                 fill = pal[["principal"]], color = "white", linewidth = 0.3) +
+ggplot(frec_apgar1, aes(x = APGAR1, y = n)) +
+  geom_col(fill = pal[["principal"]], color = "white",
+           linewidth = 0.3, width = 1) +
+  geom_text(aes(label = num(n, 1)), vjust = -0.4, size = 2.4) +
   lineas_ref(x) +
   escala_x(x) +
-  scale_y_continuous(labels = num, expand = expansion(mult = c(0, 0.05))) +
+  scale_y_continuous(labels = num, expand = expansion(mult = c(0, 0.12))) +
   labs(title = "Puntaje APGAR al minuto", subtitle = sub_atl,
-       x = "APGAR al minuto", y = "Nacimientos", caption = fuente_dane) +
+       x = "APGAR al minuto", y = "Frecuencia", caption = fuente_dane) +
   theme_proyecto()
 ```
+
+```{r moda-apgar1, include=FALSE}
+row_moda_apgar1 <- frec_apgar1 |> slice_max(n, n = 1)
+row_seg_apgar1 <- frec_apgar1 |> arrange(desc(n)) |> slice(2)
+```
+
+El puntaje Apgar al minuto fue alto en casi todos los nacimientos. El promedio fue de `r num(res_apgar1$media, 0.01)` (DE `r num(res_apgar1$de, 0.01)`) y la mediana de `r num_auto(res_apgar1$mediana)`, con el primer cuartil en `r num_auto(res_apgar1$q1)` y el tercero en `r num_auto(res_apgar1$q3)`. El puntaje más frecuente fue `r num_auto(row_moda_apgar1$APGAR1)`, con `r num(row_moda_apgar1$n)` nacimientos (`r pct(row_moda_apgar1$p)`), seguido de `r num_auto(row_seg_apgar1$APGAR1)`. Solo el `r pct(res_apgar1$p_bajo)` de los recién nacidos tuvo un puntaje menor que 7.
 
 ## APGAR a los cinco minutos
 
