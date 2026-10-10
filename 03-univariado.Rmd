@@ -9,30 +9,6 @@ if (!exists("theme_proyecto")) {
 }
 ```
 
-```{r tabla-numericas, message=FALSE, warning=FALSE}
-df_atl |>
-  select(NUMCONSUL, APGAR1, APGAR2) |>
-  pivot_longer(everything(), names_to = "Variable", values_to = "valor") |>
-  mutate(Variable = dplyr::recode(Variable,
-    NUMCONSUL = "Número de consultas",
-    APGAR1 = "APGAR al minuto",
-    APGAR2 = "APGAR a los cinco minutos")) |>
-  group_by(Variable) |>
-  summarise(
-    n = n(),
-    `x̄ (DE)` = paste0(num(mean(valor), 0.01), " (", num(sd(valor), 0.01), ")"),
-    `Me (RIC)` = paste0(num_auto(median(valor)), " (", num_auto(IQR(valor)), ")"),
-    `Mín – Máx` = paste0(num_auto(min(valor)), " – ", num_auto(max(valor))),
-    .groups = "drop"
-  ) |>
-  gt() |>
-  fmt_number(columns = n, decimals = 0, sep_mark = ".", dec_mark = ",") |>
-  cols_align("left", columns = Variable) |>
-  cols_align("center", columns = -Variable) |>
-  estilo_tabla("Variables numéricas: medidas descriptivas") |>
-  tab_footnote(nota_resumen)
-```
-
 ## Número de consultas
 
 ```{r tabla-numconsul, message=FALSE, warning=FALSE}
