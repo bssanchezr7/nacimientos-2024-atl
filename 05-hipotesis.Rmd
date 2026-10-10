@@ -156,7 +156,43 @@ En ambas comparaciones se rechazó $H_0$ (`r formato_p(max(res_wilcox$p_adj))`).
 
 ## Objetivo 2: cesáreas según el régimen de salud
 
-(Por redactar.)
+Se busca saber si las cesáreas son igual de frecuentes en el régimen contributivo y en el subsidiado. La hipótesis nula plantea que la proporción de cesáreas es la misma en los dos regímenes; la alternativa, que es distinta, sin suponer de antemano cuál es mayor:
+
+$$H_0: p_C = p_S \qquad\qquad H_1: p_C \neq p_S$$
+
+donde $p_C$ y $p_S$ son las proporciones de partos por cesárea en el régimen contributivo y en el subsidiado.
+
+```{r hip-cesareas-prueba, include=FALSE}
+chi_ces <- chisq.test(tab)
+dif_ces <- prop.test(tab[, "Sí"], rowSums(tab))
+v_ces <- sqrt(unname(chi_ces$statistic) / sum(tab))
+```
+
+Para contrastarlas se usa la prueba chi-cuadrado de homogeneidad de proporciones, con un nivel de significancia del 5 %. La prueba requiere que todas las frecuencias esperadas sean mayores o iguales que 5; aquí la menor es `r num(min(chi_ces$expected))`, por lo que la condición se cumple.
+
+```{r hip-cesareas-tabla, message=FALSE, warning=FALSE}
+tribble(
+  ~Grupo,                    ~Medida,                ~Valor,
+  "Proporción de cesáreas",  "Contributivo",         pct(unname(dif_ces$estimate[1])),
+  "Proporción de cesáreas",  "Subsidiado",           pct(unname(dif_ces$estimate[2])),
+  "Proporción de cesáreas",  "Diferencia (IC 95 %)", paste0(num(100 * diff(rev(dif_ces$estimate)), 0.1), " puntos (",
+                                                           num(100 * dif_ces$conf.int[1], 0.1), " a ",
+                                                           num(100 * dif_ces$conf.int[2], 0.1), ")"),
+  "Prueba de homogeneidad",  "χ²",                   num(unname(chi_ces$statistic), 0.01),
+  "Prueba de homogeneidad",  "Grados de libertad",   as.character(unname(chi_ces$parameter)),
+  "Prueba de homogeneidad",  "Valor p",              formato_p(chi_ces$p.value),
+  "Tamaño del efecto",       "V de Cramér",          num(v_ces, 0.01)
+) |>
+  gt(groupname_col = "Grupo") |>
+  cols_label(Medida = "", Valor = "") |>
+  cols_align("left", columns = Medida) |>
+  cols_align("center", columns = Valor) |>
+  estilo_tabla("Prueba de homogeneidad: cesáreas según régimen de salud")
+```
+
+La prueba dio un chi-cuadrado de `r num(unname(chi_ces$statistic), 0.01)` con `r unname(chi_ces$parameter)` grado de libertad (`r formato_p(chi_ces$p.value)`), por lo que se rechaza la hipótesis nula: la proporción de cesáreas no es igual en los dos regímenes. En el contributivo fue del `r pct(unname(dif_ces$estimate[1]))` y en el subsidiado del `r pct(unname(dif_ces$estimate[2]))`, una diferencia de `r num(100 * diff(rev(dif_ces$estimate)), 0.1)` puntos porcentuales.
+
+Existe una diferencia; sin embargo, el tamaño del efecto muestra que es despreciable: la V de Cramér fue de `r num(v_ces, 0.01)`, muy por debajo del 0,10 que se considera un efecto pequeño [@cohen1988]. De esto se concluye que, si bien el porcentaje de cesáreas es mayor en el régimen contributivo, la diferencia entre los dos regímenes es mínima.
 
 ## Objetivo 3: consultas prenatales según la subregión de residencia
 

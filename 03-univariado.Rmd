@@ -33,26 +33,6 @@ df_atl |>
   tab_footnote(nota_resumen)
 ```
 
-```{r tabla-categoricas, message=FALSE, warning=FALSE}
-df_atl |>
-  mutate(across(c(EDAD_MADRE, TIPO_PARTO, SEG_SOCIAL), as.character)) |>
-  pivot_longer(c(EDAD_MADRE, TIPO_PARTO, SEG_SOCIAL),
-               names_to = "Variable", values_to = "Categoría") |>
-  mutate(Variable = dplyr::recode(Variable,
-    EDAD_MADRE = "Grupo de edad de la madre",
-    TIPO_PARTO = "Tipo de parto",
-    SEG_SOCIAL = "Régimen de seguridad social")) |>
-  count(Variable, Categoría, name = "n") |>
-  group_by(Variable) |>
-  mutate(`n (%)` = paste0(num(n), " (", pct(n / sum(n)), ")")) |>
-  ungroup() |>
-  select(-n) |>
-  gt(groupname_col = "Variable") |>
-  cols_label(`n (%)` = "n (%)") |>
-  cols_align("center", columns = `n (%)`) |>
-  estilo_tabla("Variables categóricas: frecuencias")
-```
-
 ## Número de consultas
 
 ```{r tabla-numconsul, message=FALSE, warning=FALSE}
@@ -182,32 +162,78 @@ ggplot(df_atl, aes(x = APGAR2)) +
 
 ## Tipo de parto
 
-```{r barras-parto, message=FALSE, warning=FALSE, fig.cap="Distribución por tipo de parto."}
-df_atl |>
-  count(TIPO_PARTO, name = "n") |>
-  mutate(pct = n / sum(n),
-         TIPO_PARTO = fct_reorder(TIPO_PARTO, n)) |>
-  ggplot(aes(x = n, y = TIPO_PARTO)) +
+```{r tabla-parto, message=FALSE, warning=FALSE}
+frec_cesarea <- df_atl |>
+  count(CESAREA, name = "n") |>
+  mutate(p = n / sum(n))
+
+frec_cesarea |>
+  gt() |>
+  fmt_number(columns = n, decimals = 0, sep_mark = ".", dec_mark = ",") |>
+  fmt_percent(columns = p, decimals = 1, scale_values = TRUE, sep_mark = ".", dec_mark = ",") |>
+  cols_label(CESAREA = "Cesárea", n = "n", p = "%") |>
+  cols_align("left", columns = CESAREA) |>
+  cols_align("center", columns = c(n, p)) |>
+  estilo_tabla("Parto por cesárea: frecuencias")
+```
+
+```{r filas-parto, include=FALSE}
+res_ces_si <- frec_cesarea |> filter(CESAREA == "Sí")
+res_ces_no <- frec_cesarea |> filter(CESAREA == "No")
+```
+
+```{r barras-parto, message=FALSE, warning=FALSE, fig.cap="Distribución de los nacimientos según parto por cesárea."}
+frec_cesarea |>
+  mutate(CESAREA = fct_recode(CESAREA, "Cesárea" = "Sí", "No cesárea" = "No"),
+         CESAREA = fct_reorder(CESAREA, n)) |>
+  ggplot(aes(x = n, y = CESAREA)) +
   geom_col(width = 0.7, fill = pal[["principal"]]) +
-  geom_text(aes(label = paste0(num(n), "  (", pct(pct), ")")), hjust = -0.08) +
+  geom_text(aes(label = paste0(num(n), "  (", pct(p), ")")), hjust = -0.08) +
   scale_x_continuous(labels = num, expand = expansion(mult = c(0, 0.25))) +
-  labs(title = "Tipo de parto", subtitle = sub_atl,
+  labs(title = "Parto por cesárea", subtitle = sub_atl,
        x = "Nacimientos", y = NULL, caption = fuente_dane) +
   theme_proyecto(grid = "x")
 ```
 
+De los `r num(sum(frec_cesarea$n))` nacimientos, `r num(res_ces_si$n)` (`r pct(res_ces_si$p)`) fueron por cesárea; el `r pct(res_ces_no$p)` restante corresponde a partos que no terminaron en cesárea.
+
 ## Régimen de seguridad social de la madre
 
+```{r tabla-segsocial, message=FALSE, warning=FALSE}
+frec_segsocial <- df_atl |>
+  mutate(Régimen = fct_other(SEG_SOCIAL, keep = c("Subsidiado", "Contributivo"),
+                             other_level = "Otros")) |>
+  count(Régimen, name = "n") |>
+  mutate(p = n / sum(n)) |>
+  arrange(Régimen == "Otros", desc(n))
+
+frec_segsocial |>
+  gt() |>
+  fmt_number(columns = n, decimals = 0, sep_mark = ".", dec_mark = ",") |>
+  fmt_percent(columns = p, decimals = 1, scale_values = TRUE, sep_mark = ".", dec_mark = ",") |>
+  cols_label(n = "n", p = "%") |>
+  cols_align("left", columns = Régimen) |>
+  cols_align("center", columns = c(n, p)) |>
+  estilo_tabla("Régimen de seguridad social de la madre: frecuencias") |>
+  tab_footnote("Otros: regímenes de excepción y especial, y madres no aseguradas.")
+```
+
+```{r filas-segsocial, include=FALSE}
+res_reg_sub <- frec_segsocial |> filter(Régimen == "Subsidiado")
+res_reg_con <- frec_segsocial |> filter(Régimen == "Contributivo")
+res_reg_otros <- frec_segsocial |> filter(Régimen == "Otros")
+```
+
 ```{r barras-segsocial, message=FALSE, warning=FALSE, fig.cap="Distribución por régimen de seguridad social de la madre."}
-df_atl |>
-  count(SEG_SOCIAL, name = "n") |>
-  mutate(pct = n / sum(n),
-         SEG_SOCIAL = fct_reorder(SEG_SOCIAL, n)) |>
-  ggplot(aes(x = n, y = SEG_SOCIAL)) +
+frec_segsocial |>
+  mutate(Régimen = fct_reorder(Régimen, n)) |>
+  ggplot(aes(x = n, y = Régimen)) +
   geom_col(width = 0.7, fill = pal[["principal"]]) +
-  geom_text(aes(label = paste0(num(n), "  (", pct(pct), ")")), hjust = -0.08) +
+  geom_text(aes(label = paste0(num(n), "  (", pct(p), ")")), hjust = -0.08) +
   scale_x_continuous(labels = num, expand = expansion(mult = c(0, 0.25))) +
   labs(title = "Régimen de seguridad social de la madre", subtitle = sub_atl,
        x = "Nacimientos", y = NULL, caption = fuente_dane) +
   theme_proyecto(grid = "x")
 ```
+
+En `r num(res_reg_sub$n)` nacimientos (`r pct(res_reg_sub$p)`) la madre pertenecía al régimen subsidiado y en `r num(res_reg_con$n)` (`r pct(res_reg_con$p)`) al contributivo. El `r pct(res_reg_otros$p)` restante corresponde a regímenes poco comunes o a madres no aseguradas.
