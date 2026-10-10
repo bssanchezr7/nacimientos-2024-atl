@@ -120,3 +120,64 @@ df_reg |>
        subtitle = sub_atl, x = NULL, y = NULL, caption = fuente_dane) +
   theme_proyecto(grid = "none")
 ```
+
+## Número de consultas prenatales según la subregión de residencia
+
+```{r consultas-subregion-tabla, message=FALSE, warning=FALSE}
+res_consultas_subregion <- df_atl |>
+  group_by(Subregión = SUBREGION) |>
+  summarise(
+    n = n(),
+    media = mean(NUMCONSUL),
+    de = sd(NUMCONSUL),
+    mediana = median(NUMCONSUL),
+    q1 = quantile(NUMCONSUL, 0.25),
+    q3 = quantile(NUMCONSUL, 0.75),
+    min = min(NUMCONSUL),
+    max = max(NUMCONSUL),
+    .groups = "drop"
+  ) |>
+  mutate(RIC = paste0(num_auto(q1), " – ", num_auto(q3)))
+
+res_consultas_subregion |>
+  select(Subregión, n, media, de, mediana, RIC, min, max) |>
+  gt() |>
+  fmt_number(columns = n, decimals = 0, sep_mark = ".", dec_mark = ",") |>
+  fmt_number(columns = c(media, de), decimals = 2, sep_mark = ".", dec_mark = ",") |>
+  fmt_number(columns = c(mediana, min, max), decimals = 0, sep_mark = ".", dec_mark = ",") |>
+  cols_label(Subregión = "Subregión", n = "n",
+             media = "Media", de = "DE", mediana = "Mediana", RIC = "RIC (Q1–Q3)",
+             min = "Mín", max = "Máx") |>
+  cols_align("left", columns = Subregión) |>
+  cols_align("center", columns = -Subregión) |>
+  estilo_tabla("Número de consultas según subregión de residencia")
+```
+
+```{r filas-consultas-subregion, include=FALSE}
+res_bq <- res_consultas_subregion |> filter(Subregión == "Barranquilla")
+res_sol <- res_consultas_subregion |> filter(Subregión == "Soledad")
+res_ram <- res_consultas_subregion |> filter(Subregión == "Resto del área metropolitana")
+res_resto <- res_consultas_subregion |> filter(Subregión == "Resto del departamento")
+```
+
+Barranquilla registró el promedio más alto de consultas, `r num(res_bq$media, 0.01)` (DE `r num(res_bq$de, 0.01)`), y el resto del departamento el más bajo, `r num(res_resto$media, 0.01)` (DE `r num(res_resto$de, 0.01)`). Mientras que para Soledad y el resto del área metropolitana quedaron en `r num(res_sol$media, 0.01)` (DE `r num(res_sol$de, 0.01)`) y `r num(res_ram$media, 0.01)` (DE `r num(res_ram$de, 0.01)`), respectivamente. El 50% de las madres de Barranquilla y Soledad tuvo al menos `r num_auto(res_bq$mediana)` (RIC `r res_bq$RIC` para ambas) consultas, mientras que el 50% de las madres del resto del área metropolitana y el resto del departamento tuvo al menos `r num_auto(res_ram$mediana)` (RIC `r res_ram$RIC` para ambas) consultas.
+
+```{r consultas-subregion, message=FALSE, warning=FALSE, fig.cap="Número de consultas prenatales según subregión de residencia de la madre."}
+x <- df_atl$NUMCONSUL
+
+df_atl |>
+  mutate(grupo = fct_rev(SUBREGION)) |>
+  add_count(grupo, name = "n_g") |>
+  mutate(grupo_lab = paste0(grupo, "  (n = ", num(n_g), ")"),
+         grupo_lab = fct_rev(grupo_lab)) |>
+  ggplot(aes(x = NUMCONSUL, y = grupo_lab)) +
+  geom_boxplot(width = 0.55, fill = pal[["claro"]], color = pal[["principal"]],
+               outlier.color = pal[["gris"]], outlier.alpha = 0.35, outlier.size = 0.9) +
+  punto_media() +
+  escala_x(x) +
+  labs(title = "Número de consultas prenatales según subregión de residencia",
+       subtitle = sub_atl, x = "Número de consultas", y = NULL,
+       caption = paste0(fuente_dane, "  ·  ◆ = media")) +
+  theme_proyecto(grid = "x")
+```
+Para el resto del área metropolitana se observa una media ligeramente a la derecha de la mediana, y en el resto del departamento ligeramente a la izquierda, aunque en ambos casos la diferencia apenas se distingue. En cambio, en Barranquilla y Soledad la media queda claramente a la izquierda de la mediana. Se registran valores atípicos en todas las subregiones, tanto para conteos bajos como para altos.

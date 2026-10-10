@@ -213,3 +213,41 @@ frec_segsocial |>
 ```
 
 En `r num(res_reg_sub$n)` nacimientos (`r pct(res_reg_sub$p)`) la madre pertenecía al régimen subsidiado y en `r num(res_reg_con$n)` (`r pct(res_reg_con$p)`) al contributivo. El `r pct(res_reg_otros$p)` restante corresponde a regímenes poco comunes o a madres no aseguradas.
+
+## Subregión de residencia de la madre
+
+```{r tabla-subregion, message=FALSE, warning=FALSE}
+frec_subregion <- df_atl |>
+  count(SUBREGION, name = "n") |>
+  mutate(p = n / sum(n))
+
+frec_subregion |>
+  gt() |>
+  fmt_number(columns = n, decimals = 0, sep_mark = ".", dec_mark = ",") |>
+  fmt_percent(columns = p, decimals = 1, scale_values = TRUE, sep_mark = ".", dec_mark = ",") |>
+  cols_label(SUBREGION = "Subregión", n = "n", p = "%") |>
+  cols_align("left", columns = SUBREGION) |>
+  cols_align("center", columns = c(n, p)) |>
+  estilo_tabla("Subregión de residencia de la madre: frecuencias")
+```
+
+```{r filas-subregion, include=FALSE}
+res_sub_bq <- frec_subregion |> filter(SUBREGION == "Barranquilla")
+res_sub_sol <- frec_subregion |> filter(SUBREGION == "Soledad")
+res_sub_ram <- frec_subregion |> filter(SUBREGION == "Resto del área metropolitana")
+res_sub_resto <- frec_subregion |> filter(SUBREGION == "Resto del departamento")
+```
+
+```{r barras-subregion, message=FALSE, warning=FALSE, fig.cap="Distribución por subregión de residencia de la madre."}
+frec_subregion |>
+  mutate(SUBREGION = fct_reorder(SUBREGION, n)) |>
+  ggplot(aes(x = n, y = SUBREGION)) +
+  geom_col(width = 0.7, fill = pal[["principal"]]) +
+  geom_text(aes(label = paste0(num(n), "  (", pct(p), ")")), hjust = -0.08) +
+  scale_x_continuous(labels = num, expand = expansion(mult = c(0, 0.25))) +
+  labs(title = "Subregión de residencia de la madre", subtitle = sub_atl,
+       x = "Nacimientos", y = NULL, caption = fuente_dane) +
+  theme_proyecto(grid = "x")
+```
+
+La mayoría de los nacimientos se concentraron en Barranquilla con el `r pct(res_sub_bq$p)` (`r num(res_sub_bq$n)`), seguida de Soledad con el `r pct(res_sub_sol$p)` (`r num(res_sub_sol$n)`), el resto del departamento con el `r pct(res_sub_resto$p)` (`r num(res_sub_resto$n)`) y por último el resto del área metropolitana con el `r pct(res_sub_ram$p)` (`r num(res_sub_ram$n)`).
