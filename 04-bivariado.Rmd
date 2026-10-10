@@ -61,67 +61,62 @@ df_atl |>
 
 En el boxplot se observó la caja del grupo adolescente ligeramente a la izquierda respecto a los grupos de edad adulta. La media (rombo) se ubica levemente a la izquierda de la mediana en el grupo adolescente y en el de edad óptima, mientras que en el grupo de edad avanzada visualmente no se puede apreciar una diferencia.
 
-## Tipo de parto según el régimen de salud
-
-Se comparan los dos regímenes con mayor volumen: Contributivo y Subsidiado.
+## Cesáreas según el régimen de salud
 
 ```{r cesareas-regimen-datos, message=FALSE, warning=FALSE}
 df_reg <- df_atl |>
   filter(SEG_SOCIAL %in% c("Contributivo", "Subsidiado")) |>
-  mutate(
-    SEG_SOCIAL = fct_drop(SEG_SOCIAL),
-    TIPO_PARTO = fct_drop(TIPO_PARTO)
-  )
+  mutate(SEG_SOCIAL = fct_drop(SEG_SOCIAL))
 
-tab <- table(df_reg$SEG_SOCIAL, df_reg$TIPO_PARTO)
+tab <- table(df_reg$SEG_SOCIAL, df_reg$CESAREA)
 prop_fila <- prop.table(tab, 1)
-chi <- chisq.test(tab)
 ```
+
+Se comparan los dos regímenes con mayor volumen, contributivo y subsidiado. Los `r num(nrow(df_atl) - nrow(df_reg))` nacimientos de otros regímenes o de madres no aseguradas quedan por fuera de la comparación.
 
 ```{r cesareas-regimen-tabla, message=FALSE, warning=FALSE}
 tibble(
   Régimen = rep(rownames(tab), times = ncol(tab)),
-  Parto = rep(colnames(tab), each = nrow(tab)),
+  Cesárea = rep(colnames(tab), each = nrow(tab)),
   n = as.vector(tab),
   p = as.vector(prop_fila)
 ) |>
   mutate(celda = paste0(num(n), " (", pct(p), ")")) |>
-  select(Régimen, Parto, celda) |>
-  pivot_wider(names_from = Parto, values_from = celda) |>
+  select(Régimen, Cesárea, celda) |>
+  pivot_wider(names_from = Cesárea, values_from = celda) |>
   mutate(Total = paste0(num(rowSums(tab)), " (", pct(rowSums(tab) / sum(tab)), ")")) |>
   gt() |>
+  tab_spanner(label = "Cesárea", columns = c(Sí, No)) |>
   cols_align("left", columns = Régimen) |>
   cols_align("center", columns = -Régimen) |>
-  estilo_tabla("Tipo de parto según régimen de seguridad social") |>
-  tab_footnote("Porcentajes por fila.") |>
-  tab_footnote(paste0(
-    "Prueba χ² de independencia: χ²(", chi$parameter, ") = ",
-    num(chi$statistic, 0.01), "; ", formato_p(chi$p.value), "."
-  ))
+  estilo_tabla("Parto por cesárea según régimen de seguridad social") |>
+  tab_footnote("Porcentajes por fila.")
 ```
 
-```{r cesareas-regimen, message=FALSE, warning=FALSE, fig.cap="Composición del tipo de parto dentro de cada régimen de salud."}
-colores_parto <- setNames(
-  pal_cat[seq_len(nlevels(df_reg$TIPO_PARTO))],
-  levels(df_reg$TIPO_PARTO)
+En el régimen contributivo, `r num(tab["Contributivo", "Sí"])` nacimientos (`r pct(prop_fila["Contributivo", "Sí"])`) fueron por cesárea y `r num(tab["Contributivo", "No"])` (`r pct(prop_fila["Contributivo", "No"])`) no. En el subsidiado, `r num(tab["Subsidiado", "Sí"])` (`r pct(prop_fila["Subsidiado", "Sí"])`) fueron por cesárea y `r num(tab["Subsidiado", "No"])` (`r pct(prop_fila["Subsidiado", "No"])`) no.
+
+```{r cesareas-regimen, message=FALSE, warning=FALSE, fig.cap="Proporción de partos por cesárea dentro de cada régimen de salud."}
+colores_cesarea <- setNames(
+  pal_cat[seq_len(nlevels(df_reg$CESAREA))],
+  levels(df_reg$CESAREA)
 )
 
 df_reg |>
-  count(SEG_SOCIAL, TIPO_PARTO, name = "n") |>
+  count(SEG_SOCIAL, CESAREA, name = "n") |>
   group_by(SEG_SOCIAL) |>
   mutate(p = n / sum(n), n_f = sum(n)) |>
   ungroup() |>
   mutate(f_lab = paste0(SEG_SOCIAL, "  (n = ", num(n_f), ")"),
-         txt = color_texto_sobre(colores_parto[as.character(TIPO_PARTO)])) |>
-  ggplot(aes(x = p, y = fct_rev(f_lab), fill = TIPO_PARTO)) +
+         txt = color_texto_sobre(colores_cesarea[as.character(CESAREA)])) |>
+  ggplot(aes(x = p, y = fct_rev(f_lab), fill = CESAREA)) +
   geom_col(position = position_fill(reverse = TRUE), width = 0.7,
            color = "white", linewidth = 0.3) +
   geom_text(aes(label = if_else(p >= 0.05, pct(p, 1), ""), color = txt),
             position = position_fill(vjust = 0.5, reverse = TRUE), size = 3.1) +
   scale_color_identity() +
-  scale_fill_manual(values = colores_parto, name = "Tipo de parto") +
+  scale_fill_manual(values = colores_cesarea, name = "Cesárea") +
   scale_x_continuous(labels = \(v) pct(v, 1), expand = expansion(0)) +
-  labs(title = "Tipo de parto según régimen de seguridad social",
+  labs(title = "Parto por cesárea según régimen de seguridad social",
        subtitle = sub_atl, x = NULL, y = NULL, caption = fuente_dane) +
   theme_proyecto(grid = "none")
 ```
