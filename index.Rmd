@@ -19,6 +19,9 @@ knitr::opts_chunk$set(
   out.width = "85%", dpi = 300
 )
 library(tidyverse)
+library(nortest)
+library(car)
+library(rstatix)
 source("R/estilo.R")
 source("R/tablas.R")
 ```

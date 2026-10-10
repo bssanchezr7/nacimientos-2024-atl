@@ -1,10 +1,158 @@
+
+```{r depende-datos-hipotesis, include=FALSE}
+if (!exists("df_atl")) {
+  stop("No existe `df_atl`. Corre primero el setup de index.Rmd y los chunks de 02-datos.Rmd.")
+}
+if (!exists("theme_proyecto")) {
+  stop("No está el estilo. Corre primero el chunk setup de index.Rmd (source de R/).")
+}
+```
+
 # Pruebas de hipótesis {#hipotesis}
 
 (Por redactar: criterios comunes a todas las pruebas.)
 
 ## Objetivo 1: consultas prenatales según la edad de la madre
 
-(Por redactar.)
+### Test de normalidad
+
+Por el tamaño de la muestra se decide usar Kolmogorov-Smirnov con corrección de
+Lilliefors (`nortest::lillie.test`) en cada grupo:
+
+$H_0$: las consultas del grupo siguen distribución normal;
+$H_1$: no la siguen.
+
+```{r lillie-consultas-edad, message=FALSE, warning=FALSE}
+
+res_lillie <- df_atl |>
+  group_by(`Grupo de edad` = EDAD_MADRE) |>
+  summarise(
+    n = n(),
+    D = lillie.test(NUMCONSUL)$statistic,
+    p = lillie.test(NUMCONSUL)$p.value,
+    .groups = "drop"
+  )
+```
+
+```{r lillie-consultas-edad-tabla, message=FALSE, warning=FALSE}
+res_lillie |>
+  gt() |>
+  fmt_number(columns = n, decimals = 0, sep_mark = ".", dec_mark = ",") |>
+  fmt_number(columns = D, decimals = 3, sep_mark = ".", dec_mark = ",") |>
+  fmt_number(columns = p, decimals = 3, sep_mark = ".", dec_mark = ",") |>
+  cols_label(`Grupo de edad` = "Grupo de edad", D = "D", p = "p") |>
+  estilo_tabla("Lilliefors: normalidad de consultas según edad") 
+```
+
+En los tres grupos p < 0,05, por lo tanto se rechaza el supuesto de normalidad para todos. Se decide realizar la prueba no paramétrica de Wilcoxon (Mann-Whitney) por pares.
+
+### Prueba de homogeneidad de varianzas
+
+Dado que no hay normalidad, la homogeneidad se evalúa con el test de Levene centrado en la mediana.
+
+$H_0$: igual varianza entre los dos grupos;
+$H_1$: varianza distinta.
+
+```{r levene-consultas-edad, message=FALSE, warning=FALSE}
+lev_adol_opt <- leveneTest(
+  NUMCONSUL ~ EDAD_MADRE,
+  data = df_atl |>
+    filter(EDAD_MADRE %in% c("Maternidad Adolescente", "Edad Reproductiva Óptima")) |>
+    mutate(EDAD_MADRE = fct_drop(EDAD_MADRE)),
+  center = "median"
+)
+
+lev_adol_avan <- leveneTest(
+  NUMCONSUL ~ EDAD_MADRE,
+  data = df_atl |>
+    filter(EDAD_MADRE %in% c("Maternidad Adolescente", "Edad Materna Avanzada")) |>
+    mutate(EDAD_MADRE = fct_drop(EDAD_MADRE)),
+  center = "median"
+)
+
+res_levene <- tibble(
+  Comparación = c("Adolescente vs Óptima", "Adolescente vs Avanzada"),
+  F = c(lev_adol_opt[1, 2], lev_adol_avan[1, 2]),
+  p = c(lev_adol_opt[1, 3], lev_adol_avan[1, 3])
+)
+```
+
+```{r levene-consultas-edad-tabla, message=FALSE, warning=FALSE}
+res_levene |>
+  gt() |>
+  fmt_number(columns = F, decimals = 2, sep_mark = ".", dec_mark = ",") |>
+  fmt_number(columns = p, decimals = 3, sep_mark = ".", dec_mark = ",") |>
+  cols_label(Comparación = "Comparación", F = "F", p = "p") |>
+  estilo_tabla("Levene (mediana): homogeneidad de consultas por par")
+```
+
+En la comparación Adolescente vs Óptima rechaza homogeneidad `r formato_p(res_levene$p[1])`, por lo que su Wilcoxon se interpreta solo como desplazamiento global $P(X>Y) \neq 0{,}5$. En la comparación Adolescente vs Avanzada `r formato_p(res_levene$p[2])`, no tenemos evidencias estadísticamente significativas para rechazar la homogeneidad, por lo que admite lectura como diferencia de medianas.
+
+### Comparación adolescentes frente a adultas (Wilcoxon–Mann–Whitney)
+
+Se realizan las dos comparaciones planeadas del objetivo 1, con corrección de Bonferroni por las dos pruebas ($\alpha = 0{,}05/2$):
+
+$H_0$: $P(X_{adol} > Y_{adulta}) = 0{,}5$ (misma distribución);
+$H_1$: $P(X_{adol} > Y_{adulta}) \neq 0{,}5$.
+
+```{r wilcox-consultas-edad, message=FALSE, warning=FALSE}
+df_adol_opt <- df_atl |>
+  filter(EDAD_MADRE %in% c("Maternidad Adolescente", "Edad Reproductiva Óptima")) |>
+  mutate(EDAD_MADRE = fct_drop(EDAD_MADRE))
+
+df_adol_avan <- df_atl |>
+  filter(EDAD_MADRE %in% c("Maternidad Adolescente", "Edad Materna Avanzada")) |>
+  mutate(EDAD_MADRE = fct_drop(EDAD_MADRE))
+
+w1 <- wilcox_test(NUMCONSUL ~ EDAD_MADRE, data = df_adol_opt, paired = FALSE)
+w2 <- wilcox_test(NUMCONSUL ~ EDAD_MADRE, data = df_adol_avan, paired = FALSE)
+
+res_wilcox <- bind_rows(
+  w1 |> mutate(Comparación = "Adolescente vs Óptima"),
+  w2 |> mutate(Comparación = "Adolescente vs Avanzada")
+) |>
+  mutate(p_adj = p.adjust(p, method = "bonferroni")) |>
+  select(Comparación, statistic, p, p_adj, n1, n2)
+
+med_adol <- median(x_adol <- df_atl |> filter(EDAD_MADRE == "Maternidad Adolescente") |> pull(NUMCONSUL))
+med_opt <- median(df_atl |> filter(EDAD_MADRE == "Edad Reproductiva Óptima") |> pull(NUMCONSUL))
+med_avan <- median(df_atl |> filter(EDAD_MADRE == "Edad Materna Avanzada") |> pull(NUMCONSUL))
+mean_adol <- mean(x_adol)
+mean_opt <- mean(df_atl |> filter(EDAD_MADRE == "Edad Reproductiva Óptima") |> pull(NUMCONSUL))
+mean_avan <- mean(df_atl |> filter(EDAD_MADRE == "Edad Materna Avanzada") |> pull(NUMCONSUL))
+```
+
+```{r wilcox-consultas-edad-tabla, message=FALSE, warning=FALSE}
+res_wilcox |>
+  gt() |>
+  fmt_number(columns = statistic, decimals = 0, sep_mark = ".", dec_mark = ",") |>
+  fmt_number(columns = c(p, p_adj), decimals = 3,
+             sep_mark = ".", dec_mark = ",") |>
+  cols_label(Comparación = "Comparación", statistic = "U", p = "p", p_adj = "p ajust. (Bonferroni)") |>
+  estilo_tabla("Wilcoxon: consultas de adolescentes frente a adultas")
+```
+
+En ambas comparaciones se rechaza $H_0$ (`r formato_p(max(res_wilcox$p_adj))` en el peor caso). Dado que las medianas del Capítulo \@ref(bivariado) ubican a las adolescentes por debajo, se concluye desplazamiento hacia menos consultas en adolescentes frente a los dos grupos adultos.
+
+### Efecto
+
+```{r effsize-consultas-edad, message=FALSE, warning=FALSE}
+res_eff <- bind_rows(
+  wilcox_effsize(NUMCONSUL ~ EDAD_MADRE, data = df_adol_opt, paired = FALSE),
+  wilcox_effsize(NUMCONSUL ~ EDAD_MADRE, data = df_adol_avan, paired = FALSE)
+)
+```
+
+```{r effsize-consultas-edad-tabla, message=FALSE, warning=FALSE}
+res_eff |>
+  gt() |>
+  fmt_number(columns = effsize, decimals = 3, sep_mark = ".", dec_mark = ",") |>
+  cols_label(.y. = ".y.", group1 = "group1", group2 = "group2", effsize = "effsize") |>
+  estilo_tabla("Efecto: consultas de adolescentes frente a adultas") |>
+  tab_footnote("r = Z / sqrt(N). Umbrales 0,1 pequeño; 0,3 mediano; 0,5 grande.")
+```
+
+En ambas comparaciones se rechazó $H_0$ (`r formato_p(max(res_wilcox$p_adj))`). Las adolescentes presentaron desplazamiento hacia menos consultas frente a óptima (mediana `r num_auto(med_adol)` vs `r num_auto(med_opt)` del Capítulo \@ref(bivariado), medias `r num(mean_adol, 0.01)` vs `r num(mean_opt, 0.01)`; $r=`r num(res_eff$effsize[1], 0.001)`$, `r res_eff$magnitude[1]`) y frente a avanzada (mediana `r num_auto(med_adol)` vs `r num_auto(med_avan)`; medias `r num(mean_adol, 0.01)` vs `r num(mean_avan, 0.01)`; $r=`r num(res_eff$effsize[2], 0.001)`$, `r res_eff$magnitude[2]`). Por tanto, sí hay menor consultas prenatales en adolescentes, pero más marcado frente a edad avanzada.
 
 ## Objetivo 2: cesáreas según el régimen de salud
 

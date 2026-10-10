@@ -13,7 +13,7 @@ if (!exists("theme_proyecto")) {
 df_atl |>
   select(NUMCONSUL, APGAR1, APGAR2) |>
   pivot_longer(everything(), names_to = "Variable", values_to = "valor") |>
-  mutate(Variable = recode(Variable,
+  mutate(Variable = dplyr::recode(Variable,
     NUMCONSUL = "Número de consultas",
     APGAR1 = "APGAR al minuto",
     APGAR2 = "APGAR a los cinco minutos")) |>
@@ -38,7 +38,7 @@ df_atl |>
   mutate(across(c(EDAD_MADRE, TIPO_PARTO, SEG_SOCIAL), as.character)) |>
   pivot_longer(c(EDAD_MADRE, TIPO_PARTO, SEG_SOCIAL),
                names_to = "Variable", values_to = "Categoría") |>
-  mutate(Variable = recode(Variable,
+  mutate(Variable = dplyr::recode(Variable,
     EDAD_MADRE = "Grupo de edad de la madre",
     TIPO_PARTO = "Tipo de parto",
     SEG_SOCIAL = "Régimen de seguridad social")) |>
