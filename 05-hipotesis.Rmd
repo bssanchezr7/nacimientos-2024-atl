@@ -156,11 +156,7 @@ En ambas comparaciones se rechazó $H_0$ (`r formato_p(max(res_wilcox$p_adj))`).
 
 ## Objetivo 2: cesáreas según el régimen de salud
 
-Se busca saber si las cesáreas son igual de frecuentes en el régimen contributivo y en el subsidiado. La hipótesis nula plantea que la proporción de cesáreas es la misma en los dos regímenes; la alternativa, que es distinta, sin suponer de antemano cuál es mayor:
-
-$$H_0: p_C = p_S \qquad\qquad H_1: p_C \neq p_S$$
-
-donde $p_C$ y $p_S$ son las proporciones de partos por cesárea en el régimen contributivo y en el subsidiado.
+Se busca saber si las cesáreas son igual de frecuentes en el régimen contributivo y en el subsidiado.
 
 ```{r hip-cesareas-prueba, include=FALSE}
 chi_ces <- chisq.test(tab)
@@ -168,31 +164,62 @@ dif_ces <- prop.test(tab[, "Sí"], rowSums(tab))
 v_ces <- sqrt(unname(chi_ces$statistic) / sum(tab))
 ```
 
-Para contrastarlas se usa la prueba chi-cuadrado de homogeneidad de proporciones, con un nivel de significancia del 5 %. La prueba requiere que todas las frecuencias esperadas sean mayores o iguales que 5; aquí la menor es `r num(min(chi_ces$expected))`, por lo que la condición se cumple.
+### Condición de la prueba
 
-```{r hip-cesareas-tabla, message=FALSE, warning=FALSE}
-tribble(
-  ~Grupo,                    ~Medida,                ~Valor,
-  "Proporción de cesáreas",  "Contributivo",         pct(unname(dif_ces$estimate[1])),
-  "Proporción de cesáreas",  "Subsidiado",           pct(unname(dif_ces$estimate[2])),
-  "Proporción de cesáreas",  "Diferencia (IC 95 %)", paste0(num(100 * diff(rev(dif_ces$estimate)), 0.1), " puntos (",
-                                                           num(100 * dif_ces$conf.int[1], 0.1), " a ",
-                                                           num(100 * dif_ces$conf.int[2], 0.1), ")"),
-  "Prueba de homogeneidad",  "χ²",                   num(unname(chi_ces$statistic), 0.01),
-  "Prueba de homogeneidad",  "Grados de libertad",   as.character(unname(chi_ces$parameter)),
-  "Prueba de homogeneidad",  "Valor p",              formato_p(chi_ces$p.value),
-  "Tamaño del efecto",       "V de Cramér",          num(v_ces, 0.01)
-) |>
-  gt(groupname_col = "Grupo") |>
-  cols_label(Medida = "", Valor = "") |>
-  cols_align("left", columns = Medida) |>
-  cols_align("center", columns = Valor) |>
-  estilo_tabla("Prueba de homogeneidad: cesáreas según régimen de salud")
+La prueba chi-cuadrado de homogeneidad requiere que todas las frecuencias esperadas sean mayores o iguales que 5.
+
+```{r hip-cesareas-esperadas, message=FALSE, warning=FALSE}
+as_tibble(chi_ces$expected, rownames = "Régimen") |>
+  gt() |>
+  fmt_number(columns = c(Sí, No), decimals = 0, sep_mark = ".", dec_mark = ",") |>
+  tab_spanner(label = "Cesárea", columns = c(Sí, No)) |>
+  cols_align("left", columns = Régimen) |>
+  cols_align("center", columns = c(Sí, No)) |>
+  estilo_tabla("Frecuencias esperadas: cesáreas según régimen de salud")
 ```
 
-La prueba dio un chi-cuadrado de `r num(unname(chi_ces$statistic), 0.01)` con `r unname(chi_ces$parameter)` grado de libertad (`r formato_p(chi_ces$p.value)`), por lo que se rechaza la hipótesis nula: la proporción de cesáreas no es igual en los dos regímenes. En el contributivo fue del `r pct(unname(dif_ces$estimate[1]))` y en el subsidiado del `r pct(unname(dif_ces$estimate[2]))`, una diferencia de `r num(100 * diff(rev(dif_ces$estimate)), 0.1)` puntos porcentuales.
+La menor frecuencia esperada es `r num(min(chi_ces$expected))`, por lo que la condición se cumple.
 
-Existe una diferencia; sin embargo, el tamaño del efecto muestra que es despreciable: la V de Cramér fue de `r num(v_ces, 0.01)`, muy por debajo del 0,10 que se considera un efecto pequeño [@cohen1988]. De esto se concluye que, si bien el porcentaje de cesáreas es mayor en el régimen contributivo, la diferencia entre los dos regímenes es mínima.
+### Prueba de homogeneidad de proporciones
+
+La hipótesis nula plantea que la proporción de cesáreas es la misma en los dos regímenes; la alternativa, que es distinta, sin suponer de antemano cuál es mayor:
+
+$$H_0: p_C = p_S \qquad\qquad H_1: p_C \neq p_S$$
+
+donde $p_C$ y $p_S$ son las proporciones de partos por cesárea en el régimen contributivo y en el subsidiado. Se usa un nivel de significancia del 5 %.
+
+```{r hip-cesareas-tabla, message=FALSE, warning=FALSE}
+tibble(
+  Contributivo = pct(unname(dif_ces$estimate[1])),
+  Subsidiado = pct(unname(dif_ces$estimate[2])),
+  Diferencia = paste0(num(100 * diff(rev(dif_ces$estimate)), 0.1), " puntos (",
+                      num(100 * dif_ces$conf.int[1], 0.1), " a ",
+                      num(100 * dif_ces$conf.int[2], 0.1), ")"),
+  chi = num(unname(chi_ces$statistic), 0.01),
+  gl = unname(chi_ces$parameter),
+  p = formato_p(chi_ces$p.value)
+) |>
+  gt() |>
+  tab_spanner(label = "Proporción de cesáreas", columns = c(Contributivo, Subsidiado)) |>
+  cols_label(Diferencia = "Diferencia (IC 95 %)", chi = "χ²", gl = "gl", p = "Valor p") |>
+  cols_align("center", columns = everything()) |>
+  estilo_tabla("Chi-cuadrado de homogeneidad: cesáreas según régimen de salud")
+```
+
+Se rechaza la hipótesis nula (`r formato_p(chi_ces$p.value)`): la proporción de cesáreas no es igual en los dos regímenes. En el contributivo fue del `r pct(unname(dif_ces$estimate[1]))` y en el subsidiado del `r pct(unname(dif_ces$estimate[2]))`, una diferencia de `r num(100 * diff(rev(dif_ces$estimate)), 0.1)` puntos porcentuales.
+
+### Tamaño del efecto
+
+```{r hip-cesareas-efecto, message=FALSE, warning=FALSE}
+tibble(Medida = "V de Cramér", Valor = num(v_ces, 0.01)) |>
+  gt() |>
+  cols_align("left", columns = Medida) |>
+  cols_align("center", columns = Valor) |>
+  estilo_tabla("Tamaño del efecto: cesáreas según régimen de salud") |>
+  tab_footnote("Umbrales: 0,10 pequeño; 0,30 mediano; 0,50 grande.")
+```
+
+Si bien existe una diferencia, el tamaño del efecto indica que es despreciable: la V de Cramér resultante fue de `r num(v_ces, 0.01)`, por debajo del 0,10 que se considera un efecto pequeño [@cohen1988]. De esto se concluye que, aunque el porcentaje de cesáreas es mayor en el régimen contributivo, la diferencia entre los dos regímenes es mínima.
 
 ## Objetivo 3: consultas prenatales según la subregión de residencia
 
@@ -200,7 +227,125 @@ Existe una diferencia; sin embargo, el tamaño del efecto muestra que es desprec
 
 ## Objetivo 4: Apgar al minuto según la edad de la madre
 
-(Por redactar.)
+Se busca saber si el puntaje Apgar al minuto cambia según la edad de la madre, comparando los tres grupos de edad.
+
+```{r hip-apgar-edad-pruebas, include=FALSE}
+niv_edad <- levels(df_atl$EDAD_MADRE)
+
+norm_apgar_edad <- df_atl |>
+  group_by(`Grupo de edad` = EDAD_MADRE) |>
+  summarise(
+    n = n(),
+    D = lillie.test(APGAR1)$statistic,
+    p = lillie.test(APGAR1)$p.value,
+    .groups = "drop"
+  )
+
+lev_apgar_edad <- leveneTest(APGAR1 ~ EDAD_MADRE, data = df_atl, center = "median")
+kw_apgar_edad <- kruskal.test(APGAR1 ~ EDAD_MADRE, data = df_atl)
+eta_apgar_edad <- kruskal_effsize(df_atl, APGAR1 ~ EDAD_MADRE)$effsize
+post_apgar_edad <- pairwise.wilcox.test(df_atl$APGAR1, df_atl$EDAD_MADRE,
+                                        exact = FALSE, p.adjust.method = "bonferroni")$p.value
+```
+
+### Prueba de normalidad
+
+Se evalúa en cada grupo de edad con la prueba de Lilliefors:
+
+$H_0$: el puntaje Apgar del grupo sigue una distribución normal;
+$H_1$: no la sigue.
+
+```{r hip-apgar-edad-normalidad, message=FALSE, warning=FALSE}
+norm_apgar_edad |>
+  mutate(p = map_chr(p, formato_p)) |>
+  gt() |>
+  fmt_number(columns = n, decimals = 0, sep_mark = ".", dec_mark = ",") |>
+  fmt_number(columns = D, decimals = 3, sep_mark = ".", dec_mark = ",") |>
+  cols_label(n = "n", D = "D", p = "Valor p") |>
+  cols_align("left", columns = `Grupo de edad`) |>
+  cols_align("center", columns = -`Grupo de edad`) |>
+  estilo_tabla("Lilliefors: normalidad del APGAR al minuto según edad")
+```
+
+En los tres grupos se rechaza la normalidad (`r formato_p(max(norm_apgar_edad$p))`), por lo que se decide usar una prueba no paramétrica.
+
+### Prueba de homogeneidad de varianzas
+
+Como no hay normalidad, la homogeneidad se evalúa con la prueba de Levene centrada en la mediana:
+
+$H_0$: la varianza del puntaje es igual en los tres grupos;
+$H_1$: al menos un grupo tiene una varianza distinta.
+
+```{r hip-apgar-edad-levene, message=FALSE, warning=FALSE}
+tibble(
+  F = lev_apgar_edad[1, "F value"],
+  gl = paste(lev_apgar_edad$Df[1], "y", num(lev_apgar_edad$Df[2])),
+  p = formato_p(lev_apgar_edad[1, "Pr(>F)"])
+) |>
+  gt() |>
+  fmt_number(columns = F, decimals = 2, sep_mark = ".", dec_mark = ",") |>
+  cols_label(F = "F", gl = "gl", p = "Valor p") |>
+  cols_align("center", columns = everything()) |>
+  estilo_tabla("Levene (mediana): homogeneidad del APGAR al minuto según edad")
+```
+
+Se rechaza la igualdad de varianzas (`r formato_p(lev_apgar_edad[1, "Pr(>F)"])`), por lo que el resultado de la prueba siguiente se interpreta como una diferencia en la distribución del puntaje y no estrictamente en su mediana.
+
+### Prueba de Kruskal-Wallis
+
+$H_0$: los tres grupos de edad tienen la misma distribución del puntaje;
+$H_1$: al menos un grupo tiene una distribución distinta.
+
+Se usa un nivel de significancia del 5 %.
+
+```{r hip-apgar-edad-kruskal, message=FALSE, warning=FALSE}
+tibble(
+  chi = num(unname(kw_apgar_edad$statistic), 0.01),
+  gl = unname(kw_apgar_edad$parameter),
+  p = formato_p(kw_apgar_edad$p.value)
+) |>
+  gt() |>
+  cols_label(chi = "χ²", gl = "gl", p = "Valor p") |>
+  cols_align("center", columns = everything()) |>
+  estilo_tabla("Kruskal-Wallis: APGAR al minuto según grupo de edad")
+```
+
+Se rechaza la hipótesis nula (`r formato_p(kw_apgar_edad$p.value)`): el puntaje Apgar al minuto no se distribuye igual en los tres grupos de edad.
+
+### Comparaciones por pares
+
+Para identificar qué grupos difieren se compara cada par con la prueba de Wilcoxon, ajustando los valores p con la corrección de Bonferroni.
+
+```{r hip-apgar-edad-pares, message=FALSE, warning=FALSE}
+tibble(
+  Comparación = c(paste(niv_edad[1], "–", niv_edad[2]),
+                  paste(niv_edad[1], "–", niv_edad[3]),
+                  paste(niv_edad[2], "–", niv_edad[3])),
+  p = c(formato_p(post_apgar_edad[niv_edad[2], niv_edad[1]]),
+        formato_p(post_apgar_edad[niv_edad[3], niv_edad[1]]),
+        formato_p(post_apgar_edad[niv_edad[3], niv_edad[2]]))
+) |>
+  gt() |>
+  cols_label(p = "Valor p ajustado (Bonferroni)") |>
+  cols_align("left", columns = Comparación) |>
+  cols_align("center", columns = p) |>
+  estilo_tabla("Wilcoxon por pares: APGAR al minuto según grupo de edad")
+```
+
+Los nacimientos de madres adolescentes difieren de los de madres de 20 a 34 años (`r formato_p(post_apgar_edad[niv_edad[2], niv_edad[1]])`) y de los de 35 años o más (`r formato_p(post_apgar_edad[niv_edad[3], niv_edad[1]])`), mientras que entre estos dos últimos grupos no hay diferencia (`r formato_p(post_apgar_edad[niv_edad[3], niv_edad[2]])`).
+
+### Tamaño del efecto
+
+```{r hip-apgar-edad-efecto, message=FALSE, warning=FALSE}
+tibble(Medida = "Eta cuadrado", Valor = num(unname(eta_apgar_edad), 0.001)) |>
+  gt() |>
+  cols_align("left", columns = Medida) |>
+  cols_align("center", columns = Valor) |>
+  estilo_tabla("Tamaño del efecto: APGAR al minuto según grupo de edad") |>
+  tab_footnote("Umbrales: 0,01 pequeño; 0,06 mediano; 0,14 grande.")
+```
+
+Si bien existe una diferencia, el tamaño del efecto indica que es despreciable: el eta cuadrado resultante fue de `r num(unname(eta_apgar_edad), 0.001)`, por debajo del 0,01 que se considera un efecto pequeño [@cohen1988]. De esto se concluye que, aunque los recién nacidos de madres adolescentes tienen puntajes ligeramente más bajos, el Apgar al minuto es prácticamente igual en los tres grupos de edad.
 
 ## Objetivo 5: Apgar al minuto y a los cinco minutos
 
