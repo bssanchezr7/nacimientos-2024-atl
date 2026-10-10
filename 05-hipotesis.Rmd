@@ -196,7 +196,108 @@ Existe una diferencia; sin embargo, el tamaño del efecto muestra que es desprec
 
 ## Objetivo 3: consultas prenatales según la subregión de residencia
 
-(Por redactar.)
+### Test de normalidad
+
+Por el tamaño de la muestra se decide usar Kolmogorov-Smirnov con corrección de
+Lilliefors (`nortest::lillie.test`) en cada subregión:
+
+$H_0$: las consultas de la subregión siguen distribución normal;
+$H_1$: no la siguen.
+
+```{r lillie-consultas-subregion, message=FALSE, warning=FALSE}
+
+res_lillie_sub <- df_atl |>
+  group_by(Subregión = SUBREGION) |>
+  summarise(
+    n = n(),
+    D = lillie.test(NUMCONSUL)$statistic,
+    p = lillie.test(NUMCONSUL)$p.value,
+    .groups = "drop"
+  )
+```
+
+```{r lillie-consultas-subregion-tabla, message=FALSE, warning=FALSE}
+res_lillie_sub |>
+  gt() |>
+  fmt_number(columns = n, decimals = 0, sep_mark = ".", dec_mark = ",") |>
+  fmt_number(columns = D, decimals = 3, sep_mark = ".", dec_mark = ",") |>
+  fmt_number(columns = p, decimals = 3, sep_mark = ".", dec_mark = ",") |>
+  cols_label(Subregión = "Subregión", D = "D", p = "p") |>
+  estilo_tabla("Lilliefors: normalidad de consultas según subregión")
+```
+
+En las cuatro subregiones p < 0,05, por lo tanto se rechaza el supuesto de normalidad para todas. Se decide realizar la prueba no paramétrica de Kruskal-Wallis.
+
+### Prueba de homogeneidad de varianzas
+
+Dado que no hay normalidad, la homogeneidad se evalúa con el test de Levene centrado en la mediana.
+
+$H_0$: igual varianza entre las subregiones;
+$H_1$: varianza distinta en al menos una.
+
+```{r levene-consultas-subregion, message=FALSE, warning=FALSE}
+lev_sub <- leveneTest(NUMCONSUL ~ SUBREGION, data = df_atl, center = "median")
+
+res_levene_sub <- tibble(
+  F = lev_sub[1, 2],
+  gl1 = lev_sub[1, 1],
+  gl2 = lev_sub[2, 1],
+  p = lev_sub[1, 3]
+)
+```
+
+```{r levene-consultas-subregion-tabla, message=FALSE, warning=FALSE}
+res_levene_sub |>
+  gt() |>
+  fmt_number(columns = F, decimals = 2, sep_mark = ".", dec_mark = ",") |>
+  fmt_number(columns = c(gl1, gl2), decimals = 0, sep_mark = ".", dec_mark = ",") |>
+  fmt_number(columns = p, decimals = 3, sep_mark = ".", dec_mark = ",") |>
+  cols_label(F = "F", gl1 = "gl1", gl2 = "gl2", p = "p") |>
+  estilo_tabla("Levene (mediana): homogeneidad de consultas entre subregiones")
+```
+
+Se rechaza homogeneidad `r formato_p(res_levene_sub$p)`, por lo que el Kruskal-Wallis se interpreta solo como diferencia distribucional global y no como diferencia de medianas en sentido estricto.
+
+### Comparación global (Kruskal-Wallis)
+
+$H_0$: las consultas de las cuatro subregiones provienen de la misma distribución;
+$H_1$: al menos una subregión proviene de una distribución distinta.
+
+```{r kruskal-consultas-subregion, message=FALSE, warning=FALSE}
+kw_sub <- kruskal_test(NUMCONSUL ~ SUBREGION, data = df_atl)
+```
+
+```{r kruskal-consultas-subregion-tabla, message=FALSE, warning=FALSE}
+tibble(
+  H = kw_sub$statistic,
+  gl = kw_sub$df,
+  p = kw_sub$p
+) |>
+  gt() |>
+  fmt_number(columns = H, decimals = 2, sep_mark = ".", dec_mark = ",") |>
+  fmt_number(columns = gl, decimals = 0, sep_mark = ".", dec_mark = ",") |>
+  fmt_number(columns = p, decimals = 3, sep_mark = ".", dec_mark = ",") |>
+  cols_label(H = "H", gl = "gl", p = "p") |>
+  estilo_tabla("Kruskal-Wallis: consultas según subregión de residencia")
+```
+
+Se rechaza $H_0$ ($\chi^2(`r kw_sub$df`) = `r num(kw_sub$statistic, 0.01)`; `r formato_p(kw_sub$p)`): el control prenatal no fue igual en las cuatro subregiones.
+
+```{r effsize-consultas-subregion, message=FALSE, warning=FALSE}
+eff_sub <- kruskal_effsize(NUMCONSUL ~ SUBREGION, data = df_atl)
+```
+
+```{r effsize-consultas-subregion-tabla, message=FALSE, warning=FALSE}
+eff_sub |>
+  gt() |>
+  fmt_number(columns = effsize, decimals = 3, sep_mark = ".", dec_mark = ",") |>
+  cols_label(.y. = ".y.", effsize = "η²[H]") |>
+  estilo_tabla("Efecto: consultas según subregión de residencia") |>
+  tab_footnote("η²[H]. Umbrales 0,01 pequeño; 0,06 mediano; 0,14 grande.")
+```
+
+El tamaño del efecto fue pequeño ($\eta^2_H$ = `r num(eff_sub$effsize, 0.001)`): la desigualdad entre subregiones existe.
+
 
 ## Objetivo 4: Apgar al minuto según la edad de la madre
 
