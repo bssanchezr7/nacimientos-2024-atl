@@ -54,8 +54,8 @@ df_atl |>
   punto_media() +
   escala_x(x) +
   labs(title = "Número de consultas prenatales según grupo de edad",
-       subtitle = sub_atl, x = "Número de consultas", y = NULL,
-       caption = paste0(fuente_dane, "  ·  ◆ = media")) +
+       x = "Número de consultas", y = NULL,
+       caption = "◆ = media") +
   theme_proyecto(grid = "x")
 ```
 
@@ -117,7 +117,7 @@ df_reg |>
   scale_fill_manual(values = colores_cesarea, name = "Cesárea") +
   scale_x_continuous(labels = \(v) pct(v, 1), expand = expansion(0)) +
   labs(title = "Parto por cesárea según régimen de seguridad social",
-       subtitle = sub_atl, x = NULL, y = NULL, caption = fuente_dane) +
+       x = NULL, y = NULL) +
   theme_proyecto(grid = "none")
 ```
 
@@ -176,8 +176,8 @@ df_atl |>
   punto_media() +
   escala_x(x) +
   labs(title = "Número de consultas prenatales según subregión de residencia",
-       subtitle = sub_atl, x = "Número de consultas", y = NULL,
-       caption = paste0(fuente_dane, "  ·  ◆ = media")) +
+       x = "Número de consultas", y = NULL,
+       caption = "◆ = media") +
   theme_proyecto(grid = "x")
 ```
 Para el resto del área metropolitana se observa una media ligeramente a la derecha de la mediana, y en el resto del departamento ligeramente a la izquierda, aunque en ambos casos la diferencia apenas se distingue. En cambio, en Barranquilla y Soledad la media queda claramente a la izquierda de la mediana. Se registran valores atípicos en todas las subregiones, tanto para conteos bajos como para altos.
@@ -251,7 +251,7 @@ df_apgar_edad |>
   scale_fill_manual(values = colores_apgar, name = "Apgar al minuto") +
   scale_x_continuous(labels = \(v) pct(v, 1), expand = expansion(0)) +
   labs(title = "Apgar al minuto según grupo de edad",
-       subtitle = sub_atl, x = NULL, y = NULL, caption = fuente_dane) +
+       x = NULL, y = NULL) +
   theme_proyecto(grid = "none")
 ```
 
@@ -345,6 +345,6 @@ df_apgar_tiempo |>
   scale_fill_manual(values = colores_apgar_tiempo, name = "Apgar a los cinco minutos") +
   scale_x_continuous(labels = \(v) pct(v, 1), expand = expansion(0)) +
   labs(title = "Apgar a los cinco minutos según Apgar al minuto",
-       subtitle = sub_atl, x = NULL, y = NULL, caption = fuente_dane) +
+       x = NULL, y = NULL) +
   theme_proyecto(grid = "none")
 ```

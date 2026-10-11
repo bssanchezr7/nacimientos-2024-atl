@@ -12,6 +12,8 @@ registro de nacimientos [-@dane2024eevv]. El DANE consolida los certificados
 de nacido vivo que se diligencian por cada nacimiento, los revisa y los
 publica como microdatos anonimizados de acceso abierto. Se utilizó la base de
 nacimientos de 2024, que contiene `r num(nrow(df))` registros de todo el país.
+Todas las tablas y figuras de este documento son de elaboración propia a
+partir de esa base.
 
 ## Población y unidad de análisis
 
@@ -59,7 +61,7 @@ tribble(
   gt() |>
   fmt_markdown(columns = Variable) |>
   cols_align("left", columns = everything()) |>
-  estilo_tabla("Variables tomadas de la base del DANE", subtitulo = NULL)
+  estilo_tabla("Variables tomadas de la base del DANE")
 ```
 
 A partir de estas se construyeron tres variables más, que agrupan sus
@@ -75,8 +77,7 @@ tribble(
   gt() |>
   fmt_markdown(columns = `Se construye a partir de`) |>
   cols_align("left", columns = everything()) |>
-  estilo_tabla("Variables construidas para el análisis", subtitulo = NULL,
-               fuente = "Fuente: elaboración propia a partir de DANE, Estadísticas Vitales 2024")
+  estilo_tabla("Variables construidas para el análisis")
 ```
 
 ## Limpieza y transformación

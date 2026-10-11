@@ -1,14 +1,5 @@
 # Análisis univariado {#univariado}
 
-```{r depende-datos, include=FALSE}
-if (!exists("df_atl")) {
-  stop("No existe `df_atl`. Corre primero el setup de index.Rmd y los chunks de 02-datos.Rmd.")
-}
-if (!exists("theme_proyecto")) {
-  stop("No está el estilo. Corre primero el chunk setup de index.Rmd (source de R/).")
-}
-```
-
 ## Número de consultas
 
 ```{r tabla-numconsul, message=FALSE, warning=FALSE}
@@ -54,8 +45,8 @@ x <- df_atl$NUMCONSUL
   lineas_ref(x) +
   escala_x(x) +
   scale_y_continuous(labels = num, expand = expansion(mult = c(0, 0.12))) +
-  labs(title = "Número de consultas prenatales", subtitle = sub_atl,
-       x = "Número de consultas", y = "Frecuencia", caption = fuente_dane) +
+  labs(title = "Número de consultas prenatales",
+       x = "Número de consultas", y = "Frecuencia") +
   theme_proyecto()
 ```
 
@@ -98,8 +89,8 @@ df_atl |>
   geom_col(width = 0.7, fill = pal[["principal"]]) +
   geom_text(aes(label = paste0(num(n), "  (", pct(pct), ")")), hjust = -0.08) +
   scale_x_continuous(labels = num, expand = expansion(mult = c(0, 0.25))) +
-  labs(title = "Grupo de edad de la madre", subtitle = sub_atl,
-       x = "Nacimientos", y = NULL, caption = fuente_dane) +
+  labs(title = "Grupo de edad de la madre",
+       x = "Nacimientos", y = NULL) +
   theme_proyecto(grid = "x")
 ```
 Del total de `r num(sum(frec_edad$n))` nacimientos, predominó el grupo de 20 a 34 años con un `r pct(res_grupo_optima$p)` (`r num(res_grupo_optima$n)` nacimientos), seguido por el de madres adolescentes con un `r pct(res_grupo_adol$p)` (`r num(res_grupo_adol$n)` nacimientos) y por último el de 35 años o más con un `r pct(res_grupo_avanz$p)` (`r num(res_grupo_avanz$n)` nacimientos).
@@ -148,8 +139,8 @@ ggplot(frec_apgar1, aes(x = APGAR1, y = n)) +
   lineas_ref(x) +
   escala_x(x) +
   scale_y_continuous(labels = num, expand = expansion(mult = c(0, 0.12))) +
-  labs(title = "Puntaje Apgar al minuto", subtitle = sub_atl,
-       x = "Apgar al minuto", y = "Frecuencia", caption = fuente_dane) +
+  labs(title = "Puntaje Apgar al minuto",
+       x = "Apgar al minuto", y = "Frecuencia") +
   theme_proyecto()
 ```
 
@@ -197,14 +188,15 @@ res_apgar2 |>
 ```{r hist-apgar2, message=FALSE, warning=FALSE, fig.cap="Distribución del puntaje Apgar a los cinco minutos."}
 x <- df_atl$APGAR2
 
-ggplot(df_atl, aes(x = APGAR2)) +
-  geom_histogram(binwidth = 1, center = 0,
-                 fill = pal[["principal"]], color = "white", linewidth = 0.3) +
+ggplot(frec_apgar2, aes(x = APGAR2, y = n)) +
+  geom_col(fill = pal[["principal"]], color = "white",
+           linewidth = 0.3, width = 1) +
+  geom_text(aes(label = num(n, 1)), vjust = -0.4, size = 2.4) +
   lineas_ref(x) +
   escala_x(x) +
-  scale_y_continuous(labels = num, expand = expansion(mult = c(0, 0.05))) +
-  labs(title = "Puntaje Apgar a los cinco minutos", subtitle = sub_atl,
-       x = "Apgar a los cinco minutos", y = "Nacimientos", caption = fuente_dane) +
+  scale_y_continuous(labels = num, expand = expansion(mult = c(0, 0.12))) +
+  labs(title = "Puntaje Apgar a los cinco minutos",
+       x = "Apgar a los cinco minutos", y = "Frecuencia") +
   theme_proyecto()
 ```
 
@@ -245,8 +237,8 @@ frec_cesarea |>
   geom_col(width = 0.7, fill = pal[["principal"]]) +
   geom_text(aes(label = paste0(num(n), "  (", pct(p), ")")), hjust = -0.08) +
   scale_x_continuous(labels = num, expand = expansion(mult = c(0, 0.25))) +
-  labs(title = "Parto por cesárea", subtitle = sub_atl,
-       x = "Nacimientos", y = NULL, caption = fuente_dane) +
+  labs(title = "Parto por cesárea",
+       x = "Nacimientos", y = NULL) +
   theme_proyecto(grid = "x")
 ```
 
@@ -286,8 +278,8 @@ frec_segsocial |>
   geom_col(width = 0.7, fill = pal[["principal"]]) +
   geom_text(aes(label = paste0(num(n), "  (", pct(p), ")")), hjust = -0.08) +
   scale_x_continuous(labels = num, expand = expansion(mult = c(0, 0.25))) +
-  labs(title = "Régimen de seguridad social de la madre", subtitle = sub_atl,
-       x = "Nacimientos", y = NULL, caption = fuente_dane) +
+  labs(title = "Régimen de seguridad social de la madre",
+       x = "Nacimientos", y = NULL) +
   theme_proyecto(grid = "x")
 ```
 
@@ -324,8 +316,8 @@ frec_subregion |>
   geom_col(width = 0.7, fill = pal[["principal"]]) +
   geom_text(aes(label = paste0(num(n), "  (", pct(p), ")")), hjust = -0.08) +
   scale_x_continuous(labels = num, expand = expansion(mult = c(0, 0.25))) +
-  labs(title = "Subregión de residencia de la madre", subtitle = sub_atl,
-       x = "Nacimientos", y = NULL, caption = fuente_dane) +
+  labs(title = "Subregión de residencia de la madre",
+       x = "Nacimientos", y = NULL) +
   theme_proyecto(grid = "x")
 ```
 

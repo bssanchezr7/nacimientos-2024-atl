@@ -36,9 +36,6 @@ color_texto_sobre <- function(fondos) {
   ifelse(lum < 0.55, "white", pal[["texto"]])
 }
 
-fuente_dane <- "Fuente: DANE, Estadísticas Vitales 2024"
-sub_atl     <- "Madres residentes en el Atlántico, 2024"
-
 # FORMATO DE NÚMEROS (convención colombiana) --------------------------------
 num <- function(x, acc = 1) scales::number(x, accuracy = acc, big.mark = ".", decimal.mark = ",")
 pct <- function(x, acc = 0.1) scales::percent(x, accuracy = acc, big.mark = ".", decimal.mark = ",")
