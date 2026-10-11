@@ -182,67 +182,6 @@ df_atl |>
 ```
 Para el resto del área metropolitana se observa una media ligeramente a la derecha de la mediana, y en el resto del departamento ligeramente a la izquierda, aunque en ambos casos la diferencia apenas se distingue. En cambio, en Barranquilla y Soledad la media queda claramente a la izquierda de la mediana. Se registran valores atípicos en todas las subregiones, tanto para conteos bajos como para altos.
 
-## Apgar al minuto y a los cinco minutos
-
-```{r apgar-tiempo-datos, message=FALSE, warning=FALSE}
-df_apgar_tiempo <- df_atl |>
-  mutate(
-    apgar1_cat = cut(APGAR1, breaks = c(-Inf, 6, 7, 8, 9, 10),
-                     labels = c("Menor que 7", "7", "8", "9", "10")),
-    apgar2_cat = cut(APGAR2, breaks = c(-Inf, 6, 7, 8, 9, 10),
-                     labels = c("Menor que 7", "7", "8", "9", "10"))
-  )
-
-tab_apgar <- table(df_apgar_tiempo$apgar1_cat, df_apgar_tiempo$apgar2_cat)
-prop_apgar_fila <- prop.table(tab_apgar, 1)
-```
-
-```{r apgar-tiempo-tabla, message=FALSE, warning=FALSE}
-tibble(
-  `Apgar al minuto` = rep(rownames(tab_apgar), times = ncol(tab_apgar)),
-  `Apgar a los cinco minutos` = rep(colnames(tab_apgar), each = nrow(tab_apgar)),
-  n = as.vector(tab_apgar),
-  p = as.vector(prop_apgar_fila)
-) |>
-  mutate(celda = paste0(num(n), " (", pct(p), ")")) |>
-  select(`Apgar al minuto`, `Apgar a los cinco minutos`, celda) |>
-  pivot_wider(names_from = `Apgar a los cinco minutos`, values_from = celda) |>
-  mutate(Total = paste0(num(rowSums(tab_apgar)), " (", pct(rowSums(tab_apgar) / sum(tab_apgar)), ")")) |>
-  gt() |>
-  tab_spanner(label = "Apgar a los cinco minutos",
-              columns = c(`Menor que 7`, `7`, `8`, `9`, `10`)) |>
-  cols_align("left", columns = `Apgar al minuto`) |>
-  cols_align("center", columns = -`Apgar al minuto`) |>
-  estilo_tabla("Apgar a los cinco minutos según Apgar al minuto") |>
-  tab_footnote("Porcentajes por fila.")
-```
-
-```{r barras-apgar, message=FALSE, warning=FALSE, fig.cap="Distribución del Apgar a los cinco minutos según Apgar al minuto."}
-colores_apgar_tiempo <- setNames(
-  colores_grupo(nlevels(df_apgar_tiempo$apgar2_cat), ordinal = TRUE),
-  levels(df_apgar_tiempo$apgar2_cat)
-)
-
-df_apgar_tiempo |>
-  count(apgar1_cat, apgar2_cat, name = "n") |>
-  group_by(apgar1_cat) |>
-  mutate(p = n / sum(n), n_f = sum(n)) |>
-  ungroup() |>
-  mutate(f_lab = fct_inorder(paste0(apgar1_cat, "  (n = ", num(n_f), ")")),
-         txt = color_texto_sobre(colores_apgar_tiempo[as.character(apgar2_cat)])) |>
-  ggplot(aes(x = p, y = fct_rev(f_lab), fill = apgar2_cat)) +
-  geom_col(position = position_fill(reverse = TRUE), width = 0.7,
-           color = "white", linewidth = 0.3) +
-  geom_text(aes(label = if_else(p >= 0.05, pct(p, 0.1), ""), color = txt),
-            position = position_fill(vjust = 0.5, reverse = TRUE), size = 3.1) +
-  scale_color_identity() +
-  scale_fill_manual(values = colores_apgar_tiempo, name = "Apgar a los cinco minutos") +
-  scale_x_continuous(labels = \(v) pct(v, 1), expand = expansion(0)) +
-  labs(title = "Apgar a los cinco minutos según Apgar al minuto",
-       subtitle = sub_atl, x = NULL, y = NULL, caption = fuente_dane) +
-  theme_proyecto(grid = "none")
-```
-
 ## APGAR al minuto según la edad de la madre
 
 ```{r apgar-edad-tabla, message=FALSE, warning=FALSE}
@@ -312,6 +251,100 @@ df_apgar_edad |>
   scale_fill_manual(values = colores_apgar, name = "APGAR al minuto") +
   scale_x_continuous(labels = \(v) pct(v, 1), expand = expansion(0)) +
   labs(title = "APGAR al minuto según grupo de edad",
+       subtitle = sub_atl, x = NULL, y = NULL, caption = fuente_dane) +
+  theme_proyecto(grid = "none")
+```
+
+## Apgar al minuto y a los cinco minutos
+
+```{r apgar-cambio-tabla, message=FALSE, warning=FALSE}
+frec_cambio <- df_atl |>
+  mutate(
+    Cambio = case_when(
+      APGAR2 > APGAR1  ~ "Mejoró",
+      APGAR2 == APGAR1 ~ "Se mantuvo",
+      TRUE             ~ "Empeoró"
+    ),
+    Cambio = factor(Cambio, levels = c("Mejoró", "Se mantuvo", "Empeoró"))
+  ) |>
+  count(Cambio, name = "n") |>
+  mutate(p = n / sum(n))
+
+frec_cambio |>
+  gt() |>
+  fmt_number(columns = n, decimals = 0, sep_mark = ".", dec_mark = ",") |>
+  fmt_percent(columns = p, decimals = 1, scale_values = TRUE, sep_mark = ".", dec_mark = ",") |>
+  cols_label(Cambio = "Puntaje a los cinco minutos frente al del minuto", n = "n", p = "%") |>
+  cols_align("left", columns = Cambio) |>
+  cols_align("center", columns = c(n, p)) |>
+  estilo_tabla("Cambio del puntaje Apgar entre el primer y el quinto minuto")
+```
+
+```{r filas-apgar-cambio, include=FALSE}
+res_mejoro <- frec_cambio |> filter(Cambio == "Mejoró")
+res_mantuvo <- frec_cambio |> filter(Cambio == "Se mantuvo")
+res_empeoro <- frec_cambio |> filter(Cambio == "Empeoró")
+```
+
+Entre el primer y el quinto minuto de vida, `r num(res_mejoro$n)` recién nacidos (`r pct(res_mejoro$p)`) mejoraron su puntaje Apgar, `r num(res_mantuvo$n)` (`r pct(res_mantuvo$p)`) lo mantuvieron y `r num(res_empeoro$n)` (`r pct(res_empeoro$p)`) lo empeoraron.
+
+```{r apgar-tiempo-datos, message=FALSE, warning=FALSE}
+df_apgar_tiempo <- df_atl |>
+  mutate(
+    apgar1_cat = cut(APGAR1, breaks = c(-Inf, 6, 7, 8, 9, 10),
+                     labels = c("Menor que 7", "7", "8", "9", "10")),
+    apgar2_cat = cut(APGAR2, breaks = c(-Inf, 6, 7, 8, 9, 10),
+                     labels = c("Menor que 7", "7", "8", "9", "10"))
+  )
+
+tab_apgar <- table(df_apgar_tiempo$apgar1_cat, df_apgar_tiempo$apgar2_cat)
+prop_apgar_fila <- prop.table(tab_apgar, 1)
+```
+
+```{r apgar-tiempo-tabla, message=FALSE, warning=FALSE}
+tibble(
+  `Apgar al minuto` = rep(rownames(tab_apgar), times = ncol(tab_apgar)),
+  `Apgar a los cinco minutos` = rep(colnames(tab_apgar), each = nrow(tab_apgar)),
+  n = as.vector(tab_apgar),
+  p = as.vector(prop_apgar_fila)
+) |>
+  mutate(celda = paste0(num(n), " (", pct(p), ")")) |>
+  select(`Apgar al minuto`, `Apgar a los cinco minutos`, celda) |>
+  pivot_wider(names_from = `Apgar a los cinco minutos`, values_from = celda) |>
+  mutate(Total = paste0(num(rowSums(tab_apgar)), " (", pct(rowSums(tab_apgar) / sum(tab_apgar)), ")")) |>
+  gt() |>
+  tab_spanner(label = "Apgar a los cinco minutos",
+              columns = c(`Menor que 7`, `7`, `8`, `9`, `10`)) |>
+  cols_align("left", columns = `Apgar al minuto`) |>
+  cols_align("center", columns = -`Apgar al minuto`) |>
+  estilo_tabla("Apgar a los cinco minutos según Apgar al minuto") |>
+  tab_footnote("Porcentajes por fila.")
+```
+
+Los cambios se concentraron en los puntajes intermedios. De los recién nacidos con 8 al minuto, el `r pct(prop_apgar_fila["8", "9"])` pasó a 9 y el `r pct(prop_apgar_fila["8", "10"])` a 10. En cambio, los que tuvieron 9 o 10 al minuto casi siempre conservaron ese puntaje a los cinco minutos (`r pct(prop_apgar_fila["9", "9"])` y `r pct(prop_apgar_fila["10", "10"])`, respectivamente).
+
+```{r barras-apgar, message=FALSE, warning=FALSE, fig.cap="Distribución del Apgar a los cinco minutos según Apgar al minuto."}
+colores_apgar_tiempo <- setNames(
+  colores_grupo(nlevels(df_apgar_tiempo$apgar2_cat), ordinal = TRUE),
+  levels(df_apgar_tiempo$apgar2_cat)
+)
+
+df_apgar_tiempo |>
+  count(apgar1_cat, apgar2_cat, name = "n") |>
+  group_by(apgar1_cat) |>
+  mutate(p = n / sum(n), n_f = sum(n)) |>
+  ungroup() |>
+  mutate(f_lab = fct_inorder(paste0(apgar1_cat, "  (n = ", num(n_f), ")")),
+         txt = color_texto_sobre(colores_apgar_tiempo[as.character(apgar2_cat)])) |>
+  ggplot(aes(x = p, y = fct_rev(f_lab), fill = apgar2_cat)) +
+  geom_col(position = position_fill(reverse = TRUE), width = 0.7,
+           color = "white", linewidth = 0.3) +
+  geom_text(aes(label = if_else(p >= 0.05, pct(p, 0.1), ""), color = txt),
+            position = position_fill(vjust = 0.5, reverse = TRUE), size = 3.1) +
+  scale_color_identity() +
+  scale_fill_manual(values = colores_apgar_tiempo, name = "Apgar a los cinco minutos") +
+  scale_x_continuous(labels = \(v) pct(v, 1), expand = expansion(0)) +
+  labs(title = "Apgar a los cinco minutos según Apgar al minuto",
        subtitle = sub_atl, x = NULL, y = NULL, caption = fuente_dane) +
   theme_proyecto(grid = "none")
 ```

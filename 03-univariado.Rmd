@@ -191,7 +191,7 @@ res_apgar2 |>
              mediana = "Mediana", RIC = "RIC (Q1–Q3)",
              min = "Mín", max = "Máx") |>
   cols_align("center", columns = everything()) |>
-  estilo_tabla("Puntaje APGAR a los cinco minutos: resumen")
+  estilo_tabla("Puntaje Apgar a los cinco minutos: resumen")
 ```
 
 ```{r hist-apgar2, message=FALSE, warning=FALSE, fig.cap="Distribución del puntaje APGAR a los cinco minutos."}
