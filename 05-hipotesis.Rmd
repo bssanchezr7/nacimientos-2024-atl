@@ -450,4 +450,84 @@ Si bien existe una diferencia, el tamaño del efecto indica que es despreciable:
 
 ## Objetivo 5: Apgar al minuto y a los cinco minutos
 
-(Por redactar.)
+Se busca saber si los recién nacidos mejoran su condición entre el primer y el quinto minuto de vida. Como las dos mediciones son del mismo recién nacido, los datos son pareados y se trabaja con la diferencia entre el puntaje a los cinco minutos y el del primer minuto.
+
+```{r hip-apgar-tiempo-pruebas, include=FALSE}
+dif_apgar <- df_atl$APGAR2 - df_atl$APGAR1
+norm_dif_apgar <- lillie.test(dif_apgar)
+
+df_apgar_largo <- df_atl |>
+  mutate(id = row_number()) |>
+  select(id, APGAR1, APGAR2) |>
+  pivot_longer(c(APGAR2, APGAR1), names_to = "momento", values_to = "apgar") |>
+  mutate(momento = factor(momento, levels = c("APGAR2", "APGAR1")))
+
+wil_apgar <- wilcox_test(apgar ~ momento, data = df_apgar_largo,
+                         paired = TRUE, alternative = "greater")
+eff_apgar <- wilcox_effsize(apgar ~ momento, data = df_apgar_largo,
+                            paired = TRUE, alternative = "greater") |>
+  mutate(Magnitud = dplyr::recode(as.character(magnitude),
+                                  small = "pequeño", moderate = "mediano", large = "grande"))
+```
+
+### Prueba de normalidad
+
+En datos pareados la normalidad se evalúa sobre las diferencias, con la prueba de Lilliefors:
+
+$H_0$: las diferencias entre los dos puntajes siguen una distribución normal;
+$H_1$: no la siguen.
+
+```{r hip-apgar-tiempo-normalidad, message=FALSE, warning=FALSE}
+tibble(
+  n = length(dif_apgar),
+  D = unname(norm_dif_apgar$statistic),
+  p = formato_p(norm_dif_apgar$p.value)
+) |>
+  gt() |>
+  fmt_number(columns = n, decimals = 0, sep_mark = ".", dec_mark = ",") |>
+  fmt_number(columns = D, decimals = 3, sep_mark = ".", dec_mark = ",") |>
+  cols_label(n = "n", D = "D", p = "Valor p") |>
+  cols_align("center", columns = everything()) |>
+  estilo_tabla("Lilliefors: normalidad de las diferencias del Apgar")
+```
+
+Se rechaza la normalidad de las diferencias (`r formato_p(norm_dif_apgar$p.value)`), por lo que se decide usar la prueba no paramétrica de Wilcoxon para muestras pareadas. Al tratarse de datos pareados no se requiere igualdad de varianzas.
+
+### Prueba de Wilcoxon para muestras pareadas
+
+$H_0$: la mediana de las diferencias es igual a cero (el puntaje no cambia);
+$H_1$: la mediana de las diferencias es mayor que cero (el puntaje mejora).
+
+Se usa un nivel de significancia del 5 %.
+
+```{r hip-apgar-tiempo-wilcoxon, message=FALSE, warning=FALSE}
+tibble(
+  pares = length(dif_apgar),
+  cambio = sum(dif_apgar != 0),
+  V = wil_apgar$statistic,
+  p = formato_p(wil_apgar$p)
+) |>
+  gt() |>
+  fmt_number(columns = c(pares, cambio, V), decimals = 0, sep_mark = ".", dec_mark = ",") |>
+  cols_label(pares = "Pares analizados", cambio = "Pares con cambio de puntaje",
+             V = "V", p = "Valor p") |>
+  cols_align("center", columns = everything()) |>
+  estilo_tabla("Wilcoxon pareada: Apgar a los cinco minutos frente al del minuto")
+```
+
+Se rechaza la hipótesis nula (`r formato_p(wil_apgar$p)`): el puntaje Apgar a los cinco minutos es mayor que el del primer minuto.
+
+### Tamaño del efecto
+
+```{r hip-apgar-tiempo-efecto, message=FALSE, warning=FALSE}
+eff_apgar |>
+  select(effsize, Magnitud) |>
+  gt() |>
+  fmt_number(columns = effsize, decimals = 3, sep_mark = ".", dec_mark = ",") |>
+  cols_label(effsize = "r") |>
+  cols_align("center", columns = everything()) |>
+  estilo_tabla("Tamaño del efecto: Apgar a los cinco minutos frente al del minuto") |>
+  tab_footnote("r = Z / √N. Umbrales: 0,10 pequeño; 0,30 mediano; 0,50 grande.")
+```
+
+El tamaño del efecto fue `r eff_apgar$Magnitud` (r = `r num(eff_apgar$effsize, 0.001)`). De esto se concluye que los recién nacidos sí mejoran su condición entre el primer y el quinto minuto de vida: aunque la mayoría mantiene su puntaje, casi todos los que cambian lo hacen hacia un valor más alto.
