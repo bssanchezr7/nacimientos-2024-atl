@@ -1,3 +1,4 @@
+# Pruebas de hipótesis {#hipotesis}
 
 ```{r depende-datos-hipotesis, include=FALSE}
 if (!exists("df_atl")) {
@@ -8,16 +9,15 @@ if (!exists("theme_proyecto")) {
 }
 ```
 
-# Pruebas de hipótesis {#hipotesis}
-
 En este capítulo se evalúa una hipótesis por cada objetivo específico, mostrando las pruebas requeridas y el procedimiento de cada una. Primero se evalúan los supuestos necesarios para saber qué prueba corresponde. Como varios grupos superan los 5.000 registros, la normalidad se evalúa con la prueba de Lilliefors, que admite muestras grandes. Según el resultado de los supuestos se elige entre una prueba paramétrica y una no paramétrica. Las pruebas se evalúan con un nivel de significancia del 5 %, es decir, con una confianza del 95 %; cuando un objetivo requiere varias comparaciones, los valores p se ajustan con la corrección de Bonferroni. Por último se reporta el tamaño del efecto, para valorar si las diferencias encontradas son pequeñas, medianas o grandes [@cohen1988].
 
 ## Objetivo 1: consultas prenatales según la edad de la madre
 
-### Test de normalidad
+Se busca saber si las madres adolescentes tienen menos consultas prenatales que las madres de 20 a 34 años y que las de 35 años o más.
 
-Por el tamaño de la muestra se decide usar Kolmogorov-Smirnov con corrección de
-Lilliefors (`nortest::lillie.test`) en cada grupo:
+### Prueba de normalidad
+
+Se evalúa en cada grupo de edad con la prueba de Lilliefors:
 
 $H_0$: las consultas del grupo siguen distribución normal;
 $H_1$: no la siguen.
@@ -36,19 +36,21 @@ res_lillie <- df_atl |>
 
 ```{r lillie-consultas-edad-tabla, message=FALSE, warning=FALSE}
 res_lillie |>
+  mutate(p = map_chr(p, formato_p)) |>
   gt() |>
   fmt_number(columns = n, decimals = 0, sep_mark = ".", dec_mark = ",") |>
   fmt_number(columns = D, decimals = 3, sep_mark = ".", dec_mark = ",") |>
-  fmt_number(columns = p, decimals = 3, sep_mark = ".", dec_mark = ",") |>
-  cols_label(`Grupo de edad` = "Grupo de edad", D = "D", p = "p") |>
-  estilo_tabla("Lilliefors: normalidad de consultas según edad") 
+  cols_label(`Grupo de edad` = "Grupo de edad", D = "D", p = "Valor p") |>
+  cols_align("left", columns = `Grupo de edad`) |>
+  cols_align("center", columns = -`Grupo de edad`) |>
+  estilo_tabla("Lilliefors: normalidad de consultas según edad")
 ```
 
-En los tres grupos p < 0,05, por lo tanto se rechaza el supuesto de normalidad para todos. Se decide realizar la prueba no paramétrica de Wilcoxon (Mann-Whitney) por pares.
+En los tres grupos se rechaza la normalidad (`r formato_p(max(res_lillie$p))`), por lo que se decide usar la prueba no paramétrica de Wilcoxon (Mann-Whitney) por pares.
 
 ### Prueba de homogeneidad de varianzas
 
-Dado que no hay normalidad, la homogeneidad se evalúa con el test de Levene centrado en la mediana.
+Como no hay normalidad, la homogeneidad se evalúa con la prueba de Levene centrada en la mediana:
 
 $H_0$: igual varianza entre los dos grupos;
 $H_1$: varianza distinta.
@@ -57,7 +59,7 @@ $H_1$: varianza distinta.
 lev_adol_opt <- leveneTest(
   NUMCONSUL ~ EDAD_MADRE,
   data = df_atl |>
-    filter(EDAD_MADRE %in% c("Maternidad Adolescente", "Edad Reproductiva Óptima")) |>
+    filter(EDAD_MADRE %in% c("Adolescente", "De 20 a 34 años")) |>
     mutate(EDAD_MADRE = fct_drop(EDAD_MADRE)),
   center = "median"
 )
@@ -65,13 +67,13 @@ lev_adol_opt <- leveneTest(
 lev_adol_avan <- leveneTest(
   NUMCONSUL ~ EDAD_MADRE,
   data = df_atl |>
-    filter(EDAD_MADRE %in% c("Maternidad Adolescente", "Edad Materna Avanzada")) |>
+    filter(EDAD_MADRE %in% c("Adolescente", "De 35 años o más")) |>
     mutate(EDAD_MADRE = fct_drop(EDAD_MADRE)),
   center = "median"
 )
 
 res_levene <- tibble(
-  Comparación = c("Adolescente vs Óptima", "Adolescente vs Avanzada"),
+  Comparación = c("Adolescente – De 20 a 34 años", "Adolescente – De 35 años o más"),
   F = c(lev_adol_opt[1, 2], lev_adol_avan[1, 2]),
   p = c(lev_adol_opt[1, 3], lev_adol_avan[1, 3])
 )
@@ -79,80 +81,93 @@ res_levene <- tibble(
 
 ```{r levene-consultas-edad-tabla, message=FALSE, warning=FALSE}
 res_levene |>
+  mutate(p = map_chr(p, formato_p)) |>
   gt() |>
   fmt_number(columns = F, decimals = 2, sep_mark = ".", dec_mark = ",") |>
-  fmt_number(columns = p, decimals = 3, sep_mark = ".", dec_mark = ",") |>
-  cols_label(Comparación = "Comparación", F = "F", p = "p") |>
+  cols_label(Comparación = "Comparación", F = "F", p = "Valor p") |>
+  cols_align("left", columns = Comparación) |>
+  cols_align("center", columns = -Comparación) |>
   estilo_tabla("Levene (mediana): homogeneidad de consultas por par")
 ```
 
-En la comparación Adolescente vs Óptima rechaza homogeneidad `r formato_p(res_levene$p[1])`, por lo que su Wilcoxon se interpreta solo como desplazamiento global $P(X>Y) \neq 0{,}5$. En la comparación Adolescente vs Avanzada `r formato_p(res_levene$p[2])`, no tenemos evidencias estadísticamente significativas para rechazar la homogeneidad, por lo que admite lectura como diferencia de medianas.
+En la comparación con las madres de 20 a 34 años se rechaza la homogeneidad (`r formato_p(res_levene$p[1])`), por lo que su prueba de Wilcoxon se interpreta solo como un desplazamiento global, $P(X>Y) \neq 0{,}5$. En la comparación con las de 35 años o más no hay evidencia estadísticamente significativa para rechazarla (`r formato_p(res_levene$p[2])`), por lo que admite una lectura como diferencia de medianas.
 
 ### Comparación adolescentes frente a adultas (Wilcoxon–Mann–Whitney)
 
-Se realizan las dos comparaciones planeadas del objetivo 1, con corrección de Bonferroni por las dos pruebas ($\alpha = 0{,}05/2$):
+Se realizan las dos comparaciones planeadas del objetivo 1. Los valores p se ajustan con la corrección de Bonferroni por las dos pruebas y se comparan con un nivel de significancia del 5 %:
 
 $H_0$: $P(X_{adol} > Y_{adulta}) = 0{,}5$ (misma distribución);
 $H_1$: $P(X_{adol} > Y_{adulta}) \neq 0{,}5$.
 
 ```{r wilcox-consultas-edad, message=FALSE, warning=FALSE}
 df_adol_opt <- df_atl |>
-  filter(EDAD_MADRE %in% c("Maternidad Adolescente", "Edad Reproductiva Óptima")) |>
+  filter(EDAD_MADRE %in% c("Adolescente", "De 20 a 34 años")) |>
   mutate(EDAD_MADRE = fct_drop(EDAD_MADRE))
 
 df_adol_avan <- df_atl |>
-  filter(EDAD_MADRE %in% c("Maternidad Adolescente", "Edad Materna Avanzada")) |>
+  filter(EDAD_MADRE %in% c("Adolescente", "De 35 años o más")) |>
   mutate(EDAD_MADRE = fct_drop(EDAD_MADRE))
 
 w1 <- wilcox_test(NUMCONSUL ~ EDAD_MADRE, data = df_adol_opt, paired = FALSE)
 w2 <- wilcox_test(NUMCONSUL ~ EDAD_MADRE, data = df_adol_avan, paired = FALSE)
 
 res_wilcox <- bind_rows(
-  w1 |> mutate(Comparación = "Adolescente vs Óptima"),
-  w2 |> mutate(Comparación = "Adolescente vs Avanzada")
+  w1 |> mutate(Comparación = "Adolescente – De 20 a 34 años"),
+  w2 |> mutate(Comparación = "Adolescente – De 35 años o más")
 ) |>
   mutate(p_adj = p.adjust(p, method = "bonferroni")) |>
   select(Comparación, statistic, p, p_adj, n1, n2)
 
-med_adol <- median(x_adol <- df_atl |> filter(EDAD_MADRE == "Maternidad Adolescente") |> pull(NUMCONSUL))
-med_opt <- median(df_atl |> filter(EDAD_MADRE == "Edad Reproductiva Óptima") |> pull(NUMCONSUL))
-med_avan <- median(df_atl |> filter(EDAD_MADRE == "Edad Materna Avanzada") |> pull(NUMCONSUL))
+med_adol <- median(x_adol <- df_atl |> filter(EDAD_MADRE == "Adolescente") |> pull(NUMCONSUL))
+med_opt <- median(df_atl |> filter(EDAD_MADRE == "De 20 a 34 años") |> pull(NUMCONSUL))
+med_avan <- median(df_atl |> filter(EDAD_MADRE == "De 35 años o más") |> pull(NUMCONSUL))
 mean_adol <- mean(x_adol)
-mean_opt <- mean(df_atl |> filter(EDAD_MADRE == "Edad Reproductiva Óptima") |> pull(NUMCONSUL))
-mean_avan <- mean(df_atl |> filter(EDAD_MADRE == "Edad Materna Avanzada") |> pull(NUMCONSUL))
+mean_opt <- mean(df_atl |> filter(EDAD_MADRE == "De 20 a 34 años") |> pull(NUMCONSUL))
+mean_avan <- mean(df_atl |> filter(EDAD_MADRE == "De 35 años o más") |> pull(NUMCONSUL))
 ```
 
 ```{r wilcox-consultas-edad-tabla, message=FALSE, warning=FALSE}
 res_wilcox |>
+  mutate(across(c(p, p_adj), \(v) map_chr(v, formato_p))) |>
+  select(Comparación, n1, n2, statistic, p, p_adj) |>
   gt() |>
-  fmt_number(columns = statistic, decimals = 0, sep_mark = ".", dec_mark = ",") |>
-  fmt_number(columns = c(p, p_adj), decimals = 3,
-             sep_mark = ".", dec_mark = ",") |>
-  cols_label(Comparación = "Comparación", statistic = "U", p = "p", p_adj = "p ajust. (Bonferroni)") |>
+  fmt_number(columns = c(n1, n2, statistic), decimals = 0, sep_mark = ".", dec_mark = ",") |>
+  cols_label(Comparación = "Comparación", n1 = "n adolescentes", n2 = "n grupo comparado",
+             statistic = "U", p = "Valor p", p_adj = "Valor p ajustado (Bonferroni)") |>
+  cols_align("left", columns = Comparación) |>
+  cols_align("center", columns = -Comparación) |>
   estilo_tabla("Wilcoxon: consultas de adolescentes frente a adultas")
 ```
 
-En ambas comparaciones se rechaza $H_0$ (`r formato_p(max(res_wilcox$p_adj))` en el peor caso). Dado que las medianas del Capítulo \@ref(bivariado) ubican a las adolescentes por debajo, se concluye desplazamiento hacia menos consultas en adolescentes frente a los dos grupos adultos.
+En ambas comparaciones se rechaza $H_0$ (`r formato_p(max(res_wilcox$p_adj))` en el peor caso). Dado que las medianas del Capítulo \@ref(bivariado) ubican a las adolescentes por debajo, se concluye un desplazamiento hacia menos consultas en las adolescentes frente a los dos grupos adultos.
 
-### Efecto
+### Tamaño del efecto
 
 ```{r effsize-consultas-edad, message=FALSE, warning=FALSE}
 res_eff <- bind_rows(
   wilcox_effsize(NUMCONSUL ~ EDAD_MADRE, data = df_adol_opt, paired = FALSE),
   wilcox_effsize(NUMCONSUL ~ EDAD_MADRE, data = df_adol_avan, paired = FALSE)
-)
+) |>
+  mutate(
+    Comparación = res_wilcox$Comparación,
+    Magnitud = dplyr::recode(as.character(magnitude),
+                             small = "pequeño", moderate = "mediano", large = "grande")
+  )
 ```
 
 ```{r effsize-consultas-edad-tabla, message=FALSE, warning=FALSE}
 res_eff |>
+  select(Comparación, effsize, Magnitud) |>
   gt() |>
   fmt_number(columns = effsize, decimals = 3, sep_mark = ".", dec_mark = ",") |>
-  cols_label(.y. = ".y.", group1 = "group1", group2 = "group2", effsize = "effsize") |>
-  estilo_tabla("Efecto: consultas de adolescentes frente a adultas") |>
-  tab_footnote("r = Z / sqrt(N). Umbrales 0,1 pequeño; 0,3 mediano; 0,5 grande.")
+  cols_label(effsize = "r") |>
+  cols_align("left", columns = Comparación) |>
+  cols_align("center", columns = -Comparación) |>
+  estilo_tabla("Tamaño del efecto: consultas de adolescentes frente a adultas") |>
+  tab_footnote("r = Z / √N. Umbrales: 0,10 pequeño; 0,30 mediano; 0,50 grande.")
 ```
 
-En ambas comparaciones se rechazó $H_0$ (`r formato_p(max(res_wilcox$p_adj))`). Las adolescentes presentaron desplazamiento hacia menos consultas frente a óptima (mediana `r num_auto(med_adol)` vs `r num_auto(med_opt)` del Capítulo \@ref(bivariado), medias `r num(mean_adol, 0.01)` vs `r num(mean_opt, 0.01)`; $r=`r num(res_eff$effsize[1], 0.001)`$, `r res_eff$magnitude[1]`) y frente a avanzada (mediana `r num_auto(med_adol)` vs `r num_auto(med_avan)`; medias `r num(mean_adol, 0.01)` vs `r num(mean_avan, 0.01)`; $r=`r num(res_eff$effsize[2], 0.001)`$, `r res_eff$magnitude[2]`). Por tanto, sí hay menor consultas prenatales en adolescentes, pero más marcado frente a edad avanzada.
+Las adolescentes presentaron menos consultas que las madres de 20 a 34 años (mediana `r num_auto(med_adol)` frente a `r num_auto(med_opt)`; medias `r num(mean_adol, 0.01)` frente a `r num(mean_opt, 0.01)`; r = `r num(res_eff$effsize[1], 0.001)`, efecto `r res_eff$Magnitud[1]`) y que las de 35 años o más (mediana `r num_auto(med_adol)` frente a `r num_auto(med_avan)`; medias `r num(mean_adol, 0.01)` frente a `r num(mean_avan, 0.01)`; r = `r num(res_eff$effsize[2], 0.001)`, efecto `r res_eff$Magnitud[2]`). De esto se concluye que las madres adolescentes sí tienen un menor número de consultas prenatales, y que la diferencia es más marcada frente a las madres de 35 años o más.
 
 ## Objetivo 2: cesáreas según el régimen de salud
 
@@ -223,10 +238,11 @@ Si bien existe una diferencia, el tamaño del efecto indica que es despreciable:
 
 ## Objetivo 3: consultas prenatales según la subregión de residencia
 
-### Test de normalidad
+Se busca saber si el número de consultas prenatales es desigual entre las subregiones de residencia de la madre.
 
-Por el tamaño de la muestra se decide usar Kolmogorov-Smirnov con corrección de
-Lilliefors (`nortest::lillie.test`) en cada subregión:
+### Prueba de normalidad
+
+Se evalúa en cada subregión con la prueba de Lilliefors:
 
 $H_0$: las consultas de la subregión siguen distribución normal;
 $H_1$: no la siguen.
@@ -245,19 +261,21 @@ res_lillie_sub <- df_atl |>
 
 ```{r lillie-consultas-subregion-tabla, message=FALSE, warning=FALSE}
 res_lillie_sub |>
+  mutate(p = map_chr(p, formato_p)) |>
   gt() |>
   fmt_number(columns = n, decimals = 0, sep_mark = ".", dec_mark = ",") |>
   fmt_number(columns = D, decimals = 3, sep_mark = ".", dec_mark = ",") |>
-  fmt_number(columns = p, decimals = 3, sep_mark = ".", dec_mark = ",") |>
-  cols_label(Subregión = "Subregión", D = "D", p = "p") |>
+  cols_label(Subregión = "Subregión", D = "D", p = "Valor p") |>
+  cols_align("left", columns = Subregión) |>
+  cols_align("center", columns = -Subregión) |>
   estilo_tabla("Lilliefors: normalidad de consultas según subregión")
 ```
 
-En las cuatro subregiones p < 0,05, por lo tanto se rechaza el supuesto de normalidad para todas. Se decide realizar la prueba no paramétrica de Kruskal-Wallis.
+En las cuatro subregiones se rechaza la normalidad (`r formato_p(max(res_lillie_sub$p))`), por lo que se decide usar la prueba no paramétrica de Kruskal-Wallis.
 
 ### Prueba de homogeneidad de varianzas
 
-Dado que no hay normalidad, la homogeneidad se evalúa con el test de Levene centrado en la mediana.
+Como no hay normalidad, la homogeneidad se evalúa con la prueba de Levene centrada en la mediana:
 
 $H_0$: igual varianza entre las subregiones;
 $H_1$: varianza distinta en al menos una.
@@ -275,20 +293,23 @@ res_levene_sub <- tibble(
 
 ```{r levene-consultas-subregion-tabla, message=FALSE, warning=FALSE}
 res_levene_sub |>
+  mutate(gl = paste(gl1, "y", num(gl2)), p = map_chr(p, formato_p)) |>
+  select(F, gl, p) |>
   gt() |>
   fmt_number(columns = F, decimals = 2, sep_mark = ".", dec_mark = ",") |>
-  fmt_number(columns = c(gl1, gl2), decimals = 0, sep_mark = ".", dec_mark = ",") |>
-  fmt_number(columns = p, decimals = 3, sep_mark = ".", dec_mark = ",") |>
-  cols_label(F = "F", gl1 = "gl1", gl2 = "gl2", p = "p") |>
+  cols_label(F = "F", gl = "gl", p = "Valor p") |>
+  cols_align("center", columns = everything()) |>
   estilo_tabla("Levene (mediana): homogeneidad de consultas entre subregiones")
 ```
 
-Se rechaza homogeneidad `r formato_p(res_levene_sub$p)`, por lo que el Kruskal-Wallis se interpreta solo como diferencia distribucional global y no como diferencia de medianas en sentido estricto.
+Se rechaza la homogeneidad (`r formato_p(res_levene_sub$p)`), por lo que la prueba de Kruskal-Wallis se interpreta como una diferencia global entre distribuciones y no como una diferencia de medianas en sentido estricto.
 
-### Comparación global (Kruskal-Wallis)
+### Prueba de Kruskal-Wallis
 
 $H_0$: las consultas de las cuatro subregiones provienen de la misma distribución;
 $H_1$: al menos una subregión proviene de una distribución distinta.
+
+Se usa un nivel de significancia del 5 %.
 
 ```{r kruskal-consultas-subregion, message=FALSE, warning=FALSE}
 kw_sub <- kruskal_test(NUMCONSUL ~ SUBREGION, data = df_atl)
@@ -296,35 +317,34 @@ kw_sub <- kruskal_test(NUMCONSUL ~ SUBREGION, data = df_atl)
 
 ```{r kruskal-consultas-subregion-tabla, message=FALSE, warning=FALSE}
 tibble(
-  H = kw_sub$statistic,
+  chi = num(kw_sub$statistic, 0.01),
   gl = kw_sub$df,
-  p = kw_sub$p
+  p = formato_p(kw_sub$p)
 ) |>
   gt() |>
-  fmt_number(columns = H, decimals = 2, sep_mark = ".", dec_mark = ",") |>
-  fmt_number(columns = gl, decimals = 0, sep_mark = ".", dec_mark = ",") |>
-  fmt_number(columns = p, decimals = 3, sep_mark = ".", dec_mark = ",") |>
-  cols_label(H = "H", gl = "gl", p = "p") |>
+  cols_label(chi = "χ²", gl = "gl", p = "Valor p") |>
+  cols_align("center", columns = everything()) |>
   estilo_tabla("Kruskal-Wallis: consultas según subregión de residencia")
 ```
 
-Se rechaza $H_0$ ($\chi^2(`r kw_sub$df`) = `r num(kw_sub$statistic, 0.01)`; `r formato_p(kw_sub$p)`): el control prenatal no fue igual en las cuatro subregiones.
+Se rechaza la hipótesis nula (`r formato_p(kw_sub$p)`): el control prenatal no fue igual en las cuatro subregiones.
+
+### Tamaño del efecto
 
 ```{r effsize-consultas-subregion, message=FALSE, warning=FALSE}
 eff_sub <- kruskal_effsize(NUMCONSUL ~ SUBREGION, data = df_atl)
 ```
 
 ```{r effsize-consultas-subregion-tabla, message=FALSE, warning=FALSE}
-eff_sub |>
+tibble(Medida = "Eta cuadrado", Valor = num(eff_sub$effsize, 0.001)) |>
   gt() |>
-  fmt_number(columns = effsize, decimals = 3, sep_mark = ".", dec_mark = ",") |>
-  cols_label(.y. = ".y.", effsize = "η²[H]") |>
-  estilo_tabla("Efecto: consultas según subregión de residencia") |>
-  tab_footnote("η²[H]. Umbrales 0,01 pequeño; 0,06 mediano; 0,14 grande.")
+  cols_align("left", columns = Medida) |>
+  cols_align("center", columns = Valor) |>
+  estilo_tabla("Tamaño del efecto: consultas según subregión de residencia") |>
+  tab_footnote("Umbrales: 0,01 pequeño; 0,06 mediano; 0,14 grande.")
 ```
 
-El tamaño del efecto fue pequeño ($\eta^2_H$ = `r num(eff_sub$effsize, 0.001)`): la desigualdad entre subregiones existe.
-
+El tamaño del efecto fue pequeño: el eta cuadrado resultante fue de `r num(eff_sub$effsize, 0.001)` [@cohen1988]. De esto se concluye que la desigualdad entre subregiones existe, aunque es de poca magnitud.
 
 ## Objetivo 4: Apgar al minuto según la edad de la madre
 
@@ -365,7 +385,7 @@ norm_apgar_edad |>
   cols_label(n = "n", D = "D", p = "Valor p") |>
   cols_align("left", columns = `Grupo de edad`) |>
   cols_align("center", columns = -`Grupo de edad`) |>
-  estilo_tabla("Lilliefors: normalidad del APGAR al minuto según edad")
+  estilo_tabla("Lilliefors: normalidad del Apgar al minuto según edad")
 ```
 
 En los tres grupos se rechaza la normalidad (`r formato_p(max(norm_apgar_edad$p))`), por lo que se decide usar una prueba no paramétrica.
@@ -387,7 +407,7 @@ tibble(
   fmt_number(columns = F, decimals = 2, sep_mark = ".", dec_mark = ",") |>
   cols_label(F = "F", gl = "gl", p = "Valor p") |>
   cols_align("center", columns = everything()) |>
-  estilo_tabla("Levene (mediana): homogeneidad del APGAR al minuto según edad")
+  estilo_tabla("Levene (mediana): homogeneidad del Apgar al minuto según edad")
 ```
 
 Se rechaza la igualdad de varianzas (`r formato_p(lev_apgar_edad[1, "Pr(>F)"])`), por lo que el resultado de la prueba siguiente se interpreta como una diferencia en la distribución del puntaje y no estrictamente en su mediana.
@@ -408,7 +428,7 @@ tibble(
   gt() |>
   cols_label(chi = "χ²", gl = "gl", p = "Valor p") |>
   cols_align("center", columns = everything()) |>
-  estilo_tabla("Kruskal-Wallis: APGAR al minuto según grupo de edad")
+  estilo_tabla("Kruskal-Wallis: Apgar al minuto según grupo de edad")
 ```
 
 Se rechaza la hipótesis nula (`r formato_p(kw_apgar_edad$p.value)`): el puntaje Apgar al minuto no se distribuye igual en los tres grupos de edad.
@@ -430,7 +450,7 @@ tibble(
   cols_label(p = "Valor p ajustado (Bonferroni)") |>
   cols_align("left", columns = Comparación) |>
   cols_align("center", columns = p) |>
-  estilo_tabla("Wilcoxon por pares: APGAR al minuto según grupo de edad")
+  estilo_tabla("Wilcoxon por pares: Apgar al minuto según grupo de edad")
 ```
 
 Los nacimientos de madres adolescentes difieren de los de madres de 20 a 34 años (`r formato_p(post_apgar_edad[niv_edad[2], niv_edad[1]])`) y de los de 35 años o más (`r formato_p(post_apgar_edad[niv_edad[3], niv_edad[1]])`), mientras que entre estos dos últimos grupos no hay diferencia (`r formato_p(post_apgar_edad[niv_edad[3], niv_edad[2]])`).
@@ -442,7 +462,7 @@ tibble(Medida = "Eta cuadrado", Valor = num(unname(eta_apgar_edad), 0.001)) |>
   gt() |>
   cols_align("left", columns = Medida) |>
   cols_align("center", columns = Valor) |>
-  estilo_tabla("Tamaño del efecto: APGAR al minuto según grupo de edad") |>
+  estilo_tabla("Tamaño del efecto: Apgar al minuto según grupo de edad") |>
   tab_footnote("Umbrales: 0,01 pequeño; 0,06 mediano; 0,14 grande.")
 ```
 
