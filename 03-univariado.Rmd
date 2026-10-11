@@ -1,14 +1,5 @@
 # Análisis univariado {#univariado}
 
-```{r depende-datos, include=FALSE}
-if (!exists("df_atl")) {
-  stop("No existe `df_atl`. Corre primero el setup de index.Rmd y los chunks de 02-datos.Rmd.")
-}
-if (!exists("theme_proyecto")) {
-  stop("No está el estilo. Corre primero el chunk setup de index.Rmd (source de R/).")
-}
-```
-
 ## Número de consultas
 
 ```{r tabla-numconsul, message=FALSE, warning=FALSE}
@@ -42,7 +33,7 @@ res_numconsul |>
   estilo_tabla("Número de consultas prenatales: resumen")
 ```
 
-Al analizar el número de consultas prenatales, se observó un promedio de `r num(res_numconsul$media, 0.01)` (DE `r num(res_numconsul$de, 0.01)`) y que el 50% de las madres realizaron `r num_auto(res_numconsul$mediana)` (RIC `r res_numconsul$RIC`) consultas o más para `r num(res_numconsul$n)` nacimientos. El número mínimo y máximo de consultas fue de `r num_auto(res_numconsul$min)` y `r num_auto(res_numconsul$max)`, respectivamente.
+En los `r num(res_numconsul$n)` nacimientos se observó un promedio de `r num(res_numconsul$media, 0.01)` consultas prenatales (DE `r num(res_numconsul$de, 0.01)`) y una mediana de `r num_auto(res_numconsul$mediana)` (RIC `r res_numconsul$RIC`). El número mínimo y máximo de consultas fue de `r num_auto(res_numconsul$min)` y `r num_auto(res_numconsul$max)`, respectivamente.
 
 ```{r hist-numconsul, message=FALSE, warning=FALSE, fig.cap="Distribución del número de consultas prenatales."}
 x <- df_atl$NUMCONSUL
@@ -54,8 +45,8 @@ x <- df_atl$NUMCONSUL
   lineas_ref(x) +
   escala_x(x) +
   scale_y_continuous(labels = num, expand = expansion(mult = c(0, 0.12))) +
-  labs(title = "Número de consultas prenatales", subtitle = sub_atl,
-       x = "Número de consultas", y = "Frecuencia", caption = fuente_dane) +
+  labs(title = "Número de consultas prenatales",
+       x = "Número de consultas", y = "Frecuencia") +
   theme_proyecto()
 ```
 
@@ -63,7 +54,7 @@ x <- df_atl$NUMCONSUL
 row_moda <- frec_numconsul |> slice_max(n, n = 1)
 ```
 
-En el histograma se sugiere una asimetría negativa, la media (línea continua) se encuentra levemente a la izquierda de la mediana (línea discontinua), con un pico en `r row_moda |> pull(NUMCONSUL) |> num_auto()` consultas (`r row_moda |> pull(n) |> num()` nacimientos). A la derecha de la distribución se observan barras con baja frecuencia. 
+En el gráfico la distribución se concentra entre `r num_auto(res_numconsul$q1)` y `r num_auto(res_numconsul$q3)` consultas, con un pico en `r row_moda |> pull(NUMCONSUL) |> num_auto()` (`r row_moda |> pull(n) |> num()` nacimientos). La media (línea continua) se encuentra levemente a la izquierda de la mediana (línea discontinua), y a la derecha se observa una cola de barras con baja frecuencia, que llega hasta `r num_auto(res_numconsul$max)` consultas.
 
 ## Edad de la madre
 
@@ -83,9 +74,9 @@ frec_edad |>
 ```
 
 ```{r filas-edad-uni, include=FALSE}
-res_grupo_optima <- frec_edad |> filter(EDAD_MADRE == "Edad Reproductiva Óptima")
-res_grupo_adol <- frec_edad |> filter(EDAD_MADRE == "Maternidad Adolescente")
-res_grupo_avanz <- frec_edad |> filter(EDAD_MADRE == "Edad Materna Avanzada")
+res_grupo_optima <- frec_edad |> filter(EDAD_MADRE == "De 20 a 34 años")
+res_grupo_adol <- frec_edad |> filter(EDAD_MADRE == "Adolescente")
+res_grupo_avanz <- frec_edad |> filter(EDAD_MADRE == "De 35 años o más")
 ```
 
 
@@ -98,13 +89,13 @@ df_atl |>
   geom_col(width = 0.7, fill = pal[["principal"]]) +
   geom_text(aes(label = paste0(num(n), "  (", pct(pct), ")")), hjust = -0.08) +
   scale_x_continuous(labels = num, expand = expansion(mult = c(0, 0.25))) +
-  labs(title = "Grupo de edad de la madre", subtitle = sub_atl,
-       x = "Nacimientos", y = NULL, caption = fuente_dane) +
+  labs(title = "Grupo de edad de la madre",
+       x = "Nacimientos", y = NULL) +
   theme_proyecto(grid = "x")
 ```
-Del total de `r num(sum(frec_edad$n))` nacimientos, predominó el grupo de edad reproductiva óptima con un `r pct(res_grupo_optima$p)` (`r num(res_grupo_optima$n)` nacimientos), seguido por la maternidad adolescente con un `r pct(res_grupo_adol$p)` (`r num(res_grupo_adol$n)` nacimientos) y por último la edad materna avanzada con un `r pct(res_grupo_avanz$p)` (`r num(res_grupo_avanz$n)` nacimientos).
+Del total de `r num(sum(frec_edad$n))` nacimientos, predominó el grupo de 20 a 34 años con un `r pct(res_grupo_optima$p)` (`r num(res_grupo_optima$n)` nacimientos), seguido por el de madres adolescentes con un `r pct(res_grupo_adol$p)` (`r num(res_grupo_adol$n)` nacimientos) y por último el de 35 años o más con un `r pct(res_grupo_avanz$p)` (`r num(res_grupo_avanz$n)` nacimientos).
 
-## APGAR al minuto
+## Apgar al minuto
 
 ```{r tabla-apgar1, message=FALSE, warning=FALSE}
 frec_apgar1 <- df_atl |>
@@ -135,10 +126,10 @@ res_apgar1 |>
              mediana = "Mediana", RIC = "RIC (Q1–Q3)",
              min = "Mín", max = "Máx") |>
   cols_align("center", columns = everything()) |>
-  estilo_tabla("Puntaje APGAR al minuto: resumen")
+  estilo_tabla("Puntaje Apgar al minuto: resumen")
 ```
 
-```{r hist-apgar1, message=FALSE, warning=FALSE, fig.cap="Distribución del puntaje APGAR al minuto."}
+```{r hist-apgar1, message=FALSE, warning=FALSE, fig.cap="Distribución del puntaje Apgar al minuto."}
 x <- df_atl$APGAR1
 
 ggplot(frec_apgar1, aes(x = APGAR1, y = n)) +
@@ -148,8 +139,8 @@ ggplot(frec_apgar1, aes(x = APGAR1, y = n)) +
   lineas_ref(x) +
   escala_x(x) +
   scale_y_continuous(labels = num, expand = expansion(mult = c(0, 0.12))) +
-  labs(title = "Puntaje APGAR al minuto", subtitle = sub_atl,
-       x = "APGAR al minuto", y = "Frecuencia", caption = fuente_dane) +
+  labs(title = "Puntaje Apgar al minuto",
+       x = "Apgar al minuto", y = "Frecuencia") +
   theme_proyecto()
 ```
 
@@ -160,7 +151,7 @@ row_seg_apgar1 <- frec_apgar1 |> arrange(desc(n)) |> slice(2)
 
 El puntaje Apgar al minuto fue alto en casi todos los nacimientos. El promedio fue de `r num(res_apgar1$media, 0.01)` (DE `r num(res_apgar1$de, 0.01)`) y la mediana de `r num_auto(res_apgar1$mediana)`, con el primer cuartil en `r num_auto(res_apgar1$q1)` y el tercero en `r num_auto(res_apgar1$q3)`. El puntaje más frecuente fue `r num_auto(row_moda_apgar1$APGAR1)`, con `r num(row_moda_apgar1$n)` nacimientos (`r pct(row_moda_apgar1$p)`), seguido de `r num_auto(row_seg_apgar1$APGAR1)`. Solo el `r pct(res_apgar1$p_bajo)` de los recién nacidos tuvo un puntaje menor que 7.
 
-## APGAR a los cinco minutos
+## Apgar a los cinco minutos
 
 ```{r tabla-apgar2, message=FALSE, warning=FALSE}
 frec_apgar2 <- df_atl |>
@@ -194,17 +185,18 @@ res_apgar2 |>
   estilo_tabla("Puntaje Apgar a los cinco minutos: resumen")
 ```
 
-```{r hist-apgar2, message=FALSE, warning=FALSE, fig.cap="Distribución del puntaje APGAR a los cinco minutos."}
+```{r hist-apgar2, message=FALSE, warning=FALSE, fig.cap="Distribución del puntaje Apgar a los cinco minutos."}
 x <- df_atl$APGAR2
 
-ggplot(df_atl, aes(x = APGAR2)) +
-  geom_histogram(binwidth = 1, center = 0,
-                 fill = pal[["principal"]], color = "white", linewidth = 0.3) +
+ggplot(frec_apgar2, aes(x = APGAR2, y = n)) +
+  geom_col(fill = pal[["principal"]], color = "white",
+           linewidth = 0.3, width = 1) +
+  geom_text(aes(label = num(n, 1)), vjust = -0.4, size = 2.4) +
   lineas_ref(x) +
   escala_x(x) +
-  scale_y_continuous(labels = num, expand = expansion(mult = c(0, 0.05))) +
-  labs(title = "Puntaje APGAR a los cinco minutos", subtitle = sub_atl,
-       x = "APGAR a los cinco minutos", y = "Nacimientos", caption = fuente_dane) +
+  scale_y_continuous(labels = num, expand = expansion(mult = c(0, 0.12))) +
+  labs(title = "Puntaje Apgar a los cinco minutos",
+       x = "Apgar a los cinco minutos", y = "Frecuencia") +
   theme_proyecto()
 ```
 
@@ -245,8 +237,8 @@ frec_cesarea |>
   geom_col(width = 0.7, fill = pal[["principal"]]) +
   geom_text(aes(label = paste0(num(n), "  (", pct(p), ")")), hjust = -0.08) +
   scale_x_continuous(labels = num, expand = expansion(mult = c(0, 0.25))) +
-  labs(title = "Parto por cesárea", subtitle = sub_atl,
-       x = "Nacimientos", y = NULL, caption = fuente_dane) +
+  labs(title = "Parto por cesárea",
+       x = "Nacimientos", y = NULL) +
   theme_proyecto(grid = "x")
 ```
 
@@ -286,8 +278,8 @@ frec_segsocial |>
   geom_col(width = 0.7, fill = pal[["principal"]]) +
   geom_text(aes(label = paste0(num(n), "  (", pct(p), ")")), hjust = -0.08) +
   scale_x_continuous(labels = num, expand = expansion(mult = c(0, 0.25))) +
-  labs(title = "Régimen de seguridad social de la madre", subtitle = sub_atl,
-       x = "Nacimientos", y = NULL, caption = fuente_dane) +
+  labs(title = "Régimen de seguridad social de la madre",
+       x = "Nacimientos", y = NULL) +
   theme_proyecto(grid = "x")
 ```
 
@@ -324,8 +316,8 @@ frec_subregion |>
   geom_col(width = 0.7, fill = pal[["principal"]]) +
   geom_text(aes(label = paste0(num(n), "  (", pct(p), ")")), hjust = -0.08) +
   scale_x_continuous(labels = num, expand = expansion(mult = c(0, 0.25))) +
-  labs(title = "Subregión de residencia de la madre", subtitle = sub_atl,
-       x = "Nacimientos", y = NULL, caption = fuente_dane) +
+  labs(title = "Subregión de residencia de la madre",
+       x = "Nacimientos", y = NULL) +
   theme_proyecto(grid = "x")
 ```
 

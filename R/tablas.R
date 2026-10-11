@@ -3,10 +3,11 @@
 
 # ESTILO BASE ----------------------------------------------------------------
 
-estilo_tabla <- function(tab, titulo, subtitulo = sub_atl, fuente = fuente_dane) {
+estilo_tabla <- function(tab, titulo, subtitulo = NULL, fuente = NULL) {
+  if (!is.null(fuente)) tab <- tab |> tab_source_note(fuente)
+
   tab |>
     tab_header(title = md(paste0("**", titulo, "**")), subtitle = subtitulo) |>
-    tab_source_note(fuente) |>
     opt_table_font(font = "Arial") |>
     tab_options(
       table.border.top.color            = "white",

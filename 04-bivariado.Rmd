@@ -33,12 +33,12 @@ res_consultas_edad |>
 ```
 
 ```{r filas-edad, include=FALSE}
-res_adol <- res_consultas_edad |> filter(`Grupo de edad` == "Maternidad Adolescente")
-res_optima <- res_consultas_edad |> filter(`Grupo de edad` == "Edad Reproductiva Óptima")
-res_avanzada <- res_consultas_edad |> filter(`Grupo de edad` == "Edad Materna Avanzada")
+res_adol <- res_consultas_edad |> filter(`Grupo de edad` == "Adolescente")
+res_optima <- res_consultas_edad |> filter(`Grupo de edad` == "De 20 a 34 años")
+res_avanzada <- res_consultas_edad |> filter(`Grupo de edad` == "De 35 años o más")
 ```
 
-La tabla anterior muestra el número de consultas según la edad de la madre. Se observó una media de `r num(res_adol$media, 0.01)` (DE `r num(res_adol$de, 0.01)`) para las madres adolescentes, menor frente a las madres adultas: edad reproductiva óptima con media `r num(res_optima$media, 0.01)` (DE `r num(res_optima$de, 0.01)`) y edad materna avanzada con media `r num(res_avanzada$media, 0.01)` (DE `r num(res_avanzada$de, 0.01)`). Las medianas fueron `r num_auto(res_adol$mediana)` (RIC `r res_adol$RIC`) en adolescentes, `r num_auto(res_optima$mediana)` (RIC `r res_optima$RIC`) en edad óptima y `r num_auto(res_avanzada$mediana)` (RIC `r res_avanzada$RIC`) en edad avanzada.
+La tabla anterior muestra el número de consultas según la edad de la madre. Se observó una media de `r num(res_adol$media, 0.01)` (DE `r num(res_adol$de, 0.01)`) para las madres adolescentes, menor frente a las madres adultas: las de 20 a 34 años con media `r num(res_optima$media, 0.01)` (DE `r num(res_optima$de, 0.01)`) y las de 35 años o más con media `r num(res_avanzada$media, 0.01)` (DE `r num(res_avanzada$de, 0.01)`). Las medianas fueron `r num_auto(res_adol$mediana)` (RIC `r res_adol$RIC`) en adolescentes, `r num_auto(res_optima$mediana)` (RIC `r res_optima$RIC`) en las de 20 a 34 años y `r num_auto(res_avanzada$mediana)` (RIC `r res_avanzada$RIC`) en las de 35 años o más.
 
 ```{r consultas-edad, message=FALSE, warning=FALSE, fig.cap="Número de consultas prenatales según grupo de edad de la madre."}
 x <- df_atl$NUMCONSUL
@@ -54,12 +54,12 @@ df_atl |>
   punto_media() +
   escala_x(x) +
   labs(title = "Número de consultas prenatales según grupo de edad",
-       subtitle = sub_atl, x = "Número de consultas", y = NULL,
-       caption = paste0(fuente_dane, "  ·  ◆ = media")) +
+       x = "Número de consultas", y = NULL,
+       caption = "◆ = media") +
   theme_proyecto(grid = "x")
 ```
 
-En el boxplot se observó la caja del grupo adolescente ligeramente a la izquierda respecto a los grupos de edad adulta. La media (rombo) se ubica levemente a la izquierda de la mediana en el grupo adolescente y en el de edad óptima, mientras que en el grupo de edad avanzada visualmente no se puede apreciar una diferencia.
+En el boxplot se observó la caja del grupo adolescente ligeramente a la izquierda respecto a los grupos de edad adulta. La media (rombo) se ubica levemente a la izquierda de la mediana en el grupo adolescente y en el de 20 a 34 años, mientras que en el grupo de 35 años o más visualmente no se puede apreciar una diferencia.
 
 ## Cesáreas según el régimen de salud
 
@@ -117,7 +117,7 @@ df_reg |>
   scale_fill_manual(values = colores_cesarea, name = "Cesárea") +
   scale_x_continuous(labels = \(v) pct(v, 1), expand = expansion(0)) +
   labs(title = "Parto por cesárea según régimen de seguridad social",
-       subtitle = sub_atl, x = NULL, y = NULL, caption = fuente_dane) +
+       x = NULL, y = NULL) +
   theme_proyecto(grid = "none")
 ```
 
@@ -176,13 +176,13 @@ df_atl |>
   punto_media() +
   escala_x(x) +
   labs(title = "Número de consultas prenatales según subregión de residencia",
-       subtitle = sub_atl, x = "Número de consultas", y = NULL,
-       caption = paste0(fuente_dane, "  ·  ◆ = media")) +
+       x = "Número de consultas", y = NULL,
+       caption = "◆ = media") +
   theme_proyecto(grid = "x")
 ```
 Para el resto del área metropolitana se observa una media ligeramente a la derecha de la mediana, y en el resto del departamento ligeramente a la izquierda, aunque en ambos casos la diferencia apenas se distingue. En cambio, en Barranquilla y Soledad la media queda claramente a la izquierda de la mediana. Se registran valores atípicos en todas las subregiones, tanto para conteos bajos como para altos.
 
-## APGAR al minuto según la edad de la madre
+## Apgar al minuto según la edad de la madre
 
 ```{r apgar-edad-tabla, message=FALSE, warning=FALSE}
 res_apgar_edad <- df_atl |>
@@ -210,10 +210,10 @@ res_apgar_edad |>
   fmt_percent(columns = p_bajo, decimals = 2, scale_values = TRUE, sep_mark = ".", dec_mark = ",") |>
   cols_label(`Grupo de edad` = "Grupo de edad", n = "n",
              media = "Media", de = "DE", mediana = "Mediana", RIC = "RIC (Q1–Q3)",
-             min = "Mín", max = "Máx", p_bajo = "APGAR menor que 7") |>
+             min = "Mín", max = "Máx", p_bajo = "Apgar menor que 7") |>
   cols_align("left", columns = `Grupo de edad`) |>
   cols_align("center", columns = -`Grupo de edad`) |>
-  estilo_tabla("APGAR al minuto según grupo de edad")
+  estilo_tabla("Apgar al minuto según grupo de edad")
 ```
 
 ```{r filas-apgar-edad, include=FALSE}
@@ -225,7 +225,7 @@ res_apgar_avan <- res_apgar_edad |> filter(`Grupo de edad` == niv_edad[3])
 
 En los tres grupos de edad la mediana del Apgar al minuto fue de `r num_auto(res_apgar_adol$mediana)`. El promedio fue de `r num(res_apgar_adol$media, 0.01)` en las madres adolescentes, `r num(res_apgar_opt$media, 0.01)` en las de 20 a 34 años y `r num(res_apgar_avan$media, 0.01)` en las de 35 o más. El puntaje menor que 7 se presentó en el `r pct(res_apgar_adol$p_bajo, 0.01)` de los nacimientos de madres adolescentes, frente al `r pct(res_apgar_opt$p_bajo, 0.01)` y el `r pct(res_apgar_avan$p_bajo, 0.01)` de los otros dos grupos.
 
-```{r apgar-edad, message=FALSE, warning=FALSE, fig.cap="Distribución del puntaje APGAR al minuto dentro de cada grupo de edad."}
+```{r apgar-edad, message=FALSE, warning=FALSE, fig.cap="Distribución del puntaje Apgar al minuto dentro de cada grupo de edad."}
 df_apgar_edad <- df_atl |>
   mutate(apgar_cat = cut(APGAR1, breaks = c(-Inf, 6, 7, 8, 9, 10),
                          labels = c("Menor que 7", "7", "8", "9", "10")))
@@ -248,10 +248,10 @@ df_apgar_edad |>
   geom_text(aes(label = if_else(p >= 0.05, pct(p, 0.1), ""), color = txt),
             position = position_fill(vjust = 0.5, reverse = TRUE), size = 3.1) +
   scale_color_identity() +
-  scale_fill_manual(values = colores_apgar, name = "APGAR al minuto") +
+  scale_fill_manual(values = colores_apgar, name = "Apgar al minuto") +
   scale_x_continuous(labels = \(v) pct(v, 1), expand = expansion(0)) +
-  labs(title = "APGAR al minuto según grupo de edad",
-       subtitle = sub_atl, x = NULL, y = NULL, caption = fuente_dane) +
+  labs(title = "Apgar al minuto según grupo de edad",
+       x = NULL, y = NULL) +
   theme_proyecto(grid = "none")
 ```
 
@@ -345,6 +345,6 @@ df_apgar_tiempo |>
   scale_fill_manual(values = colores_apgar_tiempo, name = "Apgar a los cinco minutos") +
   scale_x_continuous(labels = \(v) pct(v, 1), expand = expansion(0)) +
   labs(title = "Apgar a los cinco minutos según Apgar al minuto",
-       subtitle = sub_atl, x = NULL, y = NULL, caption = fuente_dane) +
+       x = NULL, y = NULL) +
   theme_proyecto(grid = "none")
 ```
