@@ -16,12 +16,10 @@ _bookdown_files/
 *_cache/
 nacimientos_atlantico_2024.Rmd
 nacimientos_atlantico_2024.md
-nacimientos_atlantico_2024_files/
+/nacimientos_atlantico_2024_files/
 packages.bib
 
-# Salida compilada del libro
-# (quitar docs/ de aquí cuando se publique en GitHub Pages)
-docs/
+# Salida antigua (el libro se publica desde docs/, que sí se versiona)
 _book/
 
 # Sistema operativo

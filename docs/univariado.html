@@ -1,0 +1,3672 @@
+<!DOCTYPE html>
+<html lang="es" xml:lang="es">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Capítulo 3 Análisis univariado | Nacimientos en el Atlántico, 2024: condiciones del recién nacido, tipo de parto y atención prenatal</title>
+  <meta name="description" content="Análisis exploratorio y pruebas de hipótesis de los nacimientos registrados en el departamento del Atlántico en 2024." />
+  <meta name="generator" content="bookdown 0.48 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Capítulo 3 Análisis univariado | Nacimientos en el Atlántico, 2024: condiciones del recién nacido, tipo de parto y atención prenatal" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="Análisis exploratorio y pruebas de hipótesis de los nacimientos registrados en el departamento del Atlántico en 2024." />
+  <meta name="github-repo" content="bssanchezr7/nacimientos-2024-atl" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Capítulo 3 Análisis univariado | Nacimientos en el Atlántico, 2024: condiciones del recién nacido, tipo de parto y atención prenatal" />
+  
+  <meta name="twitter:description" content="Análisis exploratorio y pruebas de hipótesis de los nacimientos registrados en el departamento del Atlántico en 2024." />
+  
+
+<meta name="author" content="Brandon Sanchez" />
+<meta name="author" content="Andres Florez" />
+
+
+<meta name="date" content="2026-10-10" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="datos.html"/>
+<link rel="next" href="bivariado.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Nacimientos Atlántico 2024</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Presentación</a>
+<ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#estructura-del-documento"><i class="fa fa-check"></i>Estructura del documento</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#sobre-este-proyecto"><i class="fa fa-check"></i>Sobre este proyecto</a></li>
+</ul></li>
+<li class="chapter" data-level="1" data-path="introduccion.html"><a href="introduccion.html"><i class="fa fa-check"></i><b>1</b> Introducción</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="introduccion.html"><a href="introduccion.html#objetivos"><i class="fa fa-check"></i><b>1.1</b> Objetivos</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="datos.html"><a href="datos.html"><i class="fa fa-check"></i><b>2</b> Datos y metodología</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="datos.html"><a href="datos.html#fuente-de-datos"><i class="fa fa-check"></i><b>2.1</b> Fuente de datos</a></li>
+<li class="chapter" data-level="2.2" data-path="datos.html"><a href="datos.html#poblaci%C3%B3n-y-unidad-de-an%C3%A1lisis"><i class="fa fa-check"></i><b>2.2</b> Población y unidad de análisis</a></li>
+<li class="chapter" data-level="2.3" data-path="datos.html"><a href="datos.html#variables"><i class="fa fa-check"></i><b>2.3</b> Variables</a></li>
+<li class="chapter" data-level="2.4" data-path="datos.html"><a href="datos.html#limpieza-y-transformaci%C3%B3n"><i class="fa fa-check"></i><b>2.4</b> Limpieza y transformación</a></li>
+<li class="chapter" data-level="2.5" data-path="datos.html"><a href="datos.html#valores-faltantes"><i class="fa fa-check"></i><b>2.5</b> Valores faltantes</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="univariado.html"><a href="univariado.html"><i class="fa fa-check"></i><b>3</b> Análisis univariado</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="univariado.html"><a href="univariado.html#n%C3%BAmero-de-consultas"><i class="fa fa-check"></i><b>3.1</b> Número de consultas</a></li>
+<li class="chapter" data-level="3.2" data-path="univariado.html"><a href="univariado.html#edad-de-la-madre"><i class="fa fa-check"></i><b>3.2</b> Edad de la madre</a></li>
+<li class="chapter" data-level="3.3" data-path="univariado.html"><a href="univariado.html#apgar-al-minuto"><i class="fa fa-check"></i><b>3.3</b> Apgar al minuto</a></li>
+<li class="chapter" data-level="3.4" data-path="univariado.html"><a href="univariado.html#apgar-a-los-cinco-minutos"><i class="fa fa-check"></i><b>3.4</b> Apgar a los cinco minutos</a></li>
+<li class="chapter" data-level="3.5" data-path="univariado.html"><a href="univariado.html#tipo-de-parto"><i class="fa fa-check"></i><b>3.5</b> Tipo de parto</a></li>
+<li class="chapter" data-level="3.6" data-path="univariado.html"><a href="univariado.html#r%C3%A9gimen-de-seguridad-social-de-la-madre"><i class="fa fa-check"></i><b>3.6</b> Régimen de seguridad social de la madre</a></li>
+<li class="chapter" data-level="3.7" data-path="univariado.html"><a href="univariado.html#subregi%C3%B3n-de-residencia-de-la-madre"><i class="fa fa-check"></i><b>3.7</b> Subregión de residencia de la madre</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="bivariado.html"><a href="bivariado.html"><i class="fa fa-check"></i><b>4</b> Análisis bivariado</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="bivariado.html"><a href="bivariado.html#n%C3%BAmero-de-consultas-prenatales-seg%C3%BAn-la-edad"><i class="fa fa-check"></i><b>4.1</b> Número de consultas prenatales según la edad</a></li>
+<li class="chapter" data-level="4.2" data-path="bivariado.html"><a href="bivariado.html#ces%C3%A1reas-seg%C3%BAn-el-r%C3%A9gimen-de-salud"><i class="fa fa-check"></i><b>4.2</b> Cesáreas según el régimen de salud</a></li>
+<li class="chapter" data-level="4.3" data-path="bivariado.html"><a href="bivariado.html#n%C3%BAmero-de-consultas-prenatales-seg%C3%BAn-la-subregi%C3%B3n-de-residencia"><i class="fa fa-check"></i><b>4.3</b> Número de consultas prenatales según la subregión de residencia</a></li>
+<li class="chapter" data-level="4.4" data-path="bivariado.html"><a href="bivariado.html#apgar-al-minuto-seg%C3%BAn-la-edad-de-la-madre"><i class="fa fa-check"></i><b>4.4</b> Apgar al minuto según la edad de la madre</a></li>
+<li class="chapter" data-level="4.5" data-path="bivariado.html"><a href="bivariado.html#apgar-al-minuto-y-a-los-cinco-minutos"><i class="fa fa-check"></i><b>4.5</b> Apgar al minuto y a los cinco minutos</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="hipotesis.html"><a href="hipotesis.html"><i class="fa fa-check"></i><b>5</b> Pruebas de hipótesis</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="hipotesis.html"><a href="hipotesis.html#objetivo-1-consultas-prenatales-seg%C3%BAn-la-edad-de-la-madre"><i class="fa fa-check"></i><b>5.1</b> Objetivo 1: consultas prenatales según la edad de la madre</a>
+<ul>
+<li class="chapter" data-level="5.1.1" data-path="hipotesis.html"><a href="hipotesis.html#prueba-de-normalidad"><i class="fa fa-check"></i><b>5.1.1</b> Prueba de normalidad</a></li>
+<li class="chapter" data-level="5.1.2" data-path="hipotesis.html"><a href="hipotesis.html#prueba-de-homogeneidad-de-varianzas"><i class="fa fa-check"></i><b>5.1.2</b> Prueba de homogeneidad de varianzas</a></li>
+<li class="chapter" data-level="5.1.3" data-path="hipotesis.html"><a href="hipotesis.html#comparaci%C3%B3n-adolescentes-frente-a-adultas-wilcoxonmannwhitney"><i class="fa fa-check"></i><b>5.1.3</b> Comparación adolescentes frente a adultas (Wilcoxon–Mann–Whitney)</a></li>
+<li class="chapter" data-level="5.1.4" data-path="hipotesis.html"><a href="hipotesis.html#tama%C3%B1o-del-efecto"><i class="fa fa-check"></i><b>5.1.4</b> Tamaño del efecto</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="hipotesis.html"><a href="hipotesis.html#objetivo-2-ces%C3%A1reas-seg%C3%BAn-el-r%C3%A9gimen-de-salud"><i class="fa fa-check"></i><b>5.2</b> Objetivo 2: cesáreas según el régimen de salud</a>
+<ul>
+<li class="chapter" data-level="5.2.1" data-path="hipotesis.html"><a href="hipotesis.html#condici%C3%B3n-de-la-prueba"><i class="fa fa-check"></i><b>5.2.1</b> Condición de la prueba</a></li>
+<li class="chapter" data-level="5.2.2" data-path="hipotesis.html"><a href="hipotesis.html#prueba-de-homogeneidad-de-proporciones"><i class="fa fa-check"></i><b>5.2.2</b> Prueba de homogeneidad de proporciones</a></li>
+<li class="chapter" data-level="5.2.3" data-path="hipotesis.html"><a href="hipotesis.html#tama%C3%B1o-del-efecto-1"><i class="fa fa-check"></i><b>5.2.3</b> Tamaño del efecto</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="hipotesis.html"><a href="hipotesis.html#objetivo-3-consultas-prenatales-seg%C3%BAn-la-subregi%C3%B3n-de-residencia"><i class="fa fa-check"></i><b>5.3</b> Objetivo 3: consultas prenatales según la subregión de residencia</a>
+<ul>
+<li class="chapter" data-level="5.3.1" data-path="hipotesis.html"><a href="hipotesis.html#prueba-de-normalidad-1"><i class="fa fa-check"></i><b>5.3.1</b> Prueba de normalidad</a></li>
+<li class="chapter" data-level="5.3.2" data-path="hipotesis.html"><a href="hipotesis.html#prueba-de-homogeneidad-de-varianzas-1"><i class="fa fa-check"></i><b>5.3.2</b> Prueba de homogeneidad de varianzas</a></li>
+<li class="chapter" data-level="5.3.3" data-path="hipotesis.html"><a href="hipotesis.html#prueba-de-kruskal-wallis"><i class="fa fa-check"></i><b>5.3.3</b> Prueba de Kruskal-Wallis</a></li>
+<li class="chapter" data-level="5.3.4" data-path="hipotesis.html"><a href="hipotesis.html#tama%C3%B1o-del-efecto-2"><i class="fa fa-check"></i><b>5.3.4</b> Tamaño del efecto</a></li>
+</ul></li>
+<li class="chapter" data-level="5.4" data-path="hipotesis.html"><a href="hipotesis.html#objetivo-4-apgar-al-minuto-seg%C3%BAn-la-edad-de-la-madre"><i class="fa fa-check"></i><b>5.4</b> Objetivo 4: Apgar al minuto según la edad de la madre</a>
+<ul>
+<li class="chapter" data-level="5.4.1" data-path="hipotesis.html"><a href="hipotesis.html#prueba-de-normalidad-2"><i class="fa fa-check"></i><b>5.4.1</b> Prueba de normalidad</a></li>
+<li class="chapter" data-level="5.4.2" data-path="hipotesis.html"><a href="hipotesis.html#prueba-de-homogeneidad-de-varianzas-2"><i class="fa fa-check"></i><b>5.4.2</b> Prueba de homogeneidad de varianzas</a></li>
+<li class="chapter" data-level="5.4.3" data-path="hipotesis.html"><a href="hipotesis.html#prueba-de-kruskal-wallis-1"><i class="fa fa-check"></i><b>5.4.3</b> Prueba de Kruskal-Wallis</a></li>
+<li class="chapter" data-level="5.4.4" data-path="hipotesis.html"><a href="hipotesis.html#comparaciones-por-pares"><i class="fa fa-check"></i><b>5.4.4</b> Comparaciones por pares</a></li>
+<li class="chapter" data-level="5.4.5" data-path="hipotesis.html"><a href="hipotesis.html#tama%C3%B1o-del-efecto-3"><i class="fa fa-check"></i><b>5.4.5</b> Tamaño del efecto</a></li>
+</ul></li>
+<li class="chapter" data-level="5.5" data-path="hipotesis.html"><a href="hipotesis.html#objetivo-5-apgar-al-minuto-y-a-los-cinco-minutos"><i class="fa fa-check"></i><b>5.5</b> Objetivo 5: Apgar al minuto y a los cinco minutos</a>
+<ul>
+<li class="chapter" data-level="5.5.1" data-path="hipotesis.html"><a href="hipotesis.html#prueba-de-normalidad-3"><i class="fa fa-check"></i><b>5.5.1</b> Prueba de normalidad</a></li>
+<li class="chapter" data-level="5.5.2" data-path="hipotesis.html"><a href="hipotesis.html#prueba-de-wilcoxon-para-muestras-pareadas"><i class="fa fa-check"></i><b>5.5.2</b> Prueba de Wilcoxon para muestras pareadas</a></li>
+<li class="chapter" data-level="5.5.3" data-path="hipotesis.html"><a href="hipotesis.html#tama%C3%B1o-del-efecto-4"><i class="fa fa-check"></i><b>5.5.3</b> Tamaño del efecto</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="conclusiones.html"><a href="conclusiones.html"><i class="fa fa-check"></i><b>6</b> Conclusiones</a></li>
+<li class="chapter" data-level="" data-path="referencias.html"><a href="referencias.html"><i class="fa fa-check"></i>Referencias</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/bssanchezr7/nacimientos-2024-atl" target="_blank">Código fuente en GitHub</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Nacimientos en el Atlántico, 2024: condiciones del recién nacido, tipo de parto y atención prenatal</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="univariado" class="section level1 hasAnchor" number="3">
+<h1><span class="header-section-number">Capítulo 3</span> Análisis univariado<a href="univariado.html#univariado" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="número-de-consultas" class="section level2 hasAnchor" number="3.1">
+<h2><span class="header-section-number">3.1</span> Número de consultas<a href="univariado.html#n%C3%BAmero-de-consultas" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="wfcswmkhjp" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#wfcswmkhjp table {
+  font-family: Arial, system-ui, 'Segoe UI', Roboto, Helvetica, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#wfcswmkhjp thead, #wfcswmkhjp tbody, #wfcswmkhjp tfoot, #wfcswmkhjp tr, #wfcswmkhjp td, #wfcswmkhjp th {
+  border-style: none;
+}
+
+#wfcswmkhjp p {
+  margin: 0;
+  padding: 0;
+}
+
+#wfcswmkhjp .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 13px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #FFFFFF;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#wfcswmkhjp .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#wfcswmkhjp .gt_title {
+  color: #333333;
+  font-size: 16px;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#wfcswmkhjp .gt_subtitle {
+  color: #333333;
+  font-size: 12px;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#wfcswmkhjp .gt_heading {
+  background-color: #FFFFFF;
+  text-align: left;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#wfcswmkhjp .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #2E5A6B;
+}
+
+#wfcswmkhjp .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #2E5A6B;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#wfcswmkhjp .gt_col_heading {
+  color: #333333;
+  background-color: #F3F6F7;
+  font-size: 100%;
+  font-weight: bold;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#wfcswmkhjp .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #F3F6F7;
+  font-size: 100%;
+  font-weight: bold;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#wfcswmkhjp .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#wfcswmkhjp .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#wfcswmkhjp .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #2E5A6B;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#wfcswmkhjp .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#wfcswmkhjp .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #F3F6F7;
+  font-size: 100%;
+  font-weight: bold;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #E3E3E3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#wfcswmkhjp .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #F3F6F7;
+  font-size: 100%;
+  font-weight: bold;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #E3E3E3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#wfcswmkhjp .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#wfcswmkhjp .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#wfcswmkhjp .gt_row {
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #E3E3E3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#wfcswmkhjp .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#wfcswmkhjp .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#wfcswmkhjp .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#wfcswmkhjp .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#wfcswmkhjp .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#wfcswmkhjp .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#wfcswmkhjp .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#wfcswmkhjp .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#wfcswmkhjp .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#wfcswmkhjp .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#wfcswmkhjp .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#wfcswmkhjp .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#wfcswmkhjp .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #2E5A6B;
+}
+
+#wfcswmkhjp .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#wfcswmkhjp .gt_footnote {
+  margin: 0px;
+  font-size: 11px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#wfcswmkhjp .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#wfcswmkhjp .gt_sourcenote {
+  font-size: 11px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#wfcswmkhjp .gt_left {
+  text-align: left;
+}
+
+#wfcswmkhjp .gt_center {
+  text-align: center;
+}
+
+#wfcswmkhjp .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#wfcswmkhjp .gt_font_normal {
+  font-weight: normal;
+}
+
+#wfcswmkhjp .gt_font_bold {
+  font-weight: bold;
+}
+
+#wfcswmkhjp .gt_font_italic {
+  font-style: italic;
+}
+
+#wfcswmkhjp .gt_super {
+  font-size: 65%;
+}
+
+#wfcswmkhjp .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#wfcswmkhjp .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#wfcswmkhjp .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#wfcswmkhjp .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#wfcswmkhjp .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#wfcswmkhjp .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#wfcswmkhjp .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#wfcswmkhjp .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#wfcswmkhjp div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+<table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+  <thead>
+    <tr class="gt_heading">
+      <td colspan="7" class="gt_heading gt_title gt_font_normal gt_bottom_border" style><span class='gt_from_md'><strong>Número de consultas prenatales: resumen</strong></span></td>
+    </tr>
+    
+    <tr class="gt_col_headings">
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="n">n</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="media">Media</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="de">DE</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="mediana">Mediana</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="RIC">RIC (Q1–Q3)</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="min">Mín</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="max">Máx</th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr><td headers="n" class="gt_row gt_center">26.216</td>
+<td headers="media" class="gt_row gt_center">7,30</td>
+<td headers="de" class="gt_row gt_center">2,34</td>
+<td headers="mediana" class="gt_row gt_center">8</td>
+<td headers="RIC" class="gt_row gt_center">6 – 8</td>
+<td headers="min" class="gt_row gt_center">0</td>
+<td headers="max" class="gt_row gt_center">25</td></tr>
+  </tbody>
+  
+</table>
+</div>
+<p>En los 26.216 nacimientos se observó un promedio de 7,30 consultas prenatales (DE 2,34) y una mediana de 8 (RIC 6 – 8). El número mínimo y máximo de consultas fue de 0 y 25, respectivamente.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:hist-numconsul"></span>
+<img src="nacimientos_atlantico_2024_files/figure-html/hist-numconsul-1.png" alt="Distribución del número de consultas prenatales." width="85%" />
+<p class="caption">
+Figura 3.1: Distribución del número de consultas prenatales.
+</p>
+</div>
+<p>En el gráfico la distribución se concentra entre 6 y 8 consultas, con un pico en 8 (6.828 nacimientos). La media (línea continua) se encuentra levemente a la izquierda de la mediana (línea discontinua), y a la derecha se observa una cola de barras con baja frecuencia, que llega hasta 25 consultas.</p>
+</div>
+<div id="edad-de-la-madre" class="section level2 hasAnchor" number="3.2">
+<h2><span class="header-section-number">3.2</span> Edad de la madre<a href="univariado.html#edad-de-la-madre" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="uxkmdkaqkr" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#uxkmdkaqkr table {
+  font-family: Arial, system-ui, 'Segoe UI', Roboto, Helvetica, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#uxkmdkaqkr thead, #uxkmdkaqkr tbody, #uxkmdkaqkr tfoot, #uxkmdkaqkr tr, #uxkmdkaqkr td, #uxkmdkaqkr th {
+  border-style: none;
+}
+
+#uxkmdkaqkr p {
+  margin: 0;
+  padding: 0;
+}
+
+#uxkmdkaqkr .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 13px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #FFFFFF;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#uxkmdkaqkr .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#uxkmdkaqkr .gt_title {
+  color: #333333;
+  font-size: 16px;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#uxkmdkaqkr .gt_subtitle {
+  color: #333333;
+  font-size: 12px;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#uxkmdkaqkr .gt_heading {
+  background-color: #FFFFFF;
+  text-align: left;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#uxkmdkaqkr .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #2E5A6B;
+}
+
+#uxkmdkaqkr .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #2E5A6B;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#uxkmdkaqkr .gt_col_heading {
+  color: #333333;
+  background-color: #F3F6F7;
+  font-size: 100%;
+  font-weight: bold;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#uxkmdkaqkr .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #F3F6F7;
+  font-size: 100%;
+  font-weight: bold;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#uxkmdkaqkr .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#uxkmdkaqkr .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#uxkmdkaqkr .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #2E5A6B;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#uxkmdkaqkr .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#uxkmdkaqkr .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #F3F6F7;
+  font-size: 100%;
+  font-weight: bold;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #E3E3E3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#uxkmdkaqkr .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #F3F6F7;
+  font-size: 100%;
+  font-weight: bold;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #E3E3E3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#uxkmdkaqkr .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#uxkmdkaqkr .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#uxkmdkaqkr .gt_row {
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #E3E3E3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#uxkmdkaqkr .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#uxkmdkaqkr .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#uxkmdkaqkr .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#uxkmdkaqkr .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#uxkmdkaqkr .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#uxkmdkaqkr .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#uxkmdkaqkr .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#uxkmdkaqkr .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#uxkmdkaqkr .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#uxkmdkaqkr .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#uxkmdkaqkr .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#uxkmdkaqkr .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#uxkmdkaqkr .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #2E5A6B;
+}
+
+#uxkmdkaqkr .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#uxkmdkaqkr .gt_footnote {
+  margin: 0px;
+  font-size: 11px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#uxkmdkaqkr .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#uxkmdkaqkr .gt_sourcenote {
+  font-size: 11px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#uxkmdkaqkr .gt_left {
+  text-align: left;
+}
+
+#uxkmdkaqkr .gt_center {
+  text-align: center;
+}
+
+#uxkmdkaqkr .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#uxkmdkaqkr .gt_font_normal {
+  font-weight: normal;
+}
+
+#uxkmdkaqkr .gt_font_bold {
+  font-weight: bold;
+}
+
+#uxkmdkaqkr .gt_font_italic {
+  font-style: italic;
+}
+
+#uxkmdkaqkr .gt_super {
+  font-size: 65%;
+}
+
+#uxkmdkaqkr .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#uxkmdkaqkr .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#uxkmdkaqkr .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#uxkmdkaqkr .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#uxkmdkaqkr .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#uxkmdkaqkr .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#uxkmdkaqkr .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#uxkmdkaqkr .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#uxkmdkaqkr div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+<table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+  <thead>
+    <tr class="gt_heading">
+      <td colspan="3" class="gt_heading gt_title gt_font_normal gt_bottom_border" style><span class='gt_from_md'><strong>Grupo de edad de la madre: frecuencias</strong></span></td>
+    </tr>
+    
+    <tr class="gt_col_headings">
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="EDAD_MADRE">Grupo de edad</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="n">n</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="p">%</th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr><td headers="EDAD_MADRE" class="gt_row gt_left">Adolescente</td>
+<td headers="n" class="gt_row gt_center">3.827</td>
+<td headers="p" class="gt_row gt_center">14,6%</td></tr>
+    <tr><td headers="EDAD_MADRE" class="gt_row gt_left">De 20 a 34 años</td>
+<td headers="n" class="gt_row gt_center">19.437</td>
+<td headers="p" class="gt_row gt_center">74,1%</td></tr>
+    <tr><td headers="EDAD_MADRE" class="gt_row gt_left">De 35 años o más</td>
+<td headers="n" class="gt_row gt_center">2.952</td>
+<td headers="p" class="gt_row gt_center">11,3%</td></tr>
+  </tbody>
+  
+</table>
+</div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:barras-edad"></span>
+<img src="nacimientos_atlantico_2024_files/figure-html/barras-edad-1.png" alt="Distribución por grupo de edad de la madre." width="85%" />
+<p class="caption">
+Figura 3.2: Distribución por grupo de edad de la madre.
+</p>
+</div>
+<p>Del total de 26.216 nacimientos, predominó el grupo de 20 a 34 años con un 74,1% (19.437 nacimientos), seguido por el de madres adolescentes con un 14,6% (3.827 nacimientos) y por último el de 35 años o más con un 11,3% (2.952 nacimientos).</p>
+</div>
+<div id="apgar-al-minuto" class="section level2 hasAnchor" number="3.3">
+<h2><span class="header-section-number">3.3</span> Apgar al minuto<a href="univariado.html#apgar-al-minuto" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="svgddywgvs" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#svgddywgvs table {
+  font-family: Arial, system-ui, 'Segoe UI', Roboto, Helvetica, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#svgddywgvs thead, #svgddywgvs tbody, #svgddywgvs tfoot, #svgddywgvs tr, #svgddywgvs td, #svgddywgvs th {
+  border-style: none;
+}
+
+#svgddywgvs p {
+  margin: 0;
+  padding: 0;
+}
+
+#svgddywgvs .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 13px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #FFFFFF;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#svgddywgvs .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#svgddywgvs .gt_title {
+  color: #333333;
+  font-size: 16px;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#svgddywgvs .gt_subtitle {
+  color: #333333;
+  font-size: 12px;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#svgddywgvs .gt_heading {
+  background-color: #FFFFFF;
+  text-align: left;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#svgddywgvs .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #2E5A6B;
+}
+
+#svgddywgvs .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #2E5A6B;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#svgddywgvs .gt_col_heading {
+  color: #333333;
+  background-color: #F3F6F7;
+  font-size: 100%;
+  font-weight: bold;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#svgddywgvs .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #F3F6F7;
+  font-size: 100%;
+  font-weight: bold;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#svgddywgvs .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#svgddywgvs .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#svgddywgvs .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #2E5A6B;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#svgddywgvs .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#svgddywgvs .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #F3F6F7;
+  font-size: 100%;
+  font-weight: bold;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #E3E3E3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#svgddywgvs .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #F3F6F7;
+  font-size: 100%;
+  font-weight: bold;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #E3E3E3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#svgddywgvs .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#svgddywgvs .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#svgddywgvs .gt_row {
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #E3E3E3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#svgddywgvs .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#svgddywgvs .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#svgddywgvs .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#svgddywgvs .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#svgddywgvs .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#svgddywgvs .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#svgddywgvs .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#svgddywgvs .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#svgddywgvs .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#svgddywgvs .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#svgddywgvs .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#svgddywgvs .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#svgddywgvs .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #2E5A6B;
+}
+
+#svgddywgvs .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#svgddywgvs .gt_footnote {
+  margin: 0px;
+  font-size: 11px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#svgddywgvs .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#svgddywgvs .gt_sourcenote {
+  font-size: 11px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#svgddywgvs .gt_left {
+  text-align: left;
+}
+
+#svgddywgvs .gt_center {
+  text-align: center;
+}
+
+#svgddywgvs .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#svgddywgvs .gt_font_normal {
+  font-weight: normal;
+}
+
+#svgddywgvs .gt_font_bold {
+  font-weight: bold;
+}
+
+#svgddywgvs .gt_font_italic {
+  font-style: italic;
+}
+
+#svgddywgvs .gt_super {
+  font-size: 65%;
+}
+
+#svgddywgvs .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#svgddywgvs .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#svgddywgvs .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#svgddywgvs .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#svgddywgvs .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#svgddywgvs .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#svgddywgvs .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#svgddywgvs .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#svgddywgvs div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+<table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+  <thead>
+    <tr class="gt_heading">
+      <td colspan="7" class="gt_heading gt_title gt_font_normal gt_bottom_border" style><span class='gt_from_md'><strong>Puntaje Apgar al minuto: resumen</strong></span></td>
+    </tr>
+    
+    <tr class="gt_col_headings">
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="n">n</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="media">Media</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="de">DE</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="mediana">Mediana</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="RIC">RIC (Q1–Q3)</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="min">Mín</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="max">Máx</th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr><td headers="n" class="gt_row gt_center">26.216</td>
+<td headers="media" class="gt_row gt_center">9,04</td>
+<td headers="de" class="gt_row gt_center">0,73</td>
+<td headers="mediana" class="gt_row gt_center">9</td>
+<td headers="RIC" class="gt_row gt_center">9 – 9</td>
+<td headers="min" class="gt_row gt_center">1</td>
+<td headers="max" class="gt_row gt_center">10</td></tr>
+  </tbody>
+  
+</table>
+</div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:hist-apgar1"></span>
+<img src="nacimientos_atlantico_2024_files/figure-html/hist-apgar1-1.png" alt="Distribución del puntaje Apgar al minuto." width="85%" />
+<p class="caption">
+Figura 3.3: Distribución del puntaje Apgar al minuto.
+</p>
+</div>
+<p>El puntaje Apgar al minuto fue alto en casi todos los nacimientos. El promedio fue de 9,04 (DE 0,73) y la mediana de 9, con el primer cuartil en 9 y el tercero en 9. El puntaje más frecuente fue 9, con 16.963 nacimientos (64,7%), seguido de 10. Solo el 0,8% de los recién nacidos tuvo un puntaje menor que 7.</p>
+</div>
+<div id="apgar-a-los-cinco-minutos" class="section level2 hasAnchor" number="3.4">
+<h2><span class="header-section-number">3.4</span> Apgar a los cinco minutos<a href="univariado.html#apgar-a-los-cinco-minutos" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="docmodrzro" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#docmodrzro table {
+  font-family: Arial, system-ui, 'Segoe UI', Roboto, Helvetica, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#docmodrzro thead, #docmodrzro tbody, #docmodrzro tfoot, #docmodrzro tr, #docmodrzro td, #docmodrzro th {
+  border-style: none;
+}
+
+#docmodrzro p {
+  margin: 0;
+  padding: 0;
+}
+
+#docmodrzro .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 13px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #FFFFFF;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#docmodrzro .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#docmodrzro .gt_title {
+  color: #333333;
+  font-size: 16px;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#docmodrzro .gt_subtitle {
+  color: #333333;
+  font-size: 12px;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#docmodrzro .gt_heading {
+  background-color: #FFFFFF;
+  text-align: left;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#docmodrzro .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #2E5A6B;
+}
+
+#docmodrzro .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #2E5A6B;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#docmodrzro .gt_col_heading {
+  color: #333333;
+  background-color: #F3F6F7;
+  font-size: 100%;
+  font-weight: bold;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#docmodrzro .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #F3F6F7;
+  font-size: 100%;
+  font-weight: bold;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#docmodrzro .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#docmodrzro .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#docmodrzro .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #2E5A6B;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#docmodrzro .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#docmodrzro .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #F3F6F7;
+  font-size: 100%;
+  font-weight: bold;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #E3E3E3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#docmodrzro .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #F3F6F7;
+  font-size: 100%;
+  font-weight: bold;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #E3E3E3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#docmodrzro .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#docmodrzro .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#docmodrzro .gt_row {
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #E3E3E3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#docmodrzro .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#docmodrzro .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#docmodrzro .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#docmodrzro .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#docmodrzro .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#docmodrzro .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#docmodrzro .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#docmodrzro .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#docmodrzro .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#docmodrzro .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#docmodrzro .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#docmodrzro .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#docmodrzro .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #2E5A6B;
+}
+
+#docmodrzro .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#docmodrzro .gt_footnote {
+  margin: 0px;
+  font-size: 11px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#docmodrzro .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#docmodrzro .gt_sourcenote {
+  font-size: 11px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#docmodrzro .gt_left {
+  text-align: left;
+}
+
+#docmodrzro .gt_center {
+  text-align: center;
+}
+
+#docmodrzro .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#docmodrzro .gt_font_normal {
+  font-weight: normal;
+}
+
+#docmodrzro .gt_font_bold {
+  font-weight: bold;
+}
+
+#docmodrzro .gt_font_italic {
+  font-style: italic;
+}
+
+#docmodrzro .gt_super {
+  font-size: 65%;
+}
+
+#docmodrzro .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#docmodrzro .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#docmodrzro .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#docmodrzro .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#docmodrzro .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#docmodrzro .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#docmodrzro .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#docmodrzro .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#docmodrzro div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+<table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+  <thead>
+    <tr class="gt_heading">
+      <td colspan="7" class="gt_heading gt_title gt_font_normal gt_bottom_border" style><span class='gt_from_md'><strong>Puntaje Apgar a los cinco minutos: resumen</strong></span></td>
+    </tr>
+    
+    <tr class="gt_col_headings">
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="n">n</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="media">Media</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="de">DE</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="mediana">Mediana</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="RIC">RIC (Q1–Q3)</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="min">Mín</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="max">Máx</th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr><td headers="n" class="gt_row gt_center">26.216</td>
+<td headers="media" class="gt_row gt_center">9,18</td>
+<td headers="de" class="gt_row gt_center">0,68</td>
+<td headers="mediana" class="gt_row gt_center">9</td>
+<td headers="RIC" class="gt_row gt_center">9 – 10</td>
+<td headers="min" class="gt_row gt_center">1</td>
+<td headers="max" class="gt_row gt_center">10</td></tr>
+  </tbody>
+  
+</table>
+</div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:hist-apgar2"></span>
+<img src="nacimientos_atlantico_2024_files/figure-html/hist-apgar2-1.png" alt="Distribución del puntaje Apgar a los cinco minutos." width="85%" />
+<p class="caption">
+Figura 3.4: Distribución del puntaje Apgar a los cinco minutos.
+</p>
+</div>
+<p>A los cinco minutos los puntajes se concentraron aún más en los valores altos. El promedio subió a 9,18 (DE 0,68) y la mediana se mantuvo en 9 (RIC 9 – 10). El puntaje más frecuente siguió siendo 9, con 17.052 nacimientos (65,0%), seguido de 10. Apenas el 0,6% de los recién nacidos quedó por debajo de 7.</p>
+</div>
+<div id="tipo-de-parto" class="section level2 hasAnchor" number="3.5">
+<h2><span class="header-section-number">3.5</span> Tipo de parto<a href="univariado.html#tipo-de-parto" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="zooyxburtx" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#zooyxburtx table {
+  font-family: Arial, system-ui, 'Segoe UI', Roboto, Helvetica, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#zooyxburtx thead, #zooyxburtx tbody, #zooyxburtx tfoot, #zooyxburtx tr, #zooyxburtx td, #zooyxburtx th {
+  border-style: none;
+}
+
+#zooyxburtx p {
+  margin: 0;
+  padding: 0;
+}
+
+#zooyxburtx .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 13px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #FFFFFF;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#zooyxburtx .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#zooyxburtx .gt_title {
+  color: #333333;
+  font-size: 16px;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#zooyxburtx .gt_subtitle {
+  color: #333333;
+  font-size: 12px;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#zooyxburtx .gt_heading {
+  background-color: #FFFFFF;
+  text-align: left;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#zooyxburtx .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #2E5A6B;
+}
+
+#zooyxburtx .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #2E5A6B;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#zooyxburtx .gt_col_heading {
+  color: #333333;
+  background-color: #F3F6F7;
+  font-size: 100%;
+  font-weight: bold;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#zooyxburtx .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #F3F6F7;
+  font-size: 100%;
+  font-weight: bold;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#zooyxburtx .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#zooyxburtx .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#zooyxburtx .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #2E5A6B;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#zooyxburtx .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#zooyxburtx .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #F3F6F7;
+  font-size: 100%;
+  font-weight: bold;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #E3E3E3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#zooyxburtx .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #F3F6F7;
+  font-size: 100%;
+  font-weight: bold;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #E3E3E3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#zooyxburtx .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#zooyxburtx .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#zooyxburtx .gt_row {
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #E3E3E3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#zooyxburtx .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#zooyxburtx .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#zooyxburtx .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#zooyxburtx .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#zooyxburtx .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#zooyxburtx .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#zooyxburtx .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#zooyxburtx .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#zooyxburtx .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#zooyxburtx .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#zooyxburtx .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#zooyxburtx .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#zooyxburtx .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #2E5A6B;
+}
+
+#zooyxburtx .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#zooyxburtx .gt_footnote {
+  margin: 0px;
+  font-size: 11px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#zooyxburtx .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#zooyxburtx .gt_sourcenote {
+  font-size: 11px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#zooyxburtx .gt_left {
+  text-align: left;
+}
+
+#zooyxburtx .gt_center {
+  text-align: center;
+}
+
+#zooyxburtx .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#zooyxburtx .gt_font_normal {
+  font-weight: normal;
+}
+
+#zooyxburtx .gt_font_bold {
+  font-weight: bold;
+}
+
+#zooyxburtx .gt_font_italic {
+  font-style: italic;
+}
+
+#zooyxburtx .gt_super {
+  font-size: 65%;
+}
+
+#zooyxburtx .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#zooyxburtx .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#zooyxburtx .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#zooyxburtx .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#zooyxburtx .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#zooyxburtx .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#zooyxburtx .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#zooyxburtx .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#zooyxburtx div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+<table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+  <thead>
+    <tr class="gt_heading">
+      <td colspan="3" class="gt_heading gt_title gt_font_normal gt_bottom_border" style><span class='gt_from_md'><strong>Parto por cesárea: frecuencias</strong></span></td>
+    </tr>
+    
+    <tr class="gt_col_headings">
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="CESAREA">Cesárea</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="n">n</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="p">%</th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr><td headers="CESAREA" class="gt_row gt_left">Sí</td>
+<td headers="n" class="gt_row gt_center">19.629</td>
+<td headers="p" class="gt_row gt_center">74,9%</td></tr>
+    <tr><td headers="CESAREA" class="gt_row gt_left">No</td>
+<td headers="n" class="gt_row gt_center">6.587</td>
+<td headers="p" class="gt_row gt_center">25,1%</td></tr>
+  </tbody>
+  
+</table>
+</div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:barras-parto"></span>
+<img src="nacimientos_atlantico_2024_files/figure-html/barras-parto-1.png" alt="Distribución de los nacimientos según parto por cesárea." width="85%" />
+<p class="caption">
+Figura 3.5: Distribución de los nacimientos según parto por cesárea.
+</p>
+</div>
+<p>De los 26.216 nacimientos, 19.629 (74,9%) fueron por cesárea; el 25,1% restante corresponde a partos que no terminaron en cesárea.</p>
+</div>
+<div id="régimen-de-seguridad-social-de-la-madre" class="section level2 hasAnchor" number="3.6">
+<h2><span class="header-section-number">3.6</span> Régimen de seguridad social de la madre<a href="univariado.html#r%C3%A9gimen-de-seguridad-social-de-la-madre" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="qmmbxqjehr" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#qmmbxqjehr table {
+  font-family: Arial, system-ui, 'Segoe UI', Roboto, Helvetica, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#qmmbxqjehr thead, #qmmbxqjehr tbody, #qmmbxqjehr tfoot, #qmmbxqjehr tr, #qmmbxqjehr td, #qmmbxqjehr th {
+  border-style: none;
+}
+
+#qmmbxqjehr p {
+  margin: 0;
+  padding: 0;
+}
+
+#qmmbxqjehr .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 13px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #FFFFFF;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#qmmbxqjehr .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#qmmbxqjehr .gt_title {
+  color: #333333;
+  font-size: 16px;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#qmmbxqjehr .gt_subtitle {
+  color: #333333;
+  font-size: 12px;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#qmmbxqjehr .gt_heading {
+  background-color: #FFFFFF;
+  text-align: left;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#qmmbxqjehr .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #2E5A6B;
+}
+
+#qmmbxqjehr .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #2E5A6B;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#qmmbxqjehr .gt_col_heading {
+  color: #333333;
+  background-color: #F3F6F7;
+  font-size: 100%;
+  font-weight: bold;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#qmmbxqjehr .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #F3F6F7;
+  font-size: 100%;
+  font-weight: bold;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#qmmbxqjehr .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#qmmbxqjehr .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#qmmbxqjehr .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #2E5A6B;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#qmmbxqjehr .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#qmmbxqjehr .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #F3F6F7;
+  font-size: 100%;
+  font-weight: bold;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #E3E3E3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#qmmbxqjehr .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #F3F6F7;
+  font-size: 100%;
+  font-weight: bold;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #E3E3E3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#qmmbxqjehr .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#qmmbxqjehr .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#qmmbxqjehr .gt_row {
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #E3E3E3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#qmmbxqjehr .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#qmmbxqjehr .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#qmmbxqjehr .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#qmmbxqjehr .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#qmmbxqjehr .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#qmmbxqjehr .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#qmmbxqjehr .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#qmmbxqjehr .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#qmmbxqjehr .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#qmmbxqjehr .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#qmmbxqjehr .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#qmmbxqjehr .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#qmmbxqjehr .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #2E5A6B;
+}
+
+#qmmbxqjehr .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#qmmbxqjehr .gt_footnote {
+  margin: 0px;
+  font-size: 11px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#qmmbxqjehr .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#qmmbxqjehr .gt_sourcenote {
+  font-size: 11px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#qmmbxqjehr .gt_left {
+  text-align: left;
+}
+
+#qmmbxqjehr .gt_center {
+  text-align: center;
+}
+
+#qmmbxqjehr .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#qmmbxqjehr .gt_font_normal {
+  font-weight: normal;
+}
+
+#qmmbxqjehr .gt_font_bold {
+  font-weight: bold;
+}
+
+#qmmbxqjehr .gt_font_italic {
+  font-style: italic;
+}
+
+#qmmbxqjehr .gt_super {
+  font-size: 65%;
+}
+
+#qmmbxqjehr .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#qmmbxqjehr .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#qmmbxqjehr .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#qmmbxqjehr .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#qmmbxqjehr .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#qmmbxqjehr .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#qmmbxqjehr .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#qmmbxqjehr .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#qmmbxqjehr div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+<table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+  <thead>
+    <tr class="gt_heading">
+      <td colspan="3" class="gt_heading gt_title gt_font_normal gt_bottom_border" style><span class='gt_from_md'><strong>Régimen de seguridad social de la madre: frecuencias</strong></span></td>
+    </tr>
+    
+    <tr class="gt_col_headings">
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="Régimen">Régimen</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="n">n</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="p">%</th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr><td headers="Régimen" class="gt_row gt_left">Subsidiado</td>
+<td headers="n" class="gt_row gt_center">14.675</td>
+<td headers="p" class="gt_row gt_center">56,0%</td></tr>
+    <tr><td headers="Régimen" class="gt_row gt_left">Contributivo</td>
+<td headers="n" class="gt_row gt_center">10.632</td>
+<td headers="p" class="gt_row gt_center">40,6%</td></tr>
+    <tr><td headers="Régimen" class="gt_row gt_left">Otros</td>
+<td headers="n" class="gt_row gt_center">909</td>
+<td headers="p" class="gt_row gt_center">3,5%</td></tr>
+  </tbody>
+  <tfoot>
+    <tr class="gt_footnotes">
+      <td class="gt_footnote" style="color: #7A7A7A;" colspan="3"> Otros: regímenes de excepción y especial, y madres no aseguradas.</td>
+    </tr>
+  </tfoot>
+</table>
+</div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:barras-segsocial"></span>
+<img src="nacimientos_atlantico_2024_files/figure-html/barras-segsocial-1.png" alt="Distribución por régimen de seguridad social de la madre." width="85%" />
+<p class="caption">
+Figura 3.6: Distribución por régimen de seguridad social de la madre.
+</p>
+</div>
+<p>En 14.675 nacimientos (56,0%) la madre pertenecía al régimen subsidiado y en 10.632 (40,6%) al contributivo. El 3,5% restante corresponde a regímenes poco comunes o a madres no aseguradas.</p>
+</div>
+<div id="subregión-de-residencia-de-la-madre" class="section level2 hasAnchor" number="3.7">
+<h2><span class="header-section-number">3.7</span> Subregión de residencia de la madre<a href="univariado.html#subregi%C3%B3n-de-residencia-de-la-madre" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="jzbundohsb" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#jzbundohsb table {
+  font-family: Arial, system-ui, 'Segoe UI', Roboto, Helvetica, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#jzbundohsb thead, #jzbundohsb tbody, #jzbundohsb tfoot, #jzbundohsb tr, #jzbundohsb td, #jzbundohsb th {
+  border-style: none;
+}
+
+#jzbundohsb p {
+  margin: 0;
+  padding: 0;
+}
+
+#jzbundohsb .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 13px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #FFFFFF;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#jzbundohsb .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#jzbundohsb .gt_title {
+  color: #333333;
+  font-size: 16px;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#jzbundohsb .gt_subtitle {
+  color: #333333;
+  font-size: 12px;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#jzbundohsb .gt_heading {
+  background-color: #FFFFFF;
+  text-align: left;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#jzbundohsb .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #2E5A6B;
+}
+
+#jzbundohsb .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #2E5A6B;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#jzbundohsb .gt_col_heading {
+  color: #333333;
+  background-color: #F3F6F7;
+  font-size: 100%;
+  font-weight: bold;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#jzbundohsb .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #F3F6F7;
+  font-size: 100%;
+  font-weight: bold;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#jzbundohsb .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#jzbundohsb .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#jzbundohsb .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #2E5A6B;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#jzbundohsb .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#jzbundohsb .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #F3F6F7;
+  font-size: 100%;
+  font-weight: bold;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #E3E3E3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#jzbundohsb .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #F3F6F7;
+  font-size: 100%;
+  font-weight: bold;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #E3E3E3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#jzbundohsb .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#jzbundohsb .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#jzbundohsb .gt_row {
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #E3E3E3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#jzbundohsb .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#jzbundohsb .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#jzbundohsb .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#jzbundohsb .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#jzbundohsb .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#jzbundohsb .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#jzbundohsb .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#jzbundohsb .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#jzbundohsb .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#jzbundohsb .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#jzbundohsb .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#jzbundohsb .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#jzbundohsb .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #2E5A6B;
+}
+
+#jzbundohsb .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#jzbundohsb .gt_footnote {
+  margin: 0px;
+  font-size: 11px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#jzbundohsb .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#jzbundohsb .gt_sourcenote {
+  font-size: 11px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#jzbundohsb .gt_left {
+  text-align: left;
+}
+
+#jzbundohsb .gt_center {
+  text-align: center;
+}
+
+#jzbundohsb .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#jzbundohsb .gt_font_normal {
+  font-weight: normal;
+}
+
+#jzbundohsb .gt_font_bold {
+  font-weight: bold;
+}
+
+#jzbundohsb .gt_font_italic {
+  font-style: italic;
+}
+
+#jzbundohsb .gt_super {
+  font-size: 65%;
+}
+
+#jzbundohsb .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#jzbundohsb .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#jzbundohsb .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#jzbundohsb .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#jzbundohsb .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#jzbundohsb .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#jzbundohsb .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#jzbundohsb .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#jzbundohsb div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+<table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+  <thead>
+    <tr class="gt_heading">
+      <td colspan="3" class="gt_heading gt_title gt_font_normal gt_bottom_border" style><span class='gt_from_md'><strong>Subregión de residencia de la madre: frecuencias</strong></span></td>
+    </tr>
+    
+    <tr class="gt_col_headings">
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="SUBREGION">Subregión</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="n">n</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="p">%</th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr><td headers="SUBREGION" class="gt_row gt_left">Barranquilla</td>
+<td headers="n" class="gt_row gt_center">13.546</td>
+<td headers="p" class="gt_row gt_center">51,7%</td></tr>
+    <tr><td headers="SUBREGION" class="gt_row gt_left">Soledad</td>
+<td headers="n" class="gt_row gt_center">5.767</td>
+<td headers="p" class="gt_row gt_center">22,0%</td></tr>
+    <tr><td headers="SUBREGION" class="gt_row gt_left">Resto del área metropolitana</td>
+<td headers="n" class="gt_row gt_center">2.265</td>
+<td headers="p" class="gt_row gt_center">8,6%</td></tr>
+    <tr><td headers="SUBREGION" class="gt_row gt_left">Resto del departamento</td>
+<td headers="n" class="gt_row gt_center">4.638</td>
+<td headers="p" class="gt_row gt_center">17,7%</td></tr>
+  </tbody>
+  
+</table>
+</div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:barras-subregion"></span>
+<img src="nacimientos_atlantico_2024_files/figure-html/barras-subregion-1.png" alt="Distribución por subregión de residencia de la madre." width="85%" />
+<p class="caption">
+Figura 3.7: Distribución por subregión de residencia de la madre.
+</p>
+</div>
+<p>La mayoría de los nacimientos se concentraron en Barranquilla con el 51,7% (13.546), seguida de Soledad con el 22,0% (5.767), el resto del departamento con el 17,7% (4.638) y por último el resto del área metropolitana con el 8,6% (2.265).</p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="datos.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="bivariado.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+  "sharing": false,
+  "fontsettings": {
+    "theme": "white",
+    "family": "sans",
+    "size": 2
+  },
+  "edit": {
+    "link": null,
+    "text": null
+  },
+  "history": {
+    "link": null,
+    "text": null
+  },
+  "view": {
+    "link": null,
+    "text": null
+  },
+  "download": null,
+  "search": {
+    "engine": "fuse",
+    "options": null
+  },
+  "toc": {
+    "collapse": "section"
+  }
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
