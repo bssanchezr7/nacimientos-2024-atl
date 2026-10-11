@@ -35,6 +35,8 @@ DANE.
 
 El análisis examina si la atención prenatal, el tipo de parto y la vitalidad del recién nacido difieren según la edad, el régimen de salud y la subregión de residencia de la madre.
 
+Se analizaron 26.216 nacimientos mediante un análisis exploratorio y cinco pruebas de hipótesis, una por objetivo, reportando en cada una el tamaño del efecto. Los resultados muestran diferencias estadísticamente significativas en las cinco comparaciones, aunque en su mayoría pequeñas. Las madres adolescentes y las que residen fuera del área metropolitana tuvieron menos consultas prenatales. La proporción de cesáreas fue casi igual en los regímenes contributivo y subsidiado, cercana a tres de cada cuatro partos. El puntaje Apgar casi no varió según la edad de la madre, pero mejoró entre el primer y el quinto minuto de vida.
+
 ## Estructura del documento {-}
 
 - **Capítulo \@ref(introduccion)**: contexto del estudio y objetivos.

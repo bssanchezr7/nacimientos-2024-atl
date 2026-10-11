@@ -10,7 +10,7 @@ if (!exists("theme_proyecto")) {
 
 # Pruebas de hipótesis {#hipotesis}
 
-(Por redactar: criterios comunes a todas las pruebas.)
+En este capítulo se evalúa una hipótesis por cada objetivo específico, mostrando las pruebas requeridas y el procedimiento de cada una. Primero se evalúan los supuestos necesarios para saber qué prueba corresponde. Como varios grupos superan los 5.000 registros, la normalidad se evalúa con la prueba de Lilliefors, que admite muestras grandes. Según el resultado de los supuestos se elige entre una prueba paramétrica y una no paramétrica. Las pruebas se evalúan con un nivel de significancia del 5 %, es decir, con una confianza del 95 %; cuando un objetivo requiere varias comparaciones, los valores p se ajustan con la corrección de Bonferroni. Por último se reporta el tamaño del efecto, para valorar si las diferencias encontradas son pequeñas, medianas o grandes [@cohen1988].
 
 ## Objetivo 1: consultas prenatales según la edad de la madre
 
