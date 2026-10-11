@@ -4,6 +4,8 @@ Libro en **bookdown** con el análisis exploratorio y las pruebas de hipótesis
 sobre los nacimientos registrados en el departamento del Atlántico en 2024, a
 partir de los microdatos de Estadísticas Vitales (EEVV) del DANE.
 
+Libro publicado: <https://bssanchezr7.github.io/nacimientos-2024-atl/>
+
 Autores: Brandon Sanchez, Andres Florez — curso de Estadística Computacional.
 
 ## Estructura
@@ -28,4 +30,6 @@ Autores: Brandon Sanchez, Andres Florez — curso de Estadística Computacional.
    install.packages(c("bookdown", "tidyverse", "gt", "nortest", "car", "rstatix"))
    bookdown::render_book("index.Rmd")
    ```
-3. La salida HTML se genera en `docs/` (lista para GitHub Pages).
+3. La salida HTML se genera en `docs/`, que es la carpeta que publica GitHub
+   Pages. Para actualizar el libro publicado hay que compilar y subir esa
+   carpeta.

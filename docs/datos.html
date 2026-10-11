@@ -1,0 +1,1776 @@
+<!DOCTYPE html>
+<html lang="es" xml:lang="es">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Capítulo 2 Datos y metodología | Nacimientos en el Atlántico, 2024: condiciones del recién nacido, tipo de parto y atención prenatal</title>
+  <meta name="description" content="Análisis exploratorio y pruebas de hipótesis de los nacimientos registrados en el departamento del Atlántico en 2024." />
+  <meta name="generator" content="bookdown 0.48 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Capítulo 2 Datos y metodología | Nacimientos en el Atlántico, 2024: condiciones del recién nacido, tipo de parto y atención prenatal" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="Análisis exploratorio y pruebas de hipótesis de los nacimientos registrados en el departamento del Atlántico en 2024." />
+  <meta name="github-repo" content="bssanchezr7/nacimientos-2024-atl" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Capítulo 2 Datos y metodología | Nacimientos en el Atlántico, 2024: condiciones del recién nacido, tipo de parto y atención prenatal" />
+  
+  <meta name="twitter:description" content="Análisis exploratorio y pruebas de hipótesis de los nacimientos registrados en el departamento del Atlántico en 2024." />
+  
+
+<meta name="author" content="Brandon Sanchez" />
+<meta name="author" content="Andres Florez" />
+
+
+<meta name="date" content="2026-10-10" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="introduccion.html"/>
+<link rel="next" href="univariado.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Nacimientos Atlántico 2024</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Presentación</a>
+<ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#estructura-del-documento"><i class="fa fa-check"></i>Estructura del documento</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#sobre-este-proyecto"><i class="fa fa-check"></i>Sobre este proyecto</a></li>
+</ul></li>
+<li class="chapter" data-level="1" data-path="introduccion.html"><a href="introduccion.html"><i class="fa fa-check"></i><b>1</b> Introducción</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="introduccion.html"><a href="introduccion.html#objetivos"><i class="fa fa-check"></i><b>1.1</b> Objetivos</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="datos.html"><a href="datos.html"><i class="fa fa-check"></i><b>2</b> Datos y metodología</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="datos.html"><a href="datos.html#fuente-de-datos"><i class="fa fa-check"></i><b>2.1</b> Fuente de datos</a></li>
+<li class="chapter" data-level="2.2" data-path="datos.html"><a href="datos.html#poblaci%C3%B3n-y-unidad-de-an%C3%A1lisis"><i class="fa fa-check"></i><b>2.2</b> Población y unidad de análisis</a></li>
+<li class="chapter" data-level="2.3" data-path="datos.html"><a href="datos.html#variables"><i class="fa fa-check"></i><b>2.3</b> Variables</a></li>
+<li class="chapter" data-level="2.4" data-path="datos.html"><a href="datos.html#limpieza-y-transformaci%C3%B3n"><i class="fa fa-check"></i><b>2.4</b> Limpieza y transformación</a></li>
+<li class="chapter" data-level="2.5" data-path="datos.html"><a href="datos.html#valores-faltantes"><i class="fa fa-check"></i><b>2.5</b> Valores faltantes</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="univariado.html"><a href="univariado.html"><i class="fa fa-check"></i><b>3</b> Análisis univariado</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="univariado.html"><a href="univariado.html#n%C3%BAmero-de-consultas"><i class="fa fa-check"></i><b>3.1</b> Número de consultas</a></li>
+<li class="chapter" data-level="3.2" data-path="univariado.html"><a href="univariado.html#edad-de-la-madre"><i class="fa fa-check"></i><b>3.2</b> Edad de la madre</a></li>
+<li class="chapter" data-level="3.3" data-path="univariado.html"><a href="univariado.html#apgar-al-minuto"><i class="fa fa-check"></i><b>3.3</b> Apgar al minuto</a></li>
+<li class="chapter" data-level="3.4" data-path="univariado.html"><a href="univariado.html#apgar-a-los-cinco-minutos"><i class="fa fa-check"></i><b>3.4</b> Apgar a los cinco minutos</a></li>
+<li class="chapter" data-level="3.5" data-path="univariado.html"><a href="univariado.html#tipo-de-parto"><i class="fa fa-check"></i><b>3.5</b> Tipo de parto</a></li>
+<li class="chapter" data-level="3.6" data-path="univariado.html"><a href="univariado.html#r%C3%A9gimen-de-seguridad-social-de-la-madre"><i class="fa fa-check"></i><b>3.6</b> Régimen de seguridad social de la madre</a></li>
+<li class="chapter" data-level="3.7" data-path="univariado.html"><a href="univariado.html#subregi%C3%B3n-de-residencia-de-la-madre"><i class="fa fa-check"></i><b>3.7</b> Subregión de residencia de la madre</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="bivariado.html"><a href="bivariado.html"><i class="fa fa-check"></i><b>4</b> Análisis bivariado</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="bivariado.html"><a href="bivariado.html#n%C3%BAmero-de-consultas-prenatales-seg%C3%BAn-la-edad"><i class="fa fa-check"></i><b>4.1</b> Número de consultas prenatales según la edad</a></li>
+<li class="chapter" data-level="4.2" data-path="bivariado.html"><a href="bivariado.html#ces%C3%A1reas-seg%C3%BAn-el-r%C3%A9gimen-de-salud"><i class="fa fa-check"></i><b>4.2</b> Cesáreas según el régimen de salud</a></li>
+<li class="chapter" data-level="4.3" data-path="bivariado.html"><a href="bivariado.html#n%C3%BAmero-de-consultas-prenatales-seg%C3%BAn-la-subregi%C3%B3n-de-residencia"><i class="fa fa-check"></i><b>4.3</b> Número de consultas prenatales según la subregión de residencia</a></li>
+<li class="chapter" data-level="4.4" data-path="bivariado.html"><a href="bivariado.html#apgar-al-minuto-seg%C3%BAn-la-edad-de-la-madre"><i class="fa fa-check"></i><b>4.4</b> Apgar al minuto según la edad de la madre</a></li>
+<li class="chapter" data-level="4.5" data-path="bivariado.html"><a href="bivariado.html#apgar-al-minuto-y-a-los-cinco-minutos"><i class="fa fa-check"></i><b>4.5</b> Apgar al minuto y a los cinco minutos</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="hipotesis.html"><a href="hipotesis.html"><i class="fa fa-check"></i><b>5</b> Pruebas de hipótesis</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="hipotesis.html"><a href="hipotesis.html#objetivo-1-consultas-prenatales-seg%C3%BAn-la-edad-de-la-madre"><i class="fa fa-check"></i><b>5.1</b> Objetivo 1: consultas prenatales según la edad de la madre</a>
+<ul>
+<li class="chapter" data-level="5.1.1" data-path="hipotesis.html"><a href="hipotesis.html#prueba-de-normalidad"><i class="fa fa-check"></i><b>5.1.1</b> Prueba de normalidad</a></li>
+<li class="chapter" data-level="5.1.2" data-path="hipotesis.html"><a href="hipotesis.html#prueba-de-homogeneidad-de-varianzas"><i class="fa fa-check"></i><b>5.1.2</b> Prueba de homogeneidad de varianzas</a></li>
+<li class="chapter" data-level="5.1.3" data-path="hipotesis.html"><a href="hipotesis.html#comparaci%C3%B3n-adolescentes-frente-a-adultas-wilcoxonmannwhitney"><i class="fa fa-check"></i><b>5.1.3</b> Comparación adolescentes frente a adultas (Wilcoxon–Mann–Whitney)</a></li>
+<li class="chapter" data-level="5.1.4" data-path="hipotesis.html"><a href="hipotesis.html#tama%C3%B1o-del-efecto"><i class="fa fa-check"></i><b>5.1.4</b> Tamaño del efecto</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="hipotesis.html"><a href="hipotesis.html#objetivo-2-ces%C3%A1reas-seg%C3%BAn-el-r%C3%A9gimen-de-salud"><i class="fa fa-check"></i><b>5.2</b> Objetivo 2: cesáreas según el régimen de salud</a>
+<ul>
+<li class="chapter" data-level="5.2.1" data-path="hipotesis.html"><a href="hipotesis.html#condici%C3%B3n-de-la-prueba"><i class="fa fa-check"></i><b>5.2.1</b> Condición de la prueba</a></li>
+<li class="chapter" data-level="5.2.2" data-path="hipotesis.html"><a href="hipotesis.html#prueba-de-homogeneidad-de-proporciones"><i class="fa fa-check"></i><b>5.2.2</b> Prueba de homogeneidad de proporciones</a></li>
+<li class="chapter" data-level="5.2.3" data-path="hipotesis.html"><a href="hipotesis.html#tama%C3%B1o-del-efecto-1"><i class="fa fa-check"></i><b>5.2.3</b> Tamaño del efecto</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="hipotesis.html"><a href="hipotesis.html#objetivo-3-consultas-prenatales-seg%C3%BAn-la-subregi%C3%B3n-de-residencia"><i class="fa fa-check"></i><b>5.3</b> Objetivo 3: consultas prenatales según la subregión de residencia</a>
+<ul>
+<li class="chapter" data-level="5.3.1" data-path="hipotesis.html"><a href="hipotesis.html#prueba-de-normalidad-1"><i class="fa fa-check"></i><b>5.3.1</b> Prueba de normalidad</a></li>
+<li class="chapter" data-level="5.3.2" data-path="hipotesis.html"><a href="hipotesis.html#prueba-de-homogeneidad-de-varianzas-1"><i class="fa fa-check"></i><b>5.3.2</b> Prueba de homogeneidad de varianzas</a></li>
+<li class="chapter" data-level="5.3.3" data-path="hipotesis.html"><a href="hipotesis.html#prueba-de-kruskal-wallis"><i class="fa fa-check"></i><b>5.3.3</b> Prueba de Kruskal-Wallis</a></li>
+<li class="chapter" data-level="5.3.4" data-path="hipotesis.html"><a href="hipotesis.html#tama%C3%B1o-del-efecto-2"><i class="fa fa-check"></i><b>5.3.4</b> Tamaño del efecto</a></li>
+</ul></li>
+<li class="chapter" data-level="5.4" data-path="hipotesis.html"><a href="hipotesis.html#objetivo-4-apgar-al-minuto-seg%C3%BAn-la-edad-de-la-madre"><i class="fa fa-check"></i><b>5.4</b> Objetivo 4: Apgar al minuto según la edad de la madre</a>
+<ul>
+<li class="chapter" data-level="5.4.1" data-path="hipotesis.html"><a href="hipotesis.html#prueba-de-normalidad-2"><i class="fa fa-check"></i><b>5.4.1</b> Prueba de normalidad</a></li>
+<li class="chapter" data-level="5.4.2" data-path="hipotesis.html"><a href="hipotesis.html#prueba-de-homogeneidad-de-varianzas-2"><i class="fa fa-check"></i><b>5.4.2</b> Prueba de homogeneidad de varianzas</a></li>
+<li class="chapter" data-level="5.4.3" data-path="hipotesis.html"><a href="hipotesis.html#prueba-de-kruskal-wallis-1"><i class="fa fa-check"></i><b>5.4.3</b> Prueba de Kruskal-Wallis</a></li>
+<li class="chapter" data-level="5.4.4" data-path="hipotesis.html"><a href="hipotesis.html#comparaciones-por-pares"><i class="fa fa-check"></i><b>5.4.4</b> Comparaciones por pares</a></li>
+<li class="chapter" data-level="5.4.5" data-path="hipotesis.html"><a href="hipotesis.html#tama%C3%B1o-del-efecto-3"><i class="fa fa-check"></i><b>5.4.5</b> Tamaño del efecto</a></li>
+</ul></li>
+<li class="chapter" data-level="5.5" data-path="hipotesis.html"><a href="hipotesis.html#objetivo-5-apgar-al-minuto-y-a-los-cinco-minutos"><i class="fa fa-check"></i><b>5.5</b> Objetivo 5: Apgar al minuto y a los cinco minutos</a>
+<ul>
+<li class="chapter" data-level="5.5.1" data-path="hipotesis.html"><a href="hipotesis.html#prueba-de-normalidad-3"><i class="fa fa-check"></i><b>5.5.1</b> Prueba de normalidad</a></li>
+<li class="chapter" data-level="5.5.2" data-path="hipotesis.html"><a href="hipotesis.html#prueba-de-wilcoxon-para-muestras-pareadas"><i class="fa fa-check"></i><b>5.5.2</b> Prueba de Wilcoxon para muestras pareadas</a></li>
+<li class="chapter" data-level="5.5.3" data-path="hipotesis.html"><a href="hipotesis.html#tama%C3%B1o-del-efecto-4"><i class="fa fa-check"></i><b>5.5.3</b> Tamaño del efecto</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="conclusiones.html"><a href="conclusiones.html"><i class="fa fa-check"></i><b>6</b> Conclusiones</a></li>
+<li class="chapter" data-level="" data-path="referencias.html"><a href="referencias.html"><i class="fa fa-check"></i>Referencias</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/bssanchezr7/nacimientos-2024-atl" target="_blank">Código fuente en GitHub</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Nacimientos en el Atlántico, 2024: condiciones del recién nacido, tipo de parto y atención prenatal</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="datos" class="section level1 hasAnchor" number="2">
+<h1><span class="header-section-number">Capítulo 2</span> Datos y metodología<a href="datos.html#datos" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="fuente-de-datos" class="section level2 hasAnchor" number="2.1">
+<h2><span class="header-section-number">2.1</span> Fuente de datos<a href="datos.html#fuente-de-datos" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Los datos provienen de las Estadísticas Vitales del DANE, específicamente del
+registro de nacimientos <span class="citation">(<a href="referencias.html#ref-dane2024eevv">2026</a>)</span>. El DANE consolida los certificados
+de nacido vivo que se diligencian por cada nacimiento, los revisa y los
+publica como microdatos anonimizados de acceso abierto. Se utilizó la base de
+nacimientos de 2024, que contiene 453.901 registros de todo el país.
+Todas las tablas y figuras de este documento son de elaboración propia a
+partir de esa base.</p>
+</div>
+<div id="población-y-unidad-de-análisis" class="section level2 hasAnchor" number="2.2">
+<h2><span class="header-section-number">2.2</span> Población y unidad de análisis<a href="datos.html#poblaci%C3%B3n-y-unidad-de-an%C3%A1lisis" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>De la base nacional se seleccionaron los nacimientos cuyas madres residían en
+el departamento del Atlántico al momento del parto, sin importar dónde ocurrió
+este: 26.237 registros. Cada registro corresponde a un recién
+nacido, no a una madre; por eso, cuando una madre tuvo un parto múltiple,
+aparece una vez por cada uno de sus hijos.</p>
+<p>Aunque la base incluye todos los nacimientos registrados en 2024, corresponde
+a un solo año. Las pruebas de hipótesis se usan para valorar si las
+diferencias observadas ese año reflejan un patrón que se mantendría más allá
+de 2024, o si podrían deberse al azar.</p>
+</div>
+<div id="variables" class="section level2 hasAnchor" number="2.3">
+<h2><span class="header-section-number">2.3</span> Variables<a href="datos.html#variables" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>La base cuenta con 40 variables, que recogen información sobre el
+lugar y la atención del parto, las características del recién nacido, el
+embarazo y datos sociodemográficos de la madre y, en menor medida, del padre.
+De ellas se seleccionaron las necesarias para responder los objetivos:</p>
+<div id="zxcsjegvic" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#zxcsjegvic table {
+  font-family: Arial, system-ui, 'Segoe UI', Roboto, Helvetica, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#zxcsjegvic thead, #zxcsjegvic tbody, #zxcsjegvic tfoot, #zxcsjegvic tr, #zxcsjegvic td, #zxcsjegvic th {
+  border-style: none;
+}
+
+#zxcsjegvic p {
+  margin: 0;
+  padding: 0;
+}
+
+#zxcsjegvic .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 13px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #FFFFFF;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#zxcsjegvic .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#zxcsjegvic .gt_title {
+  color: #333333;
+  font-size: 16px;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#zxcsjegvic .gt_subtitle {
+  color: #333333;
+  font-size: 12px;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#zxcsjegvic .gt_heading {
+  background-color: #FFFFFF;
+  text-align: left;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#zxcsjegvic .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #2E5A6B;
+}
+
+#zxcsjegvic .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #2E5A6B;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#zxcsjegvic .gt_col_heading {
+  color: #333333;
+  background-color: #F3F6F7;
+  font-size: 100%;
+  font-weight: bold;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#zxcsjegvic .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #F3F6F7;
+  font-size: 100%;
+  font-weight: bold;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#zxcsjegvic .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#zxcsjegvic .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#zxcsjegvic .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #2E5A6B;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#zxcsjegvic .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#zxcsjegvic .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #F3F6F7;
+  font-size: 100%;
+  font-weight: bold;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #E3E3E3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#zxcsjegvic .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #F3F6F7;
+  font-size: 100%;
+  font-weight: bold;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #E3E3E3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#zxcsjegvic .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#zxcsjegvic .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#zxcsjegvic .gt_row {
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #E3E3E3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#zxcsjegvic .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#zxcsjegvic .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#zxcsjegvic .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#zxcsjegvic .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#zxcsjegvic .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#zxcsjegvic .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#zxcsjegvic .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#zxcsjegvic .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#zxcsjegvic .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#zxcsjegvic .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#zxcsjegvic .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#zxcsjegvic .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#zxcsjegvic .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #2E5A6B;
+}
+
+#zxcsjegvic .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#zxcsjegvic .gt_footnote {
+  margin: 0px;
+  font-size: 11px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#zxcsjegvic .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#zxcsjegvic .gt_sourcenote {
+  font-size: 11px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#zxcsjegvic .gt_left {
+  text-align: left;
+}
+
+#zxcsjegvic .gt_center {
+  text-align: center;
+}
+
+#zxcsjegvic .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#zxcsjegvic .gt_font_normal {
+  font-weight: normal;
+}
+
+#zxcsjegvic .gt_font_bold {
+  font-weight: bold;
+}
+
+#zxcsjegvic .gt_font_italic {
+  font-style: italic;
+}
+
+#zxcsjegvic .gt_super {
+  font-size: 65%;
+}
+
+#zxcsjegvic .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#zxcsjegvic .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#zxcsjegvic .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#zxcsjegvic .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#zxcsjegvic .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#zxcsjegvic .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#zxcsjegvic .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#zxcsjegvic .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#zxcsjegvic div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+<table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+  <thead>
+    <tr class="gt_heading">
+      <td colspan="4" class="gt_heading gt_title gt_font_normal gt_bottom_border" style><span class='gt_from_md'><strong>Variables tomadas de la base del DANE</strong></span></td>
+    </tr>
+    
+    <tr class="gt_col_headings">
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="Variable">Variable</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="Qué-registra">Qué registra</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="Tipo">Tipo</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="Valores">Valores</th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr><td headers="Variable" class="gt_row gt_left"><span class='gt_from_md'><code>NUMCONSUL</code></span></td>
+<td headers="Qué registra" class="gt_row gt_left">Número de consultas prenatales</td>
+<td headers="Tipo" class="gt_row gt_left">Numérica discreta</td>
+<td headers="Valores" class="gt_row gt_left">Número entero, desde 0</td></tr>
+    <tr><td headers="Variable" class="gt_row gt_left"><span class='gt_from_md'><code>APGAR1</code></span></td>
+<td headers="Qué registra" class="gt_row gt_left">Puntaje Apgar al minuto de vida</td>
+<td headers="Tipo" class="gt_row gt_left">Numérica discreta (puntaje)</td>
+<td headers="Valores" class="gt_row gt_left">De 0 a 10</td></tr>
+    <tr><td headers="Variable" class="gt_row gt_left"><span class='gt_from_md'><code>APGAR2</code></span></td>
+<td headers="Qué registra" class="gt_row gt_left">Puntaje Apgar a los cinco minutos de vida</td>
+<td headers="Tipo" class="gt_row gt_left">Numérica discreta (puntaje)</td>
+<td headers="Valores" class="gt_row gt_left">De 0 a 10</td></tr>
+    <tr><td headers="Variable" class="gt_row gt_left"><span class='gt_from_md'><code>TIPO_PARTO</code></span></td>
+<td headers="Qué registra" class="gt_row gt_left">Tipo de parto</td>
+<td headers="Tipo" class="gt_row gt_left">Categórica nominal</td>
+<td headers="Valores" class="gt_row gt_left">Espontáneo, cesárea, instrumentado</td></tr>
+    <tr><td headers="Variable" class="gt_row gt_left"><span class='gt_from_md'><code>SEG_SOCIAL</code></span></td>
+<td headers="Qué registra" class="gt_row gt_left">Régimen de seguridad social de la madre</td>
+<td headers="Tipo" class="gt_row gt_left">Categórica nominal</td>
+<td headers="Valores" class="gt_row gt_left">Contributivo, subsidiado, excepción, especial, no asegurado</td></tr>
+    <tr><td headers="Variable" class="gt_row gt_left"><span class='gt_from_md'><code>EDAD_MADRE</code></span></td>
+<td headers="Qué registra" class="gt_row gt_left">Edad de la madre, en grupos de cinco años</td>
+<td headers="Tipo" class="gt_row gt_left">Categórica ordinal</td>
+<td headers="Valores" class="gt_row gt_left">Nueve grupos, de 10–14 a 50–54 años</td></tr>
+    <tr><td headers="Variable" class="gt_row gt_left"><span class='gt_from_md'><code>CODMUNRE</code></span></td>
+<td headers="Qué registra" class="gt_row gt_left">Municipio de residencia de la madre</td>
+<td headers="Tipo" class="gt_row gt_left">Categórica nominal</td>
+<td headers="Valores" class="gt_row gt_left">Los 23 municipios del Atlántico</td></tr>
+  </tbody>
+  
+</table>
+</div>
+<p>A partir de estas se construyeron tres variables más, que agrupan sus
+categorías para poder responder los objetivos de manera adecuada:</p>
+<div id="qzxcoflspz" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#qzxcoflspz table {
+  font-family: Arial, system-ui, 'Segoe UI', Roboto, Helvetica, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#qzxcoflspz thead, #qzxcoflspz tbody, #qzxcoflspz tfoot, #qzxcoflspz tr, #qzxcoflspz td, #qzxcoflspz th {
+  border-style: none;
+}
+
+#qzxcoflspz p {
+  margin: 0;
+  padding: 0;
+}
+
+#qzxcoflspz .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 13px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #FFFFFF;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#qzxcoflspz .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#qzxcoflspz .gt_title {
+  color: #333333;
+  font-size: 16px;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#qzxcoflspz .gt_subtitle {
+  color: #333333;
+  font-size: 12px;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#qzxcoflspz .gt_heading {
+  background-color: #FFFFFF;
+  text-align: left;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#qzxcoflspz .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #2E5A6B;
+}
+
+#qzxcoflspz .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #2E5A6B;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#qzxcoflspz .gt_col_heading {
+  color: #333333;
+  background-color: #F3F6F7;
+  font-size: 100%;
+  font-weight: bold;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#qzxcoflspz .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #F3F6F7;
+  font-size: 100%;
+  font-weight: bold;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#qzxcoflspz .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#qzxcoflspz .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#qzxcoflspz .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #2E5A6B;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#qzxcoflspz .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#qzxcoflspz .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #F3F6F7;
+  font-size: 100%;
+  font-weight: bold;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #E3E3E3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#qzxcoflspz .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #F3F6F7;
+  font-size: 100%;
+  font-weight: bold;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #E3E3E3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#qzxcoflspz .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#qzxcoflspz .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#qzxcoflspz .gt_row {
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #E3E3E3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#qzxcoflspz .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#qzxcoflspz .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#qzxcoflspz .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#qzxcoflspz .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#qzxcoflspz .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#qzxcoflspz .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#qzxcoflspz .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#qzxcoflspz .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#qzxcoflspz .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#qzxcoflspz .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#qzxcoflspz .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#qzxcoflspz .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#qzxcoflspz .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #2E5A6B;
+}
+
+#qzxcoflspz .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#qzxcoflspz .gt_footnote {
+  margin: 0px;
+  font-size: 11px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#qzxcoflspz .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#qzxcoflspz .gt_sourcenote {
+  font-size: 11px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#qzxcoflspz .gt_left {
+  text-align: left;
+}
+
+#qzxcoflspz .gt_center {
+  text-align: center;
+}
+
+#qzxcoflspz .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#qzxcoflspz .gt_font_normal {
+  font-weight: normal;
+}
+
+#qzxcoflspz .gt_font_bold {
+  font-weight: bold;
+}
+
+#qzxcoflspz .gt_font_italic {
+  font-style: italic;
+}
+
+#qzxcoflspz .gt_super {
+  font-size: 65%;
+}
+
+#qzxcoflspz .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#qzxcoflspz .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#qzxcoflspz .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#qzxcoflspz .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#qzxcoflspz .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#qzxcoflspz .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#qzxcoflspz .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#qzxcoflspz .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#qzxcoflspz div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+<table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+  <thead>
+    <tr class="gt_heading">
+      <td colspan="4" class="gt_heading gt_title gt_font_normal gt_bottom_border" style><span class='gt_from_md'><strong>Variables construidas para el análisis</strong></span></td>
+    </tr>
+    
+    <tr class="gt_col_headings">
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="Variable">Variable</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="Se-construye-a-partir-de">Se construye a partir de</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="Categorías">Categorías</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="Objetivo">Objetivo</th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr><td headers="Variable" class="gt_row gt_left">Subregión de residencia</td>
+<td headers="Se construye a partir de" class="gt_row gt_left"><span class='gt_from_md'><code>CODMUNRE</code></span></td>
+<td headers="Categorías" class="gt_row gt_left">Barranquilla; Soledad; resto del área metropolitana (Galapa, Malambo y Puerto Colombia); resto del departamento (18 municipios)</td>
+<td headers="Objetivo" class="gt_row gt_left">3</td></tr>
+    <tr><td headers="Variable" class="gt_row gt_left">Grupo de edad</td>
+<td headers="Se construye a partir de" class="gt_row gt_left"><span class='gt_from_md'><code>EDAD_MADRE</code></span></td>
+<td headers="Categorías" class="gt_row gt_left">Adolescente (10 a 19 años); de 20 a 34 años; de 35 años o más</td>
+<td headers="Objetivo" class="gt_row gt_left">1 y 4</td></tr>
+    <tr><td headers="Variable" class="gt_row gt_left">Cesárea</td>
+<td headers="Se construye a partir de" class="gt_row gt_left"><span class='gt_from_md'><code>TIPO_PARTO</code></span></td>
+<td headers="Categorías" class="gt_row gt_left">Sí; no (parto espontáneo o instrumentado)</td>
+<td headers="Objetivo" class="gt_row gt_left">2</td></tr>
+  </tbody>
+  
+</table>
+</div>
+</div>
+<div id="limpieza-y-transformación" class="section level2 hasAnchor" number="2.4">
+<h2><span class="header-section-number">2.4</span> Limpieza y transformación<a href="datos.html#limpieza-y-transformaci%C3%B3n" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Siguiendo el diccionario de datos del DANE, los códigos numéricos de las
+variables categóricas se reemplazaron por sus nombres. El código 99, que
+indica que el dato no se registró, se trató como valor faltante.</p>
+</div>
+<div id="valores-faltantes" class="section level2 hasAnchor" number="2.5">
+<h2><span class="header-section-number">2.5</span> Valores faltantes<a href="datos.html#valores-faltantes" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Después se revisó cuántos valores faltantes tenía cada variable en los
+registros del departamento:</p>
+<div id="cujanwmhzo" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#cujanwmhzo table {
+  font-family: Arial, system-ui, 'Segoe UI', Roboto, Helvetica, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#cujanwmhzo thead, #cujanwmhzo tbody, #cujanwmhzo tfoot, #cujanwmhzo tr, #cujanwmhzo td, #cujanwmhzo th {
+  border-style: none;
+}
+
+#cujanwmhzo p {
+  margin: 0;
+  padding: 0;
+}
+
+#cujanwmhzo .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 13px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #FFFFFF;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#cujanwmhzo .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#cujanwmhzo .gt_title {
+  color: #333333;
+  font-size: 16px;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#cujanwmhzo .gt_subtitle {
+  color: #333333;
+  font-size: 12px;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#cujanwmhzo .gt_heading {
+  background-color: #FFFFFF;
+  text-align: left;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#cujanwmhzo .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #2E5A6B;
+}
+
+#cujanwmhzo .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #2E5A6B;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#cujanwmhzo .gt_col_heading {
+  color: #333333;
+  background-color: #F3F6F7;
+  font-size: 100%;
+  font-weight: bold;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#cujanwmhzo .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #F3F6F7;
+  font-size: 100%;
+  font-weight: bold;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#cujanwmhzo .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#cujanwmhzo .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#cujanwmhzo .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #2E5A6B;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#cujanwmhzo .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#cujanwmhzo .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #F3F6F7;
+  font-size: 100%;
+  font-weight: bold;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #E3E3E3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#cujanwmhzo .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #F3F6F7;
+  font-size: 100%;
+  font-weight: bold;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #E3E3E3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#cujanwmhzo .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#cujanwmhzo .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#cujanwmhzo .gt_row {
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #E3E3E3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#cujanwmhzo .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#cujanwmhzo .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#cujanwmhzo .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#cujanwmhzo .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#cujanwmhzo .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#cujanwmhzo .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#cujanwmhzo .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#cujanwmhzo .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#cujanwmhzo .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#cujanwmhzo .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#cujanwmhzo .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#cujanwmhzo .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#cujanwmhzo .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #2E5A6B;
+}
+
+#cujanwmhzo .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#cujanwmhzo .gt_footnote {
+  margin: 0px;
+  font-size: 11px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#cujanwmhzo .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#cujanwmhzo .gt_sourcenote {
+  font-size: 11px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#cujanwmhzo .gt_left {
+  text-align: left;
+}
+
+#cujanwmhzo .gt_center {
+  text-align: center;
+}
+
+#cujanwmhzo .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#cujanwmhzo .gt_font_normal {
+  font-weight: normal;
+}
+
+#cujanwmhzo .gt_font_bold {
+  font-weight: bold;
+}
+
+#cujanwmhzo .gt_font_italic {
+  font-style: italic;
+}
+
+#cujanwmhzo .gt_super {
+  font-size: 65%;
+}
+
+#cujanwmhzo .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#cujanwmhzo .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#cujanwmhzo .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#cujanwmhzo .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#cujanwmhzo .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#cujanwmhzo .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#cujanwmhzo .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#cujanwmhzo .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#cujanwmhzo div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+<table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+  <thead>
+    <tr class="gt_heading">
+      <td colspan="3" class="gt_heading gt_title gt_font_normal" style><span class='gt_from_md'><strong>Valores faltantes por variable</strong></span></td>
+    </tr>
+    <tr class="gt_heading">
+      <td colspan="3" class="gt_heading gt_subtitle gt_font_normal gt_bottom_border" style>Registros del Atlántico antes de eliminar los incompletos</td>
+    </tr>
+    <tr class="gt_col_headings">
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="Variable">Variable</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="n">n faltantes</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="pct">% faltante</th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr><td headers="Variable" class="gt_row gt_left">APGAR1</td>
+<td headers="n" class="gt_row gt_right">21</td>
+<td headers="pct" class="gt_row gt_right">0,1</td></tr>
+    <tr><td headers="Variable" class="gt_row gt_left">APGAR2</td>
+<td headers="n" class="gt_row gt_right">21</td>
+<td headers="pct" class="gt_row gt_right">0,1</td></tr>
+    <tr><td headers="Variable" class="gt_row gt_left">TIPO_PARTO</td>
+<td headers="n" class="gt_row gt_right">0</td>
+<td headers="pct" class="gt_row gt_right">0,0</td></tr>
+    <tr><td headers="Variable" class="gt_row gt_left">SEG_SOCIAL</td>
+<td headers="n" class="gt_row gt_right">0</td>
+<td headers="pct" class="gt_row gt_right">0,0</td></tr>
+    <tr><td headers="Variable" class="gt_row gt_left">NUMCONSUL</td>
+<td headers="n" class="gt_row gt_right">0</td>
+<td headers="pct" class="gt_row gt_right">0,0</td></tr>
+    <tr><td headers="Variable" class="gt_row gt_left">CODMUNRE</td>
+<td headers="n" class="gt_row gt_right">0</td>
+<td headers="pct" class="gt_row gt_right">0,0</td></tr>
+    <tr><td headers="Variable" class="gt_row gt_left">EDAD_MADRE</td>
+<td headers="n" class="gt_row gt_right">0</td>
+<td headers="pct" class="gt_row gt_right">0,0</td></tr>
+  </tbody>
+  
+</table>
+</div>
+<p>Los registros con algún valor faltante fueron 21,
+el 0,1% del total. Como este porcentaje
+no supera el 5 %, se decidió eliminarlos. La base final quedó con
+26.216 registros, que son los que se analizan en todos los
+objetivos.</p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="introduccion.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="univariado.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+  "sharing": false,
+  "fontsettings": {
+    "theme": "white",
+    "family": "sans",
+    "size": 2
+  },
+  "edit": {
+    "link": null,
+    "text": null
+  },
+  "history": {
+    "link": null,
+    "text": null
+  },
+  "view": {
+    "link": null,
+    "text": null
+  },
+  "download": null,
+  "search": {
+    "engine": "fuse",
+    "options": null
+  },
+  "toc": {
+    "collapse": "section"
+  }
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
