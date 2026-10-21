@@ -12,6 +12,8 @@ ui <- page_sidebar(
 
   navset_card_tab(
     id = "pestana",
+    nav_panel("Introducción", value = "introduccion",
+              mod_introduccion_ui("introduccion")),
     nav_panel("Datos y metodología", value = "metodologia",
               mod_metodologia_ui("metodologia")),
     nav_panel("Univariado", value = "univariado",
