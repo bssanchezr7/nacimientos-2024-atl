@@ -1,5 +1,5 @@
-# Datos crudos (no se versionan)
-data/
+# Datos crudos (no se versionan). Solo la carpeta de la raíz: app/data/ sí se versiona
+/data/
 
 # RStudio / sesión de R
 .Rproj.user/
@@ -21,6 +21,9 @@ packages.bib
 
 # Salida antigua (el libro se publica desde docs/, que sí se versiona)
 _book/
+
+# Configuración local de Claude Code
+.claude/launch.json
 
 # Sistema operativo
 Thumbs.db
