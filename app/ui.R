@@ -2,13 +2,22 @@ library(shiny)
 library(bslib)
 
 ui <- page_sidebar(
-  title = "Nacimientos en el Atlántico · 2024",
+  title = div(
+    class = "d-flex align-items-center w-100",
+    span("Nacimientos en el Atlántico · 2024"),
+    input_dark_mode(id = "modo_oscuro", class = "ms-auto")
+  ),
+  window_title = "Nacimientos en el Atlántico · 2024",
+  theme = tema_app(),
+  lang = "es",
 
   sidebar = sidebar(
-    width = 300,
+    width = 150,
     h6("Filtros"),
     p(class = "text-muted", "Pendiente de contenido.")
   ),
+
+  useBusyIndicators(),
 
   navset_card_tab(
     id = "pestana",
