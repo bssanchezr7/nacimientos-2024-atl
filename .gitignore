@@ -4,6 +4,7 @@
 # RStudio / sesión de R
 .Rproj.user/
 .Rhistory
+.Renviron
 .RData
 .Ruserdata
 
