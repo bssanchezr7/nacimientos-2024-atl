@@ -19,7 +19,7 @@ callar_texto <- function(expr) {
 }
 
 # Colores del tema claro/oscuro y ajustes comunes a todos los gráficos.
-estilo_interactivo <- function(p, oscuro = FALSE, con_leyenda = FALSE) {
+estilo_interactivo <- function(p, oscuro = FALSE, con_leyenda = FALSE, nota = NULL) {
   texto  <- if (oscuro) "#DDE7EB" else pal[["texto"]]
   tenue  <- if (oscuro) "#8FA6AE" else pal[["gris"]]
   fondo  <- if (oscuro) "#22404B" else "#FFFFFF"
@@ -40,6 +40,17 @@ estilo_interactivo <- function(p, oscuro = FALSE, con_leyenda = FALSE) {
                                y = 1.02, yanchor = "bottom"))
   }
 
+  # Pie de gráfico (por ejemplo "◆ = media"): plotly no tiene caption, va como
+  # anotación en el margen inferior.
+  margen <- list(t = if (con_leyenda) 90 else 44)
+  if (!is.null(nota)) margen$b <- 78
+
+  anotacion <- if (is.null(nota)) NULL else list(list(
+    text = nota, x = 0, y = -0.16, xref = "paper", yref = "paper",
+    xanchor = "left", yanchor = "top", showarrow = FALSE,
+    font = list(color = tenue, size = 11)
+  ))
+
   p |>
     plotly::layout(
       paper_bgcolor = sin_fondo,
@@ -52,7 +63,8 @@ estilo_interactivo <- function(p, oscuro = FALSE, con_leyenda = FALSE) {
                         bordercolor = pal[["principal"]],
                         font = list(color = texto, size = 12)),
       legend     = leyenda,
-      margin     = if (con_leyenda) list(t = 90) else NULL,
+      annotations = anotacion,
+      margin     = if (length(margen)) margen else NULL,
       modebar    = list(bgcolor = sin_fondo, color = tenue, activecolor = texto),
       xaxis      = eje,
       yaxis      = eje
@@ -65,15 +77,25 @@ estilo_interactivo <- function(p, oscuro = FALSE, con_leyenda = FALSE) {
                                  "toggleSpikelines", "hoverClosestCartesian",
                                  "hoverCompareCartesian")
     ) |>
-    plotly::plotly_build()
+    plotly::plotly_build() |>
+    aligerar()
 }
 
-# ggplotly marca como discretos los ejes con posiciones 1..n y texto propio.
-eje_discreto <- function(eje) {
-  !is.null(eje$tickvals) && !is.null(eje$ticktext) &&
-    length(eje$tickvals) == length(eje$ticktext) &&
-    isTRUE(all.equal(as.numeric(eje$tickvals), seq_along(eje$tickvals))) &&
-    any(is.na(suppressWarnings(as.numeric(eje$ticktext))))
+# Deja el widget en su forma mínima. `plotly_build()` guarda en `x$attrs` una
+# copia de las trazas para seguir construyendo el gráfico en R, y repite los
+# atributos escalares (como `hoverinfo`) una vez por punto. Shiny serializa
+# ambas cosas, así que el widget viaja mucho más pesado de lo necesario.
+aligerar <- function(p) {
+  p$x$attrs <- NULL
+
+  for (i in seq_along(p$x$data)) {
+    globo <- unlist(p$x$data[[i]]$hoverinfo)
+    if (length(globo) > 1 && length(unique(globo)) == 1) {
+      p$x$data[[i]]$hoverinfo <- globo[[1]]
+    }
+  }
+
+  p
 }
 
 # Convierte el ggplot en un widget interactivo.
@@ -92,17 +114,6 @@ interactivo <- function(g, oscuro = FALSE) {
     if (identical(p$x$data[[i]]$name, "Media") ||
         identical(p$x$data[[i]]$name, "Mediana")) {
       p$x$data[[i]]$hoverinfo <- "skip"
-    }
-  }
-
-  # ggplotly no marca la orientación de las cajas horizontales: deja la traza
-  # en vertical y las dibuja sobre el eje de valores. Cuando el eje de
-  # categorías es el y, se corrige aquí.
-  if (eje_discreto(p$x$layout$yaxis) && !eje_discreto(p$x$layout$xaxis)) {
-    for (i in seq_along(p$x$data)) {
-      if (identical(p$x$data[[i]]$type, "box")) {
-        p$x$data[[i]]$orientation <- "h"
-      }
     }
   }
 

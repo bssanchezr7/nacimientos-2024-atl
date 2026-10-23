@@ -181,51 +181,93 @@ encabezado_spanner <- function(nombres, spanner) {
 
 # ---- gráficos --------------------------------------------------------------
 
-# Etiquetas "grupo  (n = X)" con el primer nivel arriba.
+# Etiquetas "grupo  (n = X)" con el primer nivel arriba. Se formatea una vez por
+# grupo y se reparte con match(): con 26 mil filas, formatear cada fila cuesta
+# casi un segundo.
 etiquetas_grupo <- function(g, n) {
-  cuentas <- tibble::tibble(g = as.factor(g), n = n) |>
+  g <- as.factor(g)
+
+  cuentas <- tibble::tibble(g = g, n = n) |>
     distinct() |>
     arrange(g)
 
   etiquetas <- paste0(cuentas$g, "  (n = ", num(cuentas$n), ")")
-  factor(paste0(as.character(g), "  (n = ", num(n), ")"), levels = rev(etiquetas))
+  factor(etiquetas[match(as.character(g), as.character(cuentas$g))],
+         levels = rev(etiquetas))
 }
 
-grafico_cajas <- function(x, g, titulo, var) {
+# Cajas con cuartiles precalculados en R: ggplotly enviaría los 26 mil puntos
+# al navegador y le haría calcular los cuartiles en cada render.
+grafico_cajas <- function(x, g, titulo, var, oscuro = FALSE) {
   tb <- tibble::tibble(x = x, g = as.factor(g)) |>
-    filter(!is.na(g), !is.na(x)) |>
-    add_count(g, name = "n_g") |>
-    mutate(etiqueta = etiquetas_grupo(g, n_g))
+    filter(!is.na(g), !is.na(x))
 
-  # El globo va en el rombo de la media: la caja ya muestra la forma y la
-  # tabla de abajo, los números.
-  rombo <- tb |>
-    group_by(etiqueta) |>
+  res <- tb |>
+    group_by(g) |>
     summarise(
-      media = mean(x), mediana = median(x),
-      q1 = quantile(x, 0.25), q3 = quantile(x, 0.75),
-      min = min(x), max = max(x),
+      n = n(), q1 = quantile(x, 0.25), mediana = median(x), q3 = quantile(x, 0.75),
+      media = mean(x), minimo = min(x), maximo = max(x),
+      li = max(min(x), q1 - 1.5 * IQR(x)),
+      ls = min(max(x), q3 + 1.5 * IQR(x)),
       .groups = "drop"
     ) |>
-    mutate(globo = paste0(
-      etiqueta,
-      "<br>Media: ", num(media, 0.01),
-      "<br>Mediana: ", num_auto(mediana),
-      "<br>RIC: ", num_auto(q1), " – ", num_auto(q3),
-      "<br>Mín: ", num_auto(min), " · Máx: ", num_auto(max)
-    ))
+    arrange(g) |>
+    mutate(
+      pos = row_number(),
+      etiqueta = paste0(g, "  (n = ", num(n), ")"),
+      globo = paste0(
+        etiqueta,
+        "<br>Media: ", num(media, 0.01),
+        "<br>Mediana: ", num_auto(mediana),
+        "<br>RIC: ", num_auto(q1), " – ", num_auto(q3),
+        "<br>Mín: ", num_auto(minimo), " · Máx: ", num_auto(maximo)
+      )
+    )
+
+  # Los atípicos van como puntos aparte: las estadísticas precalculadas no los
+  # derivan. Solo se envían sus coordenadas, sin globo.
+  atipicos <- tb |>
+    inner_join(res |> select(g, li, ls, pos), by = "g") |>
+    filter(x < li | x > ls)
 
   etiqueta_x <- if (var %in% names(eje_x)) eje_x[[var]] else etiqueta_de(var)
 
-  ggplot(tb, aes(x = x, y = etiqueta)) +
-    geom_boxplot(width = 0.55, fill = pal[["claro"]], color = pal[["principal"]],
-                 outlier.color = pal[["gris"]], outlier.alpha = 0.35,
-                 outlier.size = 0.9) +
-    geom_point(data = rombo, aes(x = media, y = etiqueta, text = globo),
-               shape = 23, size = 3, fill = pal[["acento"]], color = "white") +
-    escala_x(x) +
-    labs(title = titulo, x = etiqueta_x, y = NULL, caption = "◆ = media") +
-    theme_proyecto(grid = "x")
+  eje_valores <- list(title = list(text = etiqueta_x), showgrid = TRUE)
+  cortes <- cortes_para(x)
+  if (is.function(cortes)) {
+    marcas <- cortes(range(x))
+    eje_valores$tickmode <- "array"
+    eje_valores$tickvals <- marcas
+    eje_valores$ticktext <- num_auto(marcas)
+  }
+
+  plotly::plot_ly() |>
+    plotly::add_trace(
+      type = "box", orientation = "h", y = res$pos,
+      q1 = res$q1, median = res$mediana, q3 = res$q3,
+      lowerfence = res$li, upperfence = res$ls,
+      fillcolor = pal[["claro"]], line = list(color = pal[["principal"]]),
+      hoverinfo = "skip", showlegend = FALSE
+    ) |>
+    plotly::add_trace(
+      x = atipicos$x, y = atipicos$pos, type = "scatter", mode = "markers",
+      hoverinfo = "skip", showlegend = FALSE,
+      marker = list(color = pal[["gris"]], size = 4, opacity = 0.35)
+    ) |>
+    plotly::add_trace(
+      x = res$media, y = res$pos, type = "scatter", mode = "markers",
+      text = res$globo, hoverinfo = "text", showlegend = FALSE,
+      marker = list(symbol = "diamond", size = 9, color = pal[["acento"]],
+                    line = list(color = "white", width = 1))
+    ) |>
+    plotly::layout(
+      title = list(text = titulo),
+      xaxis = eje_valores,
+      yaxis = list(title = "", showgrid = FALSE, autorange = "reversed",
+                   tickmode = "array", tickvals = res$pos,
+                   ticktext = res$etiqueta)
+    ) |>
+    estilo_interactivo(oscuro = oscuro, nota = "◆ = media")
 }
 
 # Barras al 100 % armadas directamente en plotly: la conversión desde ggplot2
@@ -364,10 +406,7 @@ mod_bivariado_server <- function(id, datos, modo_oscuro = reactive("light")) {
       oscuro <- identical(modo_oscuro(), "dark")
 
       if (identical(a$grafico, "cajas")) {
-        callar_texto(
-          interactivo(grafico_cajas(dd[[a$var]], dd[[a$grupo]], a$titulo, a$var),
-                      oscuro)
-        )
+        grafico_cajas(dd[[a$var]], dd[[a$grupo]], a$titulo, a$var, oscuro)
       } else {
         v <- if (!is.null(a$var_grafico)) a$var_grafico else a$var
         grafico_barras100(dd[[a$grupo]], dd[[v]], a$titulo, a$leyenda,
