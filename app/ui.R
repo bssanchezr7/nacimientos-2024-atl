@@ -19,7 +19,11 @@ ui <- page_sidebar(
       mod_univariado_controles("univariado")
     ),
     conditionalPanel(
-      condition = "input.pestana !== 'univariado'",
+      condition = "input.pestana === 'bivariado'",
+      mod_bivariado_controles("bivariado")
+    ),
+    conditionalPanel(
+      condition = "input.pestana !== 'univariado' && input.pestana !== 'bivariado'",
       p(class = "text-muted", "Pendiente de contenido.")
     )
   ),

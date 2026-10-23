@@ -1,0 +1,110 @@
+# Ayudantes de gráficos compartidos por los módulos: formato de porcentaje,
+# silenciador del aviso de `text`, tema de los gráficos interactivos y
+# conversión de ggplot a plotly.
+#
+# Los gráficos de ggplot (paleta y tema del libro, R/estilo.R) se convierten
+# con `interactivo()`. Los que la conversión no resuelve bien se arman con
+# plotly y se visten con `estilo_interactivo()`.
+
+fmt_pct <- function(p, acc = 0.1) paste0(num(100 * p, acc), " %")
+
+# ggplot2 4.0 avisa que `text` no es una estética de geom_col, pero plotly la
+# usa como globo. Se silencia solo ese aviso concreto, no los demás.
+callar_texto <- function(expr) {
+  withCallingHandlers(expr, warning = function(w) {
+    if (grepl("unknown aesthetic", conditionMessage(w), fixed = TRUE)) {
+      invokeRestart("muffleWarning")
+    }
+  })
+}
+
+# Colores del tema claro/oscuro y ajustes comunes a todos los gráficos.
+estilo_interactivo <- function(p, oscuro = FALSE, con_leyenda = FALSE) {
+  texto  <- if (oscuro) "#DDE7EB" else pal[["texto"]]
+  tenue  <- if (oscuro) "#8FA6AE" else pal[["gris"]]
+  fondo  <- if (oscuro) "#22404B" else "#FFFFFF"
+  grilla <- if (oscuro) "#3A5C68" else pal[["linea"]]
+  sin_fondo <- "rgba(0,0,0,0)"
+
+  eje <- list(tickfont = list(color = texto), gridcolor = grilla,
+              title = list(font = list(color = tenue)),
+              # Sin marcas visibles, pero con su largo: así la etiqueta no
+              # queda pegada al inicio de la barra.
+              ticks = "outside", ticklen = 10,
+              tickcolor = sin_fondo, automargin = TRUE, zeroline = FALSE)
+
+  leyenda <- list(font = list(color = tenue, size = 11),
+                  title = list(font = list(color = tenue, size = 11)))
+  if (con_leyenda) {
+    leyenda <- c(leyenda, list(orientation = "h", x = 0, xanchor = "left",
+                               y = 1.02, yanchor = "bottom"))
+  }
+
+  p |>
+    plotly::layout(
+      paper_bgcolor = sin_fondo,
+      plot_bgcolor  = sin_fondo,
+      title      = list(font = list(color = texto, size = 15),
+                        x = 0, xanchor = "left"),
+      font       = list(color = texto, size = 12,
+                        family = "Source Sans 3, Segoe UI, Arial, sans-serif"),
+      hoverlabel = list(bgcolor = fondo,
+                        bordercolor = pal[["principal"]],
+                        font = list(color = texto, size = 12)),
+      legend     = leyenda,
+      margin     = if (con_leyenda) list(t = 90) else NULL,
+      modebar    = list(bgcolor = sin_fondo, color = tenue, activecolor = texto),
+      xaxis      = eje,
+      yaxis      = eje
+    ) |>
+    plotly::config(
+      displayModeBar = "hover",
+      displaylogo = FALSE,
+      locale = "es",
+      modeBarButtonsToRemove = c("lasso2d", "select2d", "autoScale2d",
+                                 "toggleSpikelines", "hoverClosestCartesian",
+                                 "hoverCompareCartesian")
+    ) |>
+    plotly::plotly_build()
+}
+
+# ggplotly marca como discretos los ejes con posiciones 1..n y texto propio.
+eje_discreto <- function(eje) {
+  !is.null(eje$tickvals) && !is.null(eje$ticktext) &&
+    length(eje$tickvals) == length(eje$ticktext) &&
+    isTRUE(all.equal(as.numeric(eje$tickvals), seq_along(eje$tickvals))) &&
+    any(is.na(suppressWarnings(as.numeric(eje$ticktext))))
+}
+
+# Convierte el ggplot en un widget interactivo.
+interactivo <- function(g, oscuro = FALSE) {
+  p <- plotly::ggplotly(g, tooltip = "text")
+
+  con_leyenda <- any(vapply(p$x$data, function(z) isTRUE(z$showlegend),
+                            logical(1)))
+
+  # El build tiene que ir después de layout(): al revés, plotly reconstruye
+  # desde el ggplot y descarta los colores del tema.
+  p <- estilo_interactivo(p, oscuro, con_leyenda = con_leyenda)
+
+  # Las líneas de media/mediana no llevan globo: el dato se lee en el gráfico.
+  for (i in seq_along(p$x$data)) {
+    if (identical(p$x$data[[i]]$name, "Media") ||
+        identical(p$x$data[[i]]$name, "Mediana")) {
+      p$x$data[[i]]$hoverinfo <- "skip"
+    }
+  }
+
+  # ggplotly no marca la orientación de las cajas horizontales: deja la traza
+  # en vertical y las dibuja sobre el eje de valores. Cuando el eje de
+  # categorías es el y, se corrige aquí.
+  if (eje_discreto(p$x$layout$yaxis) && !eje_discreto(p$x$layout$xaxis)) {
+    for (i in seq_along(p$x$data)) {
+      if (identical(p$x$data[[i]]$type, "box")) {
+        p$x$data[[i]]$orientation <- "h"
+      }
+    }
+  }
+
+  p
+}

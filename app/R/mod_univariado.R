@@ -5,9 +5,7 @@
 #   - Factor:   barras horizontales ordenadas por frecuencia; tabla de n y %.
 #
 # Los gráficos se arman con ggplot y se convierten
-# a interactivos con ggplotly al final, en `interactivo()`.
-
-fmt_pct <- function(p, acc = 0.1) paste0(num(100 * p, acc), " %")
+# a interactivos con ggplotly al final, en `interactivo()` (utils_graficos.R).
 
 # ---- gráficos --------------------------------------------------------------
 
@@ -41,80 +39,6 @@ grafico_factor <- function(x, v) {
     scale_x_continuous(labels = num, expand = expansion(mult = c(0, 0.08))) +
     labs(title = etiquetas[[v]], x = "Nacimientos", y = NULL) +
     theme_proyecto(grid = "x")
-}
-
-# ---- interactividad --------------------------------------------------------
-
-# ggplot2 4.0 avisa que `text` no es una estética de geom_col, pero plotly la
-# usa como globo. Se silencia solo ese aviso concreto, no los demás.
-callar_texto <- function(expr) {
-  withCallingHandlers(expr, warning = function(w) {
-    if (grepl("unknown aesthetic", conditionMessage(w), fixed = TRUE)) {
-      invokeRestart("muffleWarning")
-    }
-  })
-}
-
-# Convierte el ggplot en un widget de plotly y ajusta lo que el libro no
-# necesita: globos de ayuda, colores según el modo claro/oscuro y una barra de
-# herramientas discreta.
-interactivo <- function(g, oscuro = FALSE) {
-  texto  <- if (oscuro) "#DDE7EB" else pal[["texto"]]
-  tenue  <- if (oscuro) "#8FA6AE" else pal[["gris"]]
-  fondo  <- if (oscuro) "#22404B" else "#FFFFFF"
-  grilla <- if (oscuro) "#3A5C68" else pal[["linea"]]
-
-  sin_fondo <- "rgba(0,0,0,0)"
-
-  p <- plotly::ggplotly(g, tooltip = "text")
-
-  p <- p |>
-    plotly::layout(
-      paper_bgcolor = sin_fondo,
-      plot_bgcolor  = sin_fondo,
-      title      = list(font = list(color = texto, size = 15)),
-      font       = list(color = texto, size = 12,
-                        family = "Source Sans 3, Segoe UI, Arial, sans-serif"),
-      hoverlabel = list(bgcolor = fondo,
-                        bordercolor = pal[["principal"]],
-                        font = list(color = texto, size = 12)),
-      legend     = list(font = list(color = tenue, size = 11)),
-      modebar    = list(bgcolor = sin_fondo, color = tenue, activecolor = texto),
-      xaxis      = list(tickfont = list(color = texto), gridcolor = grilla,
-                        title = list(font = list(color = tenue)),
-                        # Sin marcas visibles, pero con su largo: así la
-                        # etiqueta no queda pegada al inicio de la barra.
-                        ticks = "outside", ticklen = 10,
-                        tickcolor = "rgba(0,0,0,0)",
-                        automargin = TRUE),
-      yaxis      = list(tickfont = list(color = texto), gridcolor = grilla,
-                        title = list(font = list(color = tenue)),
-                        ticks = "outside", ticklen = 10,
-                        tickcolor = "rgba(0,0,0,0)",
-                        automargin = TRUE)
-    ) |>
-    plotly::config(
-      displayModeBar = "hover",
-      displaylogo = FALSE,
-      locale = "es",
-      modeBarButtonsToRemove = c("lasso2d", "select2d", "autoScale2d",
-                                 "toggleSpikelines", "hoverClosestCartesian",
-                                 "hoverCompareCartesian")
-    )
-
-  # El build tiene que ir después de layout(): al revés, plotly reconstruye
-  # desde el ggplot y descarta los colores del tema.
-  p <- plotly::plotly_build(p)
-
-  # Las líneas de media/mediana no llevan globo: el dato se lee en la barra.
-  for (i in seq_along(p$x$data)) {
-    if (identical(p$x$data[[i]]$name, "Media") ||
-        identical(p$x$data[[i]]$name, "Mediana")) {
-      p$x$data[[i]]$hoverinfo <- "skip"
-    }
-  }
-
-  p
 }
 
 # ---- tablas ----------------------------------------------------------------
