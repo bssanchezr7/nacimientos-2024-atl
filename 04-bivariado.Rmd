@@ -16,16 +16,17 @@ res_consultas_edad <- df_atl |>
     max = max(NUMCONSUL),
     .groups = "drop"
   ) |>
-  mutate(RIC = paste0(num_auto(q1), " – ", num_auto(q3)))
+  mutate(cuartiles = paste0(num_auto(q1), " – ", num_auto(q3)),
+         RIC = num_auto(q3 - q1))
 
 res_consultas_edad |>
-  select(`Grupo de edad`, n, media, de, mediana, RIC, min, max) |>
+  select(`Grupo de edad`, n, media, de, mediana, cuartiles, RIC, min, max) |>
   gt() |>
   fmt_number(columns = n, decimals = 0, sep_mark = ".", dec_mark = ",") |>
   fmt_number(columns = c(media, de), decimals = 2, sep_mark = ".", dec_mark = ",") |>
   fmt_number(columns = c(mediana, min, max), decimals = 0, sep_mark = ".", dec_mark = ",") |>
   cols_label(`Grupo de edad` = "Grupo de edad", n = "n",
-             media = "Media", de = "DE", mediana = "Mediana", RIC = "RIC (Q1–Q3)",
+             media = "Media", de = "DE", mediana = "Mediana", cuartiles = "Q1 – Q3", RIC = "RIC",
              min = "Mín", max = "Máx") |>
   cols_align("left", columns = `Grupo de edad`) |>
   cols_align("center", columns = -`Grupo de edad`) |>
@@ -38,7 +39,7 @@ res_optima <- res_consultas_edad |> filter(`Grupo de edad` == "De 20 a 34 años"
 res_avanzada <- res_consultas_edad |> filter(`Grupo de edad` == "De 35 años o más")
 ```
 
-La tabla anterior muestra el número de consultas según la edad de la madre. Se observó una media de `r num(res_adol$media, 0.01)` (DE `r num(res_adol$de, 0.01)`) para las madres adolescentes, menor frente a las madres adultas: las de 20 a 34 años con media `r num(res_optima$media, 0.01)` (DE `r num(res_optima$de, 0.01)`) y las de 35 años o más con media `r num(res_avanzada$media, 0.01)` (DE `r num(res_avanzada$de, 0.01)`). Las medianas fueron `r num_auto(res_adol$mediana)` (RIC `r res_adol$RIC`) en adolescentes, `r num_auto(res_optima$mediana)` (RIC `r res_optima$RIC`) en las de 20 a 34 años y `r num_auto(res_avanzada$mediana)` (RIC `r res_avanzada$RIC`) en las de 35 años o más.
+La tabla anterior muestra el número de consultas según la edad de la madre. Se observó una media de `r num(res_adol$media, 0.01)` (DE `r num(res_adol$de, 0.01)`) para las madres adolescentes, menor frente a las madres adultas: las de 20 a 34 años con media `r num(res_optima$media, 0.01)` (DE `r num(res_optima$de, 0.01)`) y las de 35 años o más con media `r num(res_avanzada$media, 0.01)` (DE `r num(res_avanzada$de, 0.01)`). Las medianas fueron `r num_auto(res_adol$mediana)` en adolescentes, `r num_auto(res_optima$mediana)` en las de 20 a 34 años y `r num_auto(res_avanzada$mediana)` en las de 35 años o más, con rangos intercuartílicos (RIC) de `r res_adol$RIC`, `r res_optima$RIC` y `r res_avanzada$RIC`, respectivamente.
 
 ```{r consultas-edad, message=FALSE, warning=FALSE, fig.cap="Número de consultas prenatales según grupo de edad de la madre."}
 x <- df_atl$NUMCONSUL
@@ -137,16 +138,17 @@ res_consultas_subregion <- df_atl |>
     max = max(NUMCONSUL),
     .groups = "drop"
   ) |>
-  mutate(RIC = paste0(num_auto(q1), " – ", num_auto(q3)))
+  mutate(cuartiles = paste0(num_auto(q1), " – ", num_auto(q3)),
+         RIC = num_auto(q3 - q1))
 
 res_consultas_subregion |>
-  select(Subregión, n, media, de, mediana, RIC, min, max) |>
+  select(Subregión, n, media, de, mediana, cuartiles, RIC, min, max) |>
   gt() |>
   fmt_number(columns = n, decimals = 0, sep_mark = ".", dec_mark = ",") |>
   fmt_number(columns = c(media, de), decimals = 2, sep_mark = ".", dec_mark = ",") |>
   fmt_number(columns = c(mediana, min, max), decimals = 0, sep_mark = ".", dec_mark = ",") |>
   cols_label(Subregión = "Subregión", n = "n",
-             media = "Media", de = "DE", mediana = "Mediana", RIC = "RIC (Q1–Q3)",
+             media = "Media", de = "DE", mediana = "Mediana", cuartiles = "Q1 – Q3", RIC = "RIC",
              min = "Mín", max = "Máx") |>
   cols_align("left", columns = Subregión) |>
   cols_align("center", columns = -Subregión) |>
@@ -160,7 +162,7 @@ res_ram <- res_consultas_subregion |> filter(Subregión == "Resto del área metr
 res_resto <- res_consultas_subregion |> filter(Subregión == "Resto del departamento")
 ```
 
-Barranquilla registró el promedio más alto de consultas, `r num(res_bq$media, 0.01)` (DE `r num(res_bq$de, 0.01)`), y el resto del departamento el más bajo, `r num(res_resto$media, 0.01)` (DE `r num(res_resto$de, 0.01)`). Mientras que para Soledad y el resto del área metropolitana quedaron en `r num(res_sol$media, 0.01)` (DE `r num(res_sol$de, 0.01)`) y `r num(res_ram$media, 0.01)` (DE `r num(res_ram$de, 0.01)`), respectivamente. El 50% de las madres de Barranquilla y Soledad tuvo al menos `r num_auto(res_bq$mediana)` (RIC `r res_bq$RIC` para ambas) consultas, mientras que el 50% de las madres del resto del área metropolitana y el resto del departamento tuvo al menos `r num_auto(res_ram$mediana)` (RIC `r res_ram$RIC` para ambas) consultas.
+Barranquilla registró el promedio más alto de consultas, `r num(res_bq$media, 0.01)` (DE `r num(res_bq$de, 0.01)`), y el resto del departamento el más bajo, `r num(res_resto$media, 0.01)` (DE `r num(res_resto$de, 0.01)`). Mientras que para Soledad y el resto del área metropolitana quedaron en `r num(res_sol$media, 0.01)` (DE `r num(res_sol$de, 0.01)`) y `r num(res_ram$media, 0.01)` (DE `r num(res_ram$de, 0.01)`), respectivamente. El 50% de las madres de Barranquilla y Soledad tuvo al menos `r num_auto(res_bq$mediana)` consultas, con un RIC de `r res_bq$RIC` en ambas (entre `r num_auto(res_bq$q1)` y `r num_auto(res_bq$q3)`), mientras que el 50% de las madres del resto del área metropolitana y el resto del departamento tuvo al menos `r num_auto(res_ram$mediana)`, con un RIC de `r res_ram$RIC` en ambas (entre `r num_auto(res_ram$q1)` y `r num_auto(res_ram$q3)`).
 
 ```{r consultas-subregion, message=FALSE, warning=FALSE, fig.cap="Número de consultas prenatales según subregión de residencia de la madre."}
 x <- df_atl$NUMCONSUL
@@ -199,17 +201,18 @@ res_apgar_edad <- df_atl |>
     p_bajo = mean(APGAR1 < 7),
     .groups = "drop"
   ) |>
-  mutate(RIC = paste0(num_auto(q1), " – ", num_auto(q3)))
+  mutate(cuartiles = paste0(num_auto(q1), " – ", num_auto(q3)),
+         RIC = num_auto(q3 - q1))
 
 res_apgar_edad |>
-  select(`Grupo de edad`, n, media, de, mediana, RIC, min, max, p_bajo) |>
+  select(`Grupo de edad`, n, media, de, mediana, cuartiles, RIC, min, max, p_bajo) |>
   gt() |>
   fmt_number(columns = n, decimals = 0, sep_mark = ".", dec_mark = ",") |>
   fmt_number(columns = c(media, de), decimals = 2, sep_mark = ".", dec_mark = ",") |>
   fmt_number(columns = c(mediana, min, max), decimals = 0, sep_mark = ".", dec_mark = ",") |>
   fmt_percent(columns = p_bajo, decimals = 2, scale_values = TRUE, sep_mark = ".", dec_mark = ",") |>
   cols_label(`Grupo de edad` = "Grupo de edad", n = "n",
-             media = "Media", de = "DE", mediana = "Mediana", RIC = "RIC (Q1–Q3)",
+             media = "Media", de = "DE", mediana = "Mediana", cuartiles = "Q1 – Q3", RIC = "RIC",
              min = "Mín", max = "Máx", p_bajo = "Apgar menor que 7") |>
   cols_align("left", columns = `Grupo de edad`) |>
   cols_align("center", columns = -`Grupo de edad`) |>
