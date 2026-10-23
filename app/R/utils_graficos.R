@@ -45,10 +45,13 @@ estilo_interactivo <- function(p, oscuro = FALSE, con_leyenda = FALSE, nota = NU
   margen <- list(t = if (con_leyenda) 90 else 44)
   if (!is.null(nota)) margen$b <- 78
 
+  # Se ancla en píxeles al borde inferior de la figura, debajo del título del
+  # eje. Con una posición relativa (y = -0.16) caía encima de los números del
+  # eje cuando el gráfico era bajo.
   anotacion <- if (is.null(nota)) NULL else list(list(
-    text = nota, x = 0, y = -0.16, xref = "paper", yref = "paper",
-    xanchor = "left", yanchor = "top", showarrow = FALSE,
-    font = list(color = tenue, size = 11)
+    text = nota, x = 0, y = 0, xref = "paper", yref = "paper",
+    xanchor = "left", yanchor = "bottom", yshift = -(margen$b - 4),
+    showarrow = FALSE, font = list(color = tenue, size = 11)
   ))
 
   p |>

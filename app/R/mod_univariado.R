@@ -48,12 +48,13 @@ resumen_numerica <- function(x) {
 
   tibble::tibble(
     Indicador = c("Nacimientos", "Media", "Desv. estándar", "Mediana",
-                  "RIC (Q1–Q3)", "Mínimo", "Máximo"),
+                  "Q1 – Q3", "RIC", "Mínimo", "Máximo"),
     Valor = c(num(length(x)),
               num(mean(x), 0.01),
               num(sd(x), 0.01),
               num_auto(q[2]),
               paste0(num_auto(q[1]), " – ", num_auto(q[3])),
+              num_auto(q[3] - q[1]),
               num_auto(min(x)),
               num_auto(max(x)))
   )
