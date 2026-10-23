@@ -12,9 +12,16 @@ ui <- page_sidebar(
   lang = "es",
 
   sidebar = sidebar(
-    width = 150,
+    width = 260,
     h6("Filtros"),
-    p(class = "text-muted", "Pendiente de contenido.")
+    conditionalPanel(
+      condition = "input.pestana === 'univariado'",
+      mod_univariado_controles("univariado")
+    ),
+    conditionalPanel(
+      condition = "input.pestana !== 'univariado'",
+      p(class = "text-muted", "Pendiente de contenido.")
+    )
   ),
 
   useBusyIndicators(),
