@@ -18,22 +18,23 @@ res_numconsul <- df_atl |>
     min = min(NUMCONSUL),
     max = max(NUMCONSUL)
   ) |>
-  mutate(RIC = paste0(num_auto(q1), " – ", num_auto(q3)))
+  mutate(cuartiles = paste0(num_auto(q1), " – ", num_auto(q3)),
+         RIC = num_auto(q3 - q1))
 
 res_numconsul |>
-  select(n, media, de, mediana, RIC, min, max) |>
+  select(n, media, de, mediana, cuartiles, RIC, min, max) |>
   gt() |>
   fmt_number(columns = n, decimals = 0, sep_mark = ".", dec_mark = ",") |>
   fmt_number(columns = c(media, de), decimals = 2, sep_mark = ".", dec_mark = ",") |>
   fmt_number(columns = c(mediana, min, max), decimals = 0, sep_mark = ".", dec_mark = ",") |>
   cols_label(n = "n", media = "Media", de = "DE",
-             mediana = "Mediana", RIC = "RIC (Q1–Q3)",
+             mediana = "Mediana", cuartiles = "Q1 – Q3", RIC = "RIC",
              min = "Mín", max = "Máx") |>
   cols_align("center", columns = everything()) |>
   estilo_tabla("Número de consultas prenatales: resumen")
 ```
 
-En los `r num(res_numconsul$n)` nacimientos se observó un promedio de `r num(res_numconsul$media, 0.01)` consultas prenatales (DE `r num(res_numconsul$de, 0.01)`) y una mediana de `r num_auto(res_numconsul$mediana)` (RIC `r res_numconsul$RIC`). El número mínimo y máximo de consultas fue de `r num_auto(res_numconsul$min)` y `r num_auto(res_numconsul$max)`, respectivamente.
+En los `r num(res_numconsul$n)` nacimientos se observó un promedio de `r num(res_numconsul$media, 0.01)` consultas prenatales (DE `r num(res_numconsul$de, 0.01)`) y una mediana de `r num_auto(res_numconsul$mediana)`, con un rango intercuartílico (RIC) de `r res_numconsul$RIC`: la mitad central de los nacimientos tuvo entre `r num_auto(res_numconsul$q1)` y `r num_auto(res_numconsul$q3)` consultas. El número mínimo y máximo de consultas fue de `r num_auto(res_numconsul$min)` y `r num_auto(res_numconsul$max)`, respectivamente.
 
 ```{r hist-numconsul, message=FALSE, warning=FALSE, fig.cap="Distribución del número de consultas prenatales."}
 x <- df_atl$NUMCONSUL
@@ -114,16 +115,17 @@ res_apgar1 <- df_atl |>
     max = max(APGAR1),
     p_bajo = mean(APGAR1 < 7)
   ) |>
-  mutate(RIC = paste0(num_auto(q1), " – ", num_auto(q3)))
+  mutate(cuartiles = paste0(num_auto(q1), " – ", num_auto(q3)),
+         RIC = num_auto(q3 - q1))
 
 res_apgar1 |>
-  select(n, media, de, mediana, RIC, min, max) |>
+  select(n, media, de, mediana, cuartiles, RIC, min, max) |>
   gt() |>
   fmt_number(columns = n, decimals = 0, sep_mark = ".", dec_mark = ",") |>
   fmt_number(columns = c(media, de), decimals = 2, sep_mark = ".", dec_mark = ",") |>
   fmt_number(columns = c(mediana, min, max), decimals = 0, sep_mark = ".", dec_mark = ",") |>
   cols_label(n = "n", media = "Media", de = "DE",
-             mediana = "Mediana", RIC = "RIC (Q1–Q3)",
+             mediana = "Mediana", cuartiles = "Q1 – Q3", RIC = "RIC",
              min = "Mín", max = "Máx") |>
   cols_align("center", columns = everything()) |>
   estilo_tabla("Puntaje Apgar al minuto: resumen")
@@ -170,16 +172,17 @@ res_apgar2 <- df_atl |>
     max = max(APGAR2),
     p_bajo = mean(APGAR2 < 7)
   ) |>
-  mutate(RIC = paste0(num_auto(q1), " – ", num_auto(q3)))
+  mutate(cuartiles = paste0(num_auto(q1), " – ", num_auto(q3)),
+         RIC = num_auto(q3 - q1))
 
 res_apgar2 |>
-  select(n, media, de, mediana, RIC, min, max) |>
+  select(n, media, de, mediana, cuartiles, RIC, min, max) |>
   gt() |>
   fmt_number(columns = n, decimals = 0, sep_mark = ".", dec_mark = ",") |>
   fmt_number(columns = c(media, de), decimals = 2, sep_mark = ".", dec_mark = ",") |>
   fmt_number(columns = c(mediana, min, max), decimals = 0, sep_mark = ".", dec_mark = ",") |>
   cols_label(n = "n", media = "Media", de = "DE",
-             mediana = "Mediana", RIC = "RIC (Q1–Q3)",
+             mediana = "Mediana", cuartiles = "Q1 – Q3", RIC = "RIC",
              min = "Mín", max = "Máx") |>
   cols_align("center", columns = everything()) |>
   estilo_tabla("Puntaje Apgar a los cinco minutos: resumen")
@@ -205,7 +208,7 @@ row_moda_apgar2 <- frec_apgar2 |> slice_max(n, n = 1)
 row_seg_apgar2 <- frec_apgar2 |> arrange(desc(n)) |> slice(2)
 ```
 
-A los cinco minutos los puntajes se concentraron aún más en los valores altos. El promedio subió a `r num(res_apgar2$media, 0.01)` (DE `r num(res_apgar2$de, 0.01)`) y la mediana se mantuvo en `r num_auto(res_apgar2$mediana)` (RIC `r res_apgar2$RIC`). El puntaje más frecuente siguió siendo `r num_auto(row_moda_apgar2$APGAR2)`, con `r num(row_moda_apgar2$n)` nacimientos (`r pct(row_moda_apgar2$p)`), seguido de `r num_auto(row_seg_apgar2$APGAR2)`. Apenas el `r pct(res_apgar2$p_bajo)` de los recién nacidos quedó por debajo de 7.
+A los cinco minutos los puntajes se concentraron aún más en los valores altos. El promedio subió a `r num(res_apgar2$media, 0.01)` (DE `r num(res_apgar2$de, 0.01)`) y la mediana se mantuvo en `r num_auto(res_apgar2$mediana)`, con un RIC de `r res_apgar2$RIC` (entre `r num_auto(res_apgar2$q1)` y `r num_auto(res_apgar2$q3)`). El puntaje más frecuente siguió siendo `r num_auto(row_moda_apgar2$APGAR2)`, con `r num(row_moda_apgar2$n)` nacimientos (`r pct(row_moda_apgar2$p)`), seguido de `r num_auto(row_seg_apgar2$APGAR2)`. Apenas el `r pct(res_apgar2$p_bajo)` de los recién nacidos quedó por debajo de 7.
 
 ## Tipo de parto
 
