@@ -158,9 +158,9 @@ mod_introduccion_server <- function(id, datos, municipios, modo_oscuro = reactiv
       left_join(datos |> group_by(CODMUNRE, SUBREGION) |> resumir(), by = "CODMUNRE")
 
     output$vb_n            <- renderText(num(departamento$n))
-    output$vb_cesarea      <- renderText(pct(departamento$cesarea))
+    output$vb_cesarea      <- renderText(fmt_pct(departamento$cesarea / 100))
     output$vb_consultas    <- renderText(num(departamento$consultas, 0.1))
-    output$vb_adolescentes <- renderText(pct(departamento$adolescentes))
+    output$vb_adolescentes <- renderText(fmt_pct(departamento$adolescentes / 100))
 
     # Contorno de cada subregión, para trazar sus límites sobre el mapa
     subregiones <- por_municipio |>
@@ -183,7 +183,7 @@ mod_introduccion_server <- function(id, datos, municipios, modo_oscuro = reactiv
       if (identical(modo_oscuro(), "dark")) "oscuro" else "claro"
     })
 
-    formato <- function(x, ind) if (ind$es_pct) pct(x, ind$acc) else num(x, ind$acc)
+    formato <- function(x, ind) if (ind$es_pct) fmt_pct(x / 100, ind$acc) else num(x, ind$acc)
 
     # Acerca el mapa a una geometría (un municipio o todo el departamento)
     volar_a <- function(mapa, caja) {
@@ -208,7 +208,7 @@ mod_introduccion_server <- function(id, datos, municipios, modo_oscuro = reactiv
 
       leyenda <- function(type, cuts, p) {
         if (type == "bin") return(paste(num(head(cuts, -1)), "–", num(cuts[-1])))
-        if (ind$es_pct) pct(cuts, 1) else num(cuts, ind$acc)
+        if (ind$es_pct) fmt_pct(cuts / 100, 1) else num(cuts, ind$acc)
       }
 
       mapa |>

@@ -114,7 +114,8 @@ tabla_resumen <- function(x, g, nombre_grupo, con_bajo = FALSE) {
     Media = num(tb$media, 0.01),
     DE = num(tb$de, 0.01),
     Mediana = num_auto(tb$mediana),
-    `RIC (Q1–Q3)` = paste0(num_auto(tb$q1), " – ", num_auto(tb$q3)),
+    `Q1 – Q3` = paste0(num_auto(tb$q1), " – ", num_auto(tb$q3)),
+    RIC = num_auto(tb$q3 - tb$q1),
     Mín = num_auto(tb$min),
     Máx = num_auto(tb$max)
   )
@@ -184,6 +185,21 @@ encabezado_spanner <- function(nombres, spanner) {
 # Etiquetas "grupo  (n = X)" con el primer nivel arriba. Se formatea una vez por
 # grupo y se reparte con match(): con 26 mil filas, formatear cada fila cuesta
 # casi un segundo.
+# Nombre del grupo con su n en una segunda línea más pequeña. En una sola
+# línea ("De 20 a 34 años  (n = 19.437)") la etiqueta del eje es tan ancha que
+# plotly la recorta por la izquierda.
+etiqueta_con_n <- function(g, n) {
+  paste0(g, "<br><span style='font-size:11px'>n = ", num(n), "</span>")
+}
+
+# Margen izquierdo mínimo según la primera línea de la etiqueta más larga. El
+# margen automático de plotly se queda corto por unos píxeles y recorta el
+# texto; con este piso, plotly igual puede ampliarlo si hace falta.
+margen_etiquetas <- function(etiquetas) {
+  primera_linea <- sub("<br>.*", "", as.character(etiquetas))
+  list(l = 7 * max(nchar(primera_linea)) + 24)
+}
+
 etiquetas_grupo <- function(g, n) {
   g <- as.factor(g)
 
@@ -191,7 +207,7 @@ etiquetas_grupo <- function(g, n) {
     distinct() |>
     arrange(g)
 
-  etiquetas <- paste0(cuentas$g, "  (n = ", num(cuentas$n), ")")
+  etiquetas <- etiqueta_con_n(cuentas$g, cuentas$n)
   factor(etiquetas[match(as.character(g), as.character(cuentas$g))],
          levels = rev(etiquetas))
 }
@@ -214,12 +230,13 @@ grafico_cajas <- function(x, g, titulo, var, oscuro = FALSE) {
     arrange(g) |>
     mutate(
       pos = row_number(),
-      etiqueta = paste0(g, "  (n = ", num(n), ")"),
+      etiqueta = etiqueta_con_n(g, n),
       globo = paste0(
         etiqueta,
         "<br>Media: ", num(media, 0.01),
         "<br>Mediana: ", num_auto(mediana),
-        "<br>RIC: ", num_auto(q1), " – ", num_auto(q3),
+        "<br>Q1 – Q3: ", num_auto(q1), " – ", num_auto(q3),
+        "<br>RIC: ", num_auto(q3 - q1),
         "<br>Mín: ", num_auto(minimo), " · Máx: ", num_auto(maximo)
       )
     )
@@ -265,7 +282,8 @@ grafico_cajas <- function(x, g, titulo, var, oscuro = FALSE) {
       xaxis = eje_valores,
       yaxis = list(title = "", showgrid = FALSE, autorange = "reversed",
                    tickmode = "array", tickvals = res$pos,
-                   ticktext = res$etiqueta)
+                   ticktext = res$etiqueta),
+      margin = margen_etiquetas(res$etiqueta)
     ) |>
     estilo_interactivo(oscuro = oscuro, nota = "◆ = media")
 }
@@ -305,10 +323,11 @@ grafico_barras100 <- function(g, x, titulo, leyenda, ordinal = FALSE,
       barmode = "stack",
       title = list(text = titulo),
       xaxis = list(range = c(0, 1), tickvals = seq(0, 1, 0.25),
-                   ticktext = pct(seq(0, 100, 25), 1),
+                   ticktext = fmt_pct(seq(0, 1, 0.25), 1),
                    showgrid = FALSE, title = ""),
       yaxis = list(showgrid = FALSE, title = ""),
-      legend = list(title = list(text = leyenda), traceorder = "normal")
+      legend = list(title = list(text = leyenda), traceorder = "normal"),
+      margin = margen_etiquetas(levels(tb$etiqueta))
     ) |>
     estilo_interactivo(oscuro = oscuro, con_leyenda = TRUE)
 }
@@ -318,8 +337,10 @@ grafico_barras100 <- function(g, x, titulo, leyenda, ordinal = FALSE,
 mod_bivariado_ui <- function(id) {
   ns <- NS(id)
 
+  # fill = FALSE: cada tarjeta toma su alto natural. Si no, el gráfico y la
+  # tabla se reparten el alto de la pestaña y el gráfico queda aplastado.
   layout_columns(
-    col_widths = 12,
+    col_widths = 12, fill = FALSE,
     conditionalPanel(
       condition = sprintf("input['%s'] != 'cambio_apgar'", ns("analisis")),
       card(card_header("Gráfico"), plotly::plotlyOutput(ns("plot"), height = "400px"))
