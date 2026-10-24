@@ -49,6 +49,8 @@ ui <- page_sidebar(
               mod_introduccion_ui("introduccion")),
     nav_panel("Datos y metodología", value = "metodologia",
               mod_metodologia_ui("metodologia")),
+    nav_panel("Objetivos", value = "objetivos",
+              mod_objetivos_ui("objetivos")),
     nav_panel("Univariado", value = "univariado",
               mod_univariado_ui("univariado")),
     nav_panel("Bivariado", value = "bivariado",
