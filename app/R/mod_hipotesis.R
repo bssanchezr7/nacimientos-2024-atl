@@ -119,7 +119,7 @@ objetivos_hipotesis <- list(
       list(
         pasos = list(
           list(
-            titulo  = "Prueba de normalidad",
+            titulo  = "Prueba de normalidad (Lilliefors)",
             h0      = "las consultas del grupo siguen distribución normal",
             h1      = "no la siguen",
             tabla   = tibble::tibble(
@@ -135,7 +135,7 @@ objetivos_hipotesis <- list(
             )
           ),
           list(
-            titulo  = "Prueba de homogeneidad de varianzas",
+            titulo  = "Homogeneidad de varianzas (Levene, centrada en la mediana)",
             h0      = "igual varianza entre los dos grupos",
             h1      = "varianza distinta",
             tabla   = tibble::tibble(
@@ -173,7 +173,7 @@ objetivos_hipotesis <- list(
             )
           ),
           list(
-            titulo  = "Tamaño del efecto",
+            titulo  = "Tamaño del efecto (r)",
             tabla   = tibble::tibble(
               Comparación = meta,
               r = num(r_ef, 0.001),
@@ -224,7 +224,7 @@ objetivos_hipotesis <- list(
       list(
         pasos = list(
           list(
-            titulo  = "Condición de la prueba",
+            titulo  = "Condición de la prueba (frecuencias esperadas)",
             tabla   = tibble::tibble(
               Régimen = rownames(esp),
               Sí = num(esp[, "Sí"], 1),
@@ -240,7 +240,7 @@ objetivos_hipotesis <- list(
             )
           ),
           list(
-            titulo  = "Prueba de homogeneidad de proporciones",
+            titulo  = "Homogeneidad de proporciones (chi-cuadrado)",
             h0      = "p<sub>C</sub> = p<sub>S</sub> (la proporción de cesáreas es la misma en los dos regímenes)",
             h1      = "p<sub>C</sub> ≠ p<sub>S</sub> (la proporción de cesáreas es distinta)",
             tabla   = tibble::tibble(
@@ -264,7 +264,7 @@ objetivos_hipotesis <- list(
             )
           ),
           list(
-            titulo  = "Tamaño del efecto",
+            titulo  = "Tamaño del efecto (V de Cramér)",
             tabla   = tibble::tibble(
               Medida = "V de Cramér",
               Valor = num(v, 0.01)
@@ -318,7 +318,7 @@ objetivos_hipotesis <- list(
       list(
         pasos = list(
           list(
-            titulo  = "Prueba de normalidad",
+            titulo  = "Prueba de normalidad (Lilliefors)",
             h0      = "las consultas de la subregión siguen distribución normal",
             h1      = "no la siguen",
             tabla   = tibble::tibble(
@@ -334,7 +334,7 @@ objetivos_hipotesis <- list(
             )
           ),
           list(
-            titulo  = "Prueba de homogeneidad de varianzas",
+            titulo  = "Homogeneidad de varianzas (Levene, centrada en la mediana)",
             h0      = "igual varianza entre las subregiones",
             h1      = "varianza distinta en al menos una",
             tabla   = tibble::tibble(
@@ -386,7 +386,7 @@ objetivos_hipotesis <- list(
             )
           ),
           list(
-            titulo  = "Tamaño del efecto",
+            titulo  = "Tamaño del efecto (eta cuadrado)",
             tabla   = tibble::tibble(
               Medida = "Eta cuadrado",
               Valor = num(eta$effsize, 0.001)
@@ -443,7 +443,7 @@ objetivos_hipotesis <- list(
       list(
         pasos = list(
           list(
-            titulo  = "Prueba de normalidad",
+            titulo  = "Prueba de normalidad (Lilliefors)",
             h0      = "el puntaje Apgar del grupo sigue una distribución normal",
             h1      = "no la sigue",
             tabla   = tibble::tibble(
@@ -459,7 +459,7 @@ objetivos_hipotesis <- list(
             )
           ),
           list(
-            titulo  = "Prueba de homogeneidad de varianzas",
+            titulo  = "Homogeneidad de varianzas (Levene, centrada en la mediana)",
             h0      = "la varianza del puntaje es igual en los tres grupos",
             h1      = "al menos un grupo tiene una varianza distinta",
             tabla   = tibble::tibble(
@@ -489,7 +489,7 @@ objetivos_hipotesis <- list(
             )
           ),
           list(
-            titulo  = "Comparaciones por pares",
+            titulo  = "Comparaciones por pares (Wilcoxon con corrección de Bonferroni)",
             tabla   = tibble::tibble(
               Comparación = vapply(pares, paste, "", collapse = " – "),
               `Valor p ajustado (Bonferroni)` = formato_p(p_par)
@@ -507,7 +507,7 @@ objetivos_hipotesis <- list(
             )
           ),
           list(
-            titulo  = "Tamaño del efecto",
+            titulo  = "Tamaño del efecto (eta cuadrado)",
             tabla   = tibble::tibble(
               Medida = "Eta cuadrado",
               Valor = num(eta$effsize, 0.001)
@@ -558,7 +558,7 @@ objetivos_hipotesis <- list(
       list(
         pasos = list(
           list(
-            titulo  = "Prueba de normalidad",
+            titulo  = "Prueba de normalidad (Lilliefors)",
             h0      = "las diferencias entre los dos puntajes siguen una distribución normal",
             h1      = "no la siguen",
             tabla   = tibble::tibble(
@@ -574,7 +574,7 @@ objetivos_hipotesis <- list(
             )
           ),
           list(
-            titulo  = "Prueba de Wilcoxon para muestras pareadas",
+            titulo  = "Prueba de Wilcoxon para muestras pareadas (unilateral)",
             h0      = "la mediana de las diferencias es igual a cero (el puntaje no cambia)",
             h1      = "la mediana de las diferencias es mayor que cero (el puntaje mejora)",
             tabla   = tibble::tibble(
@@ -589,7 +589,7 @@ objetivos_hipotesis <- list(
             )
           ),
           list(
-            titulo  = "Tamaño del efecto",
+            titulo  = "Tamaño del efecto (r)",
             tabla   = tibble::tibble(
               r = num(ef, 0.001),
               Magnitud = magnitud_r(ef)
