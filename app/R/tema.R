@@ -48,6 +48,19 @@ tema_app <- function() {
          bloquear el cursor ni los clics sobre ellos */
       .leaflet-etiquetas-pane { pointer-events: none; }
 
+      /* Pasos de la depuración (pestaña de metodología) */
+      .paso-depuracion { display: flex; align-items: center; gap: 0.9rem; }
+      .paso-icono {
+        flex: 0 0 2.6rem; height: 2.6rem; border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        background-color: #E8EFF2; color: #2E5A6B; font-size: 1.1rem;
+      }
+      [data-bs-theme='dark'] .paso-icono { background-color: #1F3A44; color: #DDE7EB; }
+      .paso-cifra { font-size: 1.6rem; font-weight: 700; line-height: 1.1; color: var(--bs-link-color); }
+      .paso-titulo { font-weight: 600; }
+      .paso-detalle { font-size: 0.85rem; color: var(--bs-secondary-color); }
+      .paso-flecha { margin: 0.35rem 0 0.35rem 0.95rem; color: var(--bs-secondary-color); }
+
       /* Ícono de ayuda junto a un título */
       .ayuda {
         color: var(--bs-secondary-color);
