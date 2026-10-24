@@ -27,10 +27,13 @@ df <- read_csv(ruta_csv,
                               NUMCONSUL, CODMUNRE, EDAD_MADRE),
                col_types = cols(.default = col_character()))
 
+variables_analisis <- c("APGAR1", "APGAR2", "TIPO_PARTO", "SEG_SOCIAL",
+                        "NUMCONSUL", "CODMUNRE", "EDAD_MADRE")
+
 # POBLACIÓN: madres residentes en el Atlántico --------------------------------
 df_atl <- df |>
   filter(CODPTORE == "08") |>
-  select(APGAR1, APGAR2, TIPO_PARTO, SEG_SOCIAL, NUMCONSUL, CODMUNRE, EDAD_MADRE)
+  select(all_of(variables_analisis))
 
 # LIMPIEZA: códigos a categorías y 99 como faltante ---------------------------
 df_atl <- df_atl |>
@@ -60,6 +63,12 @@ df_atl <- df_atl |>
   )
 
 # FALTANTES: se eliminan (menos del 5 % de los registros) ---------------------
+faltantes <- tibble(
+  variable = variables_analisis,
+  n        = map_int(variables_analisis, \(v) sum(is.na(df_atl[[v]]))),
+  pct      = n / nrow(df_atl)
+)
+
 n_antes <- nrow(df_atl)
 df_atl <- df_atl |> drop_na()
 
@@ -81,12 +90,14 @@ df_atl <- df_atl |>
   )
 
 # GUARDADO -------------------------------------------------------------------
-# Se guardan también los conteos de la depuración para la pestaña de metodología
+# Se guardan también, para la pestaña de metodología, los conteos de la
+# depuración y los faltantes por variable
 attr(df_atl, "depuracion") <- list(
   n_nacional  = nrow(df),
   n_atlantico = n_antes,
   n_final     = nrow(df_atl)
 )
+attr(df_atl, "faltantes") <- faltantes
 
 saveRDS(df_atl, ruta_rds)
 
