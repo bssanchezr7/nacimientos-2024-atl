@@ -7,4 +7,8 @@ server <- function(input, output, session) {
   mod_bivariado_server("bivariado", reactive(datos),
                        modo_oscuro = reactive(input$modo_oscuro))
   mod_hipotesis_server("hipotesis", reactive(datos))
+  if (mostrar_simulacion) {
+    mod_simulacion_server("simulacion", datos,
+                          modo_oscuro = reactive(input$modo_oscuro))
+  }
 }
