@@ -26,10 +26,17 @@ ui <- page_sidebar(
       condition = "input.pestana === 'hipotesis'",
       mod_hipotesis_controles("hipotesis")
     ),
+    if (mostrar_simulacion) {
+      conditionalPanel(
+        condition = "input.pestana === 'simulacion'",
+        mod_simulacion_controles("simulacion")
+      )
+    },
     conditionalPanel(
       condition = paste0("input.pestana !== 'univariado' && ",
                          "input.pestana !== 'bivariado' && ",
-                         "input.pestana !== 'hipotesis'"),
+                         "input.pestana !== 'hipotesis' && ",
+                         "input.pestana !== 'simulacion'"),
       p(class = "text-muted", "Esta pestaña no tiene filtros.")
     )
   ),
@@ -47,6 +54,10 @@ ui <- page_sidebar(
     nav_panel("Bivariado", value = "bivariado",
               mod_bivariado_ui("bivariado")),
     nav_panel("Hipótesis", value = "hipotesis",
-              mod_hipotesis_ui("hipotesis"))
+              mod_hipotesis_ui("hipotesis")),
+    if (mostrar_simulacion) {
+      nav_panel("Simulación", value = "simulacion",
+                mod_simulacion_ui("simulacion"))
+    }
   )
 )

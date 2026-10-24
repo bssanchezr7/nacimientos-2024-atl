@@ -6,7 +6,8 @@
 # con `interactivo()`. Los que la conversión no resuelve bien se arman con
 # plotly y se visten con `estilo_interactivo()`.
 
-fmt_pct <- function(p, acc = 0.1) paste0(num(100 * p, acc), " %")
+# Porcentaje con el mismo formato del libro ("74,9%"): usa pct() de utils_estilo.R
+fmt_pct <- function(p, acc = 0.1) pct(p, acc)
 
 # ggplot2 4.0 avisa que `text` no es una estética de geom_col, pero plotly la
 # usa como globo. Se silencia solo ese aviso concreto, no los demás.

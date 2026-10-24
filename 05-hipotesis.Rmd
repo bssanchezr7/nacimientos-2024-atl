@@ -320,6 +320,34 @@ tibble(
 
 Se rechaza la hipótesis nula (`r formato_p(kw_sub$p)`): el control prenatal no fue igual en las cuatro subregiones.
 
+### Comparaciones por pares
+
+La prueba de Kruskal-Wallis indica que al menos una subregión difiere. Para identificarlas se compara cada par de subregiones con la prueba de Dunn. Como son seis comparaciones, los valores p se ajustan con la corrección de Bonferroni.
+
+$H_0$: las consultas de las dos subregiones provienen de la misma distribución;
+$H_1$: provienen de distribuciones distintas.
+
+```{r dunn-consultas-subregion, message=FALSE, warning=FALSE}
+dunn_sub <- dunn_test(NUMCONSUL ~ SUBREGION, data = df_atl,
+                      p.adjust.method = "bonferroni")
+```
+
+```{r dunn-consultas-subregion-tabla, message=FALSE, warning=FALSE}
+dunn_sub |>
+  transmute(
+    Comparación = paste(group1, "–", group2),
+    Z = num(statistic, 0.01),
+    p = map_chr(p.adj, formato_p)
+  ) |>
+  gt() |>
+  cols_label(p = "Valor p ajustado (Bonferroni)") |>
+  cols_align("left", columns = Comparación) |>
+  cols_align("center", columns = -Comparación) |>
+  estilo_tabla("Prueba de Dunn: consultas según subregión de residencia")
+```
+
+El control prenatal es similar en Barranquilla y Soledad, y se observa que disminuye a medida que la residencia se aleja del área metropolitana: el resto del área metropolitana difiere de ambas, y el resto del departamento difiere de todas las demás.
+
 ### Tamaño del efecto
 
 ```{r effsize-consultas-subregion, message=FALSE, warning=FALSE}

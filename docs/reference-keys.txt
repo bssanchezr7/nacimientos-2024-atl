@@ -46,12 +46,13 @@ objetivo-3-consultas-prenatales-según-la-subregión-de-residencia
 prueba-de-normalidad-1
 prueba-de-homogeneidad-de-varianzas-1
 prueba-de-kruskal-wallis
+comparaciones-por-pares
 tamaño-del-efecto-2
 objetivo-4-apgar-al-minuto-según-la-edad-de-la-madre
 prueba-de-normalidad-2
 prueba-de-homogeneidad-de-varianzas-2
 prueba-de-kruskal-wallis-1
-comparaciones-por-pares
+comparaciones-por-pares-1
 tamaño-del-efecto-3
 objetivo-5-apgar-al-minuto-y-a-los-cinco-minutos
 prueba-de-normalidad-3
