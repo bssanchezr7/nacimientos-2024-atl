@@ -23,6 +23,9 @@ packages.bib
 # Salida antigua (el libro se publica desde docs/, que sí se versiona)
 _book/
 
+# Despliegue de la app (rsconnect guarda aquí la configuración local)
+rsconnect/
+
 # Configuración local de Claude Code
 .claude/launch.json
 
