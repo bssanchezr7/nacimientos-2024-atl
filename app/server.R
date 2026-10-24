@@ -6,5 +6,5 @@ server <- function(input, output, session) {
                         modo_oscuro = reactive(input$modo_oscuro))
   mod_bivariado_server("bivariado", reactive(datos),
                        modo_oscuro = reactive(input$modo_oscuro))
-  mod_hipotesis_server("hipotesis")
+  mod_hipotesis_server("hipotesis", reactive(datos))
 }

@@ -23,8 +23,14 @@ ui <- page_sidebar(
       mod_bivariado_controles("bivariado")
     ),
     conditionalPanel(
-      condition = "input.pestana !== 'univariado' && input.pestana !== 'bivariado'",
-      p(class = "text-muted", "Pendiente de contenido.")
+      condition = "input.pestana === 'hipotesis'",
+      mod_hipotesis_controles("hipotesis")
+    ),
+    conditionalPanel(
+      condition = paste0("input.pestana !== 'univariado' && ",
+                         "input.pestana !== 'bivariado' && ",
+                         "input.pestana !== 'hipotesis'"),
+      p(class = "text-muted", "Esta pestaña no tiene filtros.")
     )
   ),
 
