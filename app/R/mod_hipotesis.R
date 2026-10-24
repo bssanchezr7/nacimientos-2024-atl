@@ -188,8 +188,7 @@ objetivos_hipotesis <- list(
               num_auto(med[1]), " frente a ", num_auto(med[3]), "; medias ",
               num(media[1], 0.01), " frente a ", num(media[3], 0.01), "; r = ",
               num(r_ef[2], 0.001), ", efecto ", magnitud_r(r_ef[2]), ")."
-            ),
-            pie = "r = Z / √N. Umbrales: 0,10 pequeño; 0,30 mediano; 0,50 grande."
+            )
           )
         ),
         conclusion = paste(
@@ -273,8 +272,7 @@ objetivos_hipotesis <- list(
               "Si bien existe una diferencia, el tamaño del efecto indica que es ",
               "despreciable: la V de Cramér resultante fue de ", num(v, 0.01),
               ", por debajo del 0,10 que se considera un efecto pequeño (Cohen, 1988)."
-            ),
-            pie = "Umbrales: 0,10 pequeño; 0,30 mediano; 0,50 grande."
+            )
           )
         ),
         conclusion = paste(
@@ -395,8 +393,7 @@ objetivos_hipotesis <- list(
               "El tamaño del efecto fue ", magnitud_eta(eta$effsize),
               ": el eta cuadrado resultante fue de ", num(eta$effsize, 0.001),
               " (Cohen, 1988)."
-            ),
-            pie = "Umbrales: 0,01 pequeño; 0,06 mediano; 0,14 grande."
+            )
           )
         ),
         conclusion = paste0(
@@ -517,8 +514,7 @@ objetivos_hipotesis <- list(
               "despreciable: el eta cuadrado resultante fue de ",
               num(eta$effsize, 0.001), ", por debajo del 0,01 que se considera ",
               "un efecto pequeño (Cohen, 1988)."
-            ),
-            pie = "Umbrales: 0,01 pequeño; 0,06 mediano; 0,14 grande."
+            )
           )
         ),
         conclusion = paste(
@@ -597,8 +593,7 @@ objetivos_hipotesis <- list(
             lectura = paste0(
               "El tamaño del efecto fue ", magnitud_r(ef), " (r = ",
               num(ef, 0.001), ")."
-            ),
-            pie = "r = Z / √N. Umbrales: 0,10 pequeño; 0,30 mediano; 0,50 grande."
+            )
           )
         ),
         conclusion = paste(
