@@ -310,6 +310,11 @@ objetivos_hipotesis <- list(
       kw  <- rstatix::kruskal_test(NUMCONSUL ~ SUBREGION, data = d)
       eta <- rstatix::kruskal_effsize(NUMCONSUL ~ SUBREGION, data = d)
 
+      # Post hoc de Kruskal-Wallis: qué pares de subregiones difieren
+      dunn    <- rstatix::dunn_test(d, NUMCONSUL ~ SUBREGION, p.adjust.method = "bonferroni")
+      sin_dif <- dunn[dunn$p.adj >= 0.05, ]
+      pares_sin_dif <- paste(sin_dif$group1, "y", sin_dif$group2, collapse = "; ")
+
       list(
         pasos = list(
           list(
@@ -359,6 +364,28 @@ objetivos_hipotesis <- list(
             )
           ),
           list(
+            titulo  = "Comparaciones por pares (prueba de Dunn)",
+            h0      = "las consultas de las dos subregiones provienen de la misma distribución",
+            h1      = "provienen de distribuciones distintas",
+            tabla   = tibble::tibble(
+              Comparación = paste(dunn$group1, "–", dunn$group2),
+              Z = num(dunn$statistic, 0.01),
+              `Valor p ajustado (Bonferroni)` = formato_p(dunn$p.adj)
+            ),
+            lectura = if (nrow(sin_dif) == 0) {
+              "Todos los pares de subregiones difieren entre sí."
+            } else {
+              paste0("Todos los pares de subregiones difieren entre sí, salvo ",
+                     pares_sin_dif, " (", paste(formato_p(sin_dif$p.adj), collapse = "; "), ").")
+            },
+            pie = paste(
+              "Kruskal-Wallis indica que al menos una subregión difiere, pero no cuáles.",
+              "La prueba de Dunn compara cada par usando los mismos rangos de",
+              "Kruskal-Wallis; como son seis comparaciones, los valores p se ajustan",
+              "con la corrección de Bonferroni."
+            )
+          ),
+          list(
             titulo  = "Tamaño del efecto",
             tabla   = tibble::tibble(
               Medida = "Eta cuadrado",
@@ -372,9 +399,11 @@ objetivos_hipotesis <- list(
             pie = "Umbrales: 0,01 pequeño; 0,06 mediano; 0,14 grande."
           )
         ),
-        conclusion = paste(
-          "De esto se concluye que la desigualdad entre subregiones existe,",
-          "aunque es de poca magnitud."
+        conclusion = paste0(
+          "De esto se concluye que la desigualdad entre subregiones existe, ",
+          "aunque es de poca magnitud",
+          if (nrow(sin_dif) > 0) paste0(", y que solo ", pares_sin_dif, " no se diferencian entre sí") else "",
+          "."
         )
       )
     }
